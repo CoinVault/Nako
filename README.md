@@ -11,7 +11,16 @@ Nako exposes a REST api to query the blockchain data.
 - Running a MongoDB instance as indexing storage
 - OWIN selfhost REST api easily documented using swagger
 
-# Configuration
+## Api
+Swagger http://[server-url]:[port]/swagger/
 
-
-# Deploy
+GET /api/query/address/{address}  
+GET /api/query/address/{address}/confirmations/{confirmations}/unspent/transactions  
+GET /api/query/address/{address}/unspent/transactions  
+GET /api/query/address/{address}/unspent  
+GET /api/query/block/Latest/{transactions}  
+GET /api/query/block/{blockHash}/{transactions}  
+GET /api/query/block/Index/{blockIndex}/{transactions}  
+GET /api/query/transaction/{transactionId}  
+GET /api/stats  
+GET /api/stats/peers  
