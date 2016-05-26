@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Concurrency.cs" company="SoftChains">
+// <copyright file="Stopwatch.cs" company="SoftChains">
 //   Copyright 2016 Dan Gershony
 //   //  Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //   //  THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
@@ -8,33 +8,25 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Nako.Storage.Sql
+namespace Nako.Extensions
 {
     #region Using Directives
 
-    using System.Collections.Concurrent;
-
-    using Nako.Storage.Types;
+    using System.Diagnostics;
 
     #endregion
 
-    /// <summary>
-    /// The concurrency.
-    /// </summary>
-    public class Concurrency
+    public partial class Stopwatch
     {
-        #region Public Properties
+        #region Public Methods and Operators
 
-        /// <summary>
-        /// Gets or sets the collection.
-        /// </summary>
-        public static ConcurrentBag<SyncTransactionItemOutput> TransactionCollection { get; set; }
+        public static System.Diagnostics.Stopwatch Start()
+        {
+            var stoper = new System.Diagnostics.Stopwatch();
+            stoper.Start();
+            return stoper;
+        }
 
-        /// <summary>
-        /// Gets or sets the collection.
-        /// </summary>
-        public static ConcurrentBag<SyncTransactionInfo> BlockTransactionCollection { get; set; }
-       
         #endregion
     }
 }

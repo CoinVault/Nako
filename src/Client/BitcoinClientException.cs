@@ -27,12 +27,6 @@ namespace Nako.Client
         /// <summary>
         /// Initializes a new instance of the <see cref="BitcoinClientException"/> class.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="ex">
-        /// The ex.
-        /// </param>
         public BitcoinClientException(string message, Exception ex)
             : base(message, ex)
         {
@@ -41,9 +35,6 @@ namespace Nako.Client
         /// <summary>
         /// Initializes a new instance of the <see cref="BitcoinClientException"/> class.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
         public BitcoinClientException(string message)
             : base(message)
         {
@@ -74,9 +65,6 @@ namespace Nako.Client
             }
         }
 
-        /// <summary>
-        /// Gets or sets the client error.
-        /// </summary>
         public string RawMessage { get; set; }
 
         /// <summary>
@@ -88,23 +76,11 @@ namespace Nako.Client
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The to string.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/>.
-        /// </returns>
         public override string ToString()
         {
             return string.Format("StatusCode = {0} Error = {1} {2}", this.StatusCode, this.RawMessage, base.ToString());
         }
 
-        /// <summary>
-        /// The is transaction not found.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
         public bool IsTransactionNotFound()
         {
             if (this.ErrorCode == -5)

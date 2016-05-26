@@ -29,9 +29,6 @@ namespace Nako.Storage.Mongo
 
     #endregion
 
-    /// <summary>
-    /// The data.
-    /// </summary>
     public class MongoData : IStorage
     {
         private readonly Tracer tracer;
@@ -325,7 +322,7 @@ namespace Nako.Storage.Mongo
                 filter = filter & builder.Eq(info => info.SpendingTransactionId, null);
             }
 
-            var stoper1 = StopwatchExtension.CreateAndStart();
+            var stoper1 = Stopwatch.Start();
 
             var addrs = this.MapTransactionAddress.Find(filter).ToList();
 

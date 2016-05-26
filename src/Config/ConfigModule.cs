@@ -16,17 +16,8 @@ namespace Nako.Config
 
     #endregion
 
-    /// <summary>
-    /// The module.
-    /// </summary>
     public class ConfigModule : Module 
     {
-        /// <summary>
-        /// The load.
-        /// </summary>
-        /// <param name="builder">
-        /// The builder.
-        /// </param>
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<NakoApplication>().SingleInstance();

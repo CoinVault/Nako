@@ -25,29 +25,17 @@ namespace Nako.Api.Handlers
     #endregion
 
     /// <summary>
-    /// The CoinOperations interface.
+    /// Handler to make get info about a blockchain.
     /// </summary>
     public class StatsHandler 
     {
-        /// <summary>
-        /// The sync connection.
-        /// </summary>
         private readonly SyncConnection syncConnection;
 
-        /// <summary>
-        /// The storage.
-        /// </summary>
         private readonly IStorage storage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatsHandler"/> class.
         /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="storage">
-        /// The storage.
-        /// </param>
         public StatsHandler(SyncConnection connection, IStorage storage)
         {
             this.storage = storage;
@@ -56,12 +44,6 @@ namespace Nako.Api.Handlers
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The stats connection.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public async Task<StatsConnection> StatsConnection()
         {
             var connection = this.syncConnection;
@@ -71,12 +53,6 @@ namespace Nako.Api.Handlers
             return new StatsConnection { Connections = clientConnection };
         }
 
-        /// <summary>
-        /// The stats connection.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public async Task<Statistics> Statistics()
         {
             var connection = this.syncConnection;
@@ -91,12 +67,6 @@ namespace Nako.Api.Handlers
             return stats;
         }
 
-        /// <summary>
-        /// The stats connection.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public async Task<List<PeerInfo>> Peers()
         {
             var connection = this.syncConnection;

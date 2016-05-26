@@ -10,9 +10,6 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    /// <summary>
-    /// The query address.
-    /// </summary>
     public class StatsConnection
     {
         #region Public Properties

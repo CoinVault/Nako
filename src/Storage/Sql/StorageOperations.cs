@@ -28,7 +28,7 @@ namespace Nako.Storage.Sql
     #endregion
 
     /// <summary>
-    /// The CoinOperations interface.
+    /// NOTE:The sql functionality is not maintained.
     /// </summary>
     public class StorageOperations : IStorageOperations
     {

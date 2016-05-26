@@ -28,24 +28,6 @@ namespace Nako.Client
     {
         #region Public Methods and Operators
 
-        /// <summary>
-        /// Validate a certificate is in store.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender argument.
-        /// </param>
-        /// <param name="certificate">
-        /// The certificate to check.
-        /// </param>
-        /// <param name="chain">
-        /// The chain associated with the certificate.
-        /// </param>
-        /// <param name="sslPolicyErrors">
-        /// The Policy Errors.
-        /// </param>
-        /// <returns>
-        /// Returns True is this certificate exists in store.
-        /// </returns>
         public static bool ValidateCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return IsValidCryptoRequest(sender) ? IsValidCryptoCertificate(certificate) : sslPolicyErrors == SslPolicyErrors.None;
@@ -55,15 +37,6 @@ namespace Nako.Client
 
         #region Methods
 
-        /// <summary>
-        /// The is valid crypto request.
-        /// </summary>
-        /// <param name="certificate">
-        /// The certificate.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
         private static bool IsValidCryptoCertificate(X509Certificate certificate)
         {
             var certin = certificate as X509Certificate2;
@@ -85,15 +58,6 @@ namespace Nako.Client
             return false;
         }
 
-        /// <summary>
-        /// The is valid crypto request.
-        /// </summary>
-        /// <param name="sender">
-        /// The sender.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
         private static bool IsValidCryptoRequest(object sender)
         {
             var req = sender as HttpWebRequest;

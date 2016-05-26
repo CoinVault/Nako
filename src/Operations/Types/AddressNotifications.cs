@@ -16,14 +16,8 @@ namespace Nako.Operations.Types
 
     #endregion
 
-    /// <summary>
-    /// The address notifications.
-    /// </summary>
     public class AddressNotifications
     {
-        /// <summary>
-        /// Gets or sets the address.
-        /// </summary>
         public IEnumerable<string> Addresses { get; set; }
     }
 }

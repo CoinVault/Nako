@@ -23,7 +23,7 @@ namespace Nako.Storage.Sql
     #endregion
 
     /// <summary>
-    /// This class represents a SQL Stored Procedure.
+    /// NOTE:The sql functionality is not maintained.
     /// </summary>
     public class StoredProcedure : IDisposable
     {

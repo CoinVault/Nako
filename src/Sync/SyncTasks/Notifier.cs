@@ -28,47 +28,19 @@ namespace Nako.Sync.SyncTasks
 
     #endregion
 
-    /// <summary>
-    /// The notify.
-    /// </summary>
     public class Notifier : TaskRunner<AddressNotifications>
     {
-                /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
-        /// <summary>
-        /// The configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
-        /// <summary>
-        /// The storage.
-        /// </summary>
         private readonly IStorage storage;
 
-        /// <summary>
-        /// The storage.
-        /// </summary>
         private readonly Lazy<HttpClient> client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Notifier"/> class. 
-        /// Initializes a new instance of the <see cref="BlockStore"/> class.
         /// </summary>
-        /// <param name="application">
-        /// The application.
-        /// </param>
-        /// <param name="config">
-        /// The config.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
-        /// <param name="storage">
-        /// The storage Operations.
-        /// </param>
         public Notifier(NakoApplication application, NakoConfiguration config, Tracer tracer, IStorage storage)
             : base(application, config, tracer)
         {
@@ -90,7 +62,7 @@ namespace Nako.Sync.SyncTasks
             AddressNotifications item;
             if (this.TryDequeue(out item))
             {
-                var stoper = StopwatchExtension.CreateAndStart();
+                var stoper = Stopwatch.Start();
 
                 var queue = new Queue<string>(item.Addresses);
                 var total = queue.Count();
@@ -129,22 +101,13 @@ namespace Nako.Sync.SyncTasks
             return false;
         }
 
-        /// <summary>
-        /// The coin address info.
-        /// </summary>
         public class CoinAddressInfo
         {
             #region Public Properties
 
-            /// <summary>
-            /// Gets or sets the addresses.
-            /// </summary>
             [JsonProperty("A")]
             public IEnumerable<string> Address { get; set; }
 
-            /// <summary>
-            /// Gets or sets the transaction id.
-            /// </summary>
             [JsonProperty("C")]
             public string CoinTag { get; set; }
 

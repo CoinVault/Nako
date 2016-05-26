@@ -27,7 +27,7 @@ namespace Nako.Storage.Sql
     #endregion
 
     /// <summary>
-    /// The data.
+    /// NOTE:The sql functionality is not maintained.
     /// </summary>
     public class SqlData : IStorage
     {

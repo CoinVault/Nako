@@ -17,30 +17,15 @@ namespace Nako.Config
 
     #endregion
 
-    /// <summary>
-    /// The terminator.
-    /// </summary>
     public class Terminator
     {
-        /// <summary>
-        /// The application.
-        /// </summary>
         private readonly NakoApplication nakoApplication;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Terminator"/> class.
-        /// </summary>
-        /// <param name="application">
-        /// The application.
-        /// </param>
         public Terminator(NakoApplication application)
         {
             this.nakoApplication = application;
         }
 
-        /// <summary>
-        /// The start.
-        /// </summary>
         public void Start()
         {
             Task.Run(() =>

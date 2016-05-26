@@ -21,22 +21,16 @@ namespace Nako.Api.Handlers
     #endregion
 
     /// <summary>
-    /// The exchange rates controller.
+    /// Controller to get some information about a coin.
     /// </summary>
     [RoutePrefix("api/stats")]
     public class StatsController : ApiController
     {
-        /// <summary>
-        /// The operations.
-        /// </summary>
         private readonly StatsHandler statsHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatsController"/> class.
         /// </summary>
-        /// <param name="statsHandler">
-        /// The query operations.
-        /// </param>
         public StatsController(StatsHandler statsHandler)
         {
             this.statsHandler = statsHandler;
@@ -44,12 +38,6 @@ namespace Nako.Api.Handlers
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// Heartbeat endpoint.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="HttpResponseMessage"/>.
-        /// </returns>
         [Route("heartbeat")]
         public HttpResponseMessage GetHeartbeat()
         {
@@ -58,12 +46,6 @@ namespace Nako.Api.Handlers
             return response;
         }
 
-        /// <summary>
-        /// Heartbeat endpoint.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="HttpResponseMessage"/>.
-        /// </returns>
         [Route("connections")]
         public async Task<HttpResponseMessage> GetConnections()
         {
@@ -74,12 +56,6 @@ namespace Nako.Api.Handlers
             return response;
         }
 
-        /// <summary>
-        /// Heartbeat endpoint.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="HttpResponseMessage"/>.
-        /// </returns>
         [Route("")]
         public async Task<HttpResponseMessage> Get()
         {
@@ -90,12 +66,6 @@ namespace Nako.Api.Handlers
             return response;
         }
 
-        /// <summary>
-        /// Heartbeat endpoint.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="HttpResponseMessage"/>.
-        /// </returns>
         [Route("peers")]
         public async Task<HttpResponseMessage> GetPeers()
         {

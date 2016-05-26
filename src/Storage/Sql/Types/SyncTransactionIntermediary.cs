@@ -19,7 +19,7 @@ namespace Nako.Storage.Sql.Types
     #endregion
 
     /// <summary>
-    /// The sync transaction intermediary.
+    /// NOTE:The sql functionality is not maintained.
     /// </summary>
     public class SyncTransactionIntermediary
     {

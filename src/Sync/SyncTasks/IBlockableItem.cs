@@ -10,19 +10,10 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    /// <summary>
-    /// The Block Item interface.
-    /// </summary>
     public interface IBlockableItem
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether blocked.
-        /// </summary>
         bool Blocked { get; set; }
 
-        /// <summary>
-        /// The deplete.
-        /// </summary>
         void Deplete();
     }
 }

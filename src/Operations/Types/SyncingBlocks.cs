@@ -19,31 +19,16 @@ namespace Nako.Operations.Types
 
     #endregion
 
-    /// <summary>
-    /// The sync block info.
-    /// </summary>
     public class SyncingBlocks
     {
         #region Public Properties
 
-        /// <summary>
-        /// Gets or sets the blocks.
-        /// </summary>
         public ConcurrentDictionary<string, BlockInfo> CurrentSyncing { get; set; }
 
-        /// <summary>
-        /// Gets or sets the last block.
-        /// </summary>
         public BlockInfo LastBlock { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether blocked.
-        /// </summary>
         public bool Blocked { get; set; }
 
-        /// <summary>
-        /// Gets or sets the blocks.
-        /// </summary>
         public List<string> CurrentPoolSyncing { get; set; }
 
         #endregion

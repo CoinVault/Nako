@@ -10,20 +10,12 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    /// <summary>
-    /// The query address.
-    /// </summary>
     public class QueryAddressItem
     {
          /// <summary>
         /// Gets or sets the input index.
         /// </summary>
         public int Index { get; set; }
-
-        /// <summary>
-        /// Gets or sets the addresses.
-        /// </summary>
-        public string Address { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
@@ -46,7 +38,7 @@ namespace Nako.Api.Handlers.Types
         public string PubScriptHex { get; set; }
 
         /// <summary>
-        /// Gets or sets the coin base.
+        /// Gets or sets the coinbase.
         /// </summary>
         public string CoinBase { get; set; }
 
@@ -56,17 +48,17 @@ namespace Nako.Api.Handlers.Types
         public decimal Value { get; set; }
 
         /// <summary>
-        /// Gets or sets the coin base.
+        /// Gets or sets the block index if included in a block.
         /// </summary>
         public long? BlockIndex { get; set; }
 
         /// <summary>
-        /// Gets or sets the coin base.
+        /// Gets or sets the confirmations.
         /// </summary>
         public long? Confirmations { get; set; }
 
         /// <summary>
-        /// Gets or sets the coin base.
+        /// Gets or sets the transaction time.
         /// </summary>
         public long Time { get; set; }
     }

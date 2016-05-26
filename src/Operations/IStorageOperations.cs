@@ -22,22 +22,13 @@ namespace Nako.Operations
     public interface IStorageOperations
     {
         /// <summary>
-        /// The validate block.
+        /// Validate a block.
         /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
         void ValidateBlock(SyncBlockTransactionsOperation item);
 
         /// <summary>
-        /// The insert transactions.
+        /// Insert transactions.
         /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
         InsertStats InsertTransactions(SyncBlockTransactionsOperation item);
     }
 }

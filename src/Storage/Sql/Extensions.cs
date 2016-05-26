@@ -21,7 +21,7 @@ namespace Nako.Storage.Sql
     #endregion
 
     /// <summary>
-    /// This class defines extension methods.
+    /// NOTE:The sql functionality is not maintained.
     /// </summary>
     public static class Extensions
     {

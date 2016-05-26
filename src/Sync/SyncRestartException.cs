@@ -16,9 +16,6 @@ namespace Nako.Sync
 
     #endregion
 
-    /// <summary>
-    /// The sync restart exception.
-    /// </summary>
     public class SyncRestartException : ApplicationException
     {
         /// <summary>
@@ -31,9 +28,6 @@ namespace Nako.Sync
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncRestartException"/> class.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
         public SyncRestartException(string message)
             : base(message)
         {
@@ -42,12 +36,6 @@ namespace Nako.Sync
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncRestartException"/> class.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="ex">
-        /// The ex.
-        /// </param>
         public SyncRestartException(string message, Exception ex)
             : base(message, ex)
         {

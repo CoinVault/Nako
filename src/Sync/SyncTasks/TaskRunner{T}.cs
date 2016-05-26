@@ -20,48 +20,21 @@ namespace Nako.Sync.SyncTasks
 
     #endregion
 
-    /// <summary>
-    /// The task runner.
-    /// </summary>
-    /// <typeparam name="T">
-    /// The queue type.
-    /// </typeparam>
     public abstract class TaskRunner<T> : TaskRunner, IBlockableItem
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskRunner{T}"/> class.
         /// </summary>
-        /// <param name="application">
-        /// The application.
-        /// </param>
-        /// <param name="config">
-        /// The config.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
         protected TaskRunner(NakoApplication application, NakoConfiguration config, Tracer tracer)
             : base(application, config, tracer)
         {
             this.Queue = new ConcurrentQueue<T>();
         }
 
-        /// <summary>
-        /// Gets or sets the queue.
-        /// </summary>
         public ConcurrentQueue<T> Queue { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the queue is blocked.
-        /// </summary>
         public bool Blocked { get; set; }
 
-        /// <summary>
-        /// The en-queue.
-        /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
         public void Enqueue(T item)
         {
             if (!this.Blocked)
@@ -70,15 +43,6 @@ namespace Nako.Sync.SyncTasks
             }
         }
 
-        /// <summary>
-        /// The en-queue.
-        /// </summary>
-        /// <param name="result">
-        /// The result.
-        /// </param>
-        /// <returns>
-        /// The <see cref="bool"/>.
-        /// </returns>
         public bool TryDequeue(out T result)
         {
             if (!this.Blocked)
@@ -90,9 +54,6 @@ namespace Nako.Sync.SyncTasks
             return false;
         }
 
-        /// <summary>
-        /// The Deplete all items form queue.
-        /// </summary>
         public void Deplete()
         {
             T item;

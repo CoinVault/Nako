@@ -18,18 +18,12 @@ namespace Nako.Operations.Types
 
     #endregion
 
-    /// <summary>
-    /// The crypto connection.
-    /// </summary>
     [Serializable]
     public class SyncConnection
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncConnection"/> class.
         /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
         public SyncConnection(NakoConfiguration configuration)
         {
             this.CoinTag = configuration.CoinTag;
@@ -43,49 +37,22 @@ namespace Nako.Operations.Types
 
         #region Public Properties
 
-        /// <summary>
-        /// Gets or sets the coin tag.
-        /// </summary>
         public string CoinTag { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Password.
-        /// </summary>
         public string Password { get; set; }
 
-        /// <summary>
-        /// Gets or sets the AccessPort.
-        /// </summary>
         public int RpcAccessPort { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the connection is secure.
-        /// </summary>
         public bool Secure { get; set; }
 
-        /// <summary>
-        /// Gets or sets the coin tag.
-        /// </summary>
         public string ServerDomain { get; set; }
 
-        /// <summary>
-        /// Gets or sets the server connection address.
-        /// </summary>
         public string ServerIp { get; set; }
 
-        /// <summary>
-        /// Gets or sets the ServerName.
-        /// </summary>
         public string ServerName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the RUser.
-        /// </summary>
         public string User { get; set; }
 
-        /// <summary>
-        /// Gets or sets the start block index.
-        /// </summary>
         public long StartBlockIndex { get; set; }
 
         #endregion

@@ -31,12 +31,6 @@ namespace Nako.Extensions
         /// <summary>
         /// The unix time stamp to date time.
         /// </summary>
-        /// <param name="unixTimeStamp">
-        /// The unix time stamp.
-        /// </param>
-        /// <returns>
-        /// The <see cref="DateTime"/>.
-        /// </returns>
         public static DateTime UnixTimeStampToDateTime(this long unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
@@ -46,18 +40,6 @@ namespace Nako.Extensions
         /// <summary>
         /// Batch a collection in to fixed size batches.
         /// </summary>
-        /// <typeparam name="T">
-        /// The type.
-        /// </typeparam>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="batchSize">
-        /// The batch size.
-        /// </param>
-        /// <returns>
-        /// The batch.
-        /// </returns>
         public static IEnumerable<IEnumerable<T>> Batch<T>(this IEnumerable<T> source, int batchSize)
         {
             //// consider using the System.Collections.Concurrent.Partitioner
@@ -73,15 +55,6 @@ namespace Nako.Extensions
         /// <summary>
         /// Implemented a foreach extension for an enumerable object.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        /// <typeparam name="T">
-        /// The first type.
-        /// </typeparam>
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             // Validate
@@ -104,15 +77,6 @@ namespace Nako.Extensions
         /// <summary>
         /// Implemented a foreach extension for an enumerable object.
         /// </summary>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="action">
-        /// The action.
-        /// </param>
-        /// <typeparam name="T">
-        /// The type.
-        /// </typeparam>
         public static void ForEach<T>(this IEnumerable<T> source, Action<T, int> action)
         {
             // Validate
@@ -137,19 +101,6 @@ namespace Nako.Extensions
         /// <summary>
         /// Split a collection in to batches of collections.
         /// </summary>
-        /// <typeparam name="T">
-        /// The type of the object in the source.
-        /// </typeparam>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="parts">
-        /// The number of parts.
-        /// </param>
-        /// <returns>
-        /// The collection.
-        /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Intended design.")]
         public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> source, int parts)
         {
             // Validate
@@ -167,18 +118,6 @@ namespace Nako.Extensions
         /// <summary>
         /// The take and remove.
         /// </summary>
-        /// <param name="queue">
-        /// The queue.
-        /// </param>
-        /// <param name="count">
-        /// The count.
-        /// </param>
-        /// <typeparam name="T">
-        /// The item type.
-        /// </typeparam>
-        /// <returns>
-        /// The collection.
-        /// </returns>
         public static IEnumerable<T> TakeAndRemove<T>(Queue<T> queue, int count)
         {
             var queuecount = Math.Min(queue.Count, count);
@@ -195,18 +134,6 @@ namespace Nako.Extensions
         /// <summary>
         /// Inner method to batch a collection in to fixed size batches.
         /// </summary>
-        /// <typeparam name="T">
-        /// The type.
-        /// </typeparam>
-        /// <param name="source">
-        /// The source.
-        /// </param>
-        /// <param name="batchSize">
-        /// The batch size.
-        /// </param>
-        /// <returns>
-        /// The batch.
-        /// </returns>
         private static IEnumerable<T> YieldBatchElements<T>(IEnumerator<T> source, int batchSize)
         {
             yield return source.Current;

@@ -16,9 +16,6 @@ namespace Nako.Api.Handlers.Types
 
     #endregion
 
-    /// <summary>
-    /// The query block.
-    /// </summary>
     public class QueryBlock
     {
         #region Public Properties
@@ -59,7 +56,7 @@ namespace Nako.Api.Handlers.Types
         public string PreviousBlockHash { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether sync is complete.
+        /// Gets or sets a value indicating whether sync is complete for this block.
         /// </summary>
         public bool Synced { get; set; }
 

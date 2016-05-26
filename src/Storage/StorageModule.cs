@@ -20,17 +20,8 @@ namespace Nako.Storage
 
     #endregion
 
-    /// <summary>
-    /// The module.
-    /// </summary>
     public class StorageModule : Module 
     {
-        /// <summary>
-        /// The load.
-        /// </summary>
-        /// <param name="builder">
-        /// The builder.
-        /// </param>
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<MongoData>().As<IStorage>().AsSelf().SingleInstance();

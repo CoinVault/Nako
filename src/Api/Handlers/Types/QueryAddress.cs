@@ -16,9 +16,6 @@ namespace Nako.Api.Handlers.Types
 
     #endregion
 
-    /// <summary>
-    /// The query address.
-    /// </summary>
     public class QueryAddress
     {
         #region Public Properties

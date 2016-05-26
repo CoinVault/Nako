@@ -23,17 +23,8 @@ namespace Nako.Api
 
     #endregion
 
-    /// <summary>
-    /// The module.
-    /// </summary>
     public class ApiModule : Module 
     {
-        /// <summary>
-        /// The load.
-        /// </summary>
-        /// <param name="builder">
-        /// The builder.
-        /// </param>
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ApiServer>();

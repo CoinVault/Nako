@@ -20,17 +20,8 @@ namespace Nako.Sync
 
     #endregion
 
-    /// <summary>
-    /// The module.
-    /// </summary>
     public class SyncModule : Module 
     {
-        /// <summary>
-        /// The load.
-        /// </summary>
-        /// <param name="builder">
-        /// The builder.
-        /// </param>
         protected override void Load(ContainerBuilder builder)
         {
             // server

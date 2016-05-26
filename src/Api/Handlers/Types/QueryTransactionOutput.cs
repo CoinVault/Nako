@@ -10,9 +10,6 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    /// <summary>
-    /// The query transaction.
-    /// </summary>
     public class QueryTransactionOutput
     {
         #region Public Properties
@@ -33,19 +30,9 @@ namespace Nako.Api.Handlers.Types
         public int Index { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount.
+        /// Gets or sets the output type.
         /// </summary>
         public string OutputType { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether spent.
-        /// </summary>
-        public bool Spent { get; set; }
-
-        /// <summary>
-        /// Gets or sets the amount.
-        /// </summary>
-        public string SpentTransactionId { get; set; }
 
         #endregion
     }

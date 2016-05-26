@@ -10,9 +10,6 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    /// <summary>
-    /// The query transaction.
-    /// </summary>
     public class QueryTransactionInput
     {
         #region Public Properties
@@ -28,7 +25,7 @@ namespace Nako.Api.Handlers.Types
         public string InputAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this transaction is the first transaction 'coin-base'.
+        /// Gets or sets the coinbase id the transaction is the first transaction 'coinbase'.
         /// </summary>
         public string CoinBase { get; set; }
 
@@ -36,11 +33,6 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the transaction id.
         /// </summary>
         public string InputTransactionId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the amount.
-        /// </summary>
-        public decimal? InputValue { get; set; }
 
         #endregion
     }

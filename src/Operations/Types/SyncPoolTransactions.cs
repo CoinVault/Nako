@@ -16,16 +16,10 @@ namespace Nako.Operations.Types
 
     #endregion
 
-    /// <summary>
-    /// The tracking info.
-    /// </summary>
     public class SyncPoolTransactions
     {
         #region Public Properties
 
-        /// <summary>
-        /// Gets or sets the transactions.
-        /// </summary>
         public List<string> Transactions { get; set; }
 
         #endregion

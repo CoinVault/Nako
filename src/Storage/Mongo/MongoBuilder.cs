@@ -27,38 +27,15 @@ namespace Nako.Storage.Mongo
     /// </summary>
     public class MongoBuilder : TaskStarter
     {
-        /// <summary>
-        /// The running.
-        /// </summary>
-        private static bool running;
-
-        /// <summary>
-        /// The mongo data.
-        /// </summary>
         private readonly MongoData mongoData;
 
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
-        /// <summary>
-        /// The configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoBuilder"/> class.
         /// </summary>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
-        /// <param name="data">
-        /// The data.
-        /// </param>
-        /// <param name="nakoConfiguration">
-        /// The Configuration.
-        /// </param>
         public MongoBuilder(Tracer tracer, MongoData data, NakoConfiguration nakoConfiguration)
             : base(tracer)
         {
@@ -67,9 +44,6 @@ namespace Nako.Storage.Mongo
             this.configuration = nakoConfiguration;
         }
 
-        /// <summary>
-        /// Gets the priority.
-        /// </summary>
         public override int Priority
         {
             get
@@ -78,12 +52,6 @@ namespace Nako.Storage.Mongo
             }
         }
 
-        /// <summary>
-        /// The on execute.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public override Task OnExecute()
         {
             this.tracer.Trace("MongoBuilder", "Creating mappings");
@@ -129,60 +97,6 @@ namespace Nako.Storage.Mongo
             var trxBlkIndex = Builders<MapTransactionBlock>.IndexKeys.Ascending(trxBlk => trxBlk.BlockIndex);
             this.mongoData.MapTransactionBlock.Indexes.CreateOne(trxBlkIndex);
 
-            ////if (this.configuration.CoinTag == "DOGE")
-            ////{
-            ////    // ugly hack to complete DOGE double db update
-
-            ////    // Conversion fields
-            ////    this.tracer.Trace("MongoBuilder", "Converting fields");
-
-            ////    if (running)
-            ////    {
-            ////        return Task.FromResult(1);
-            ////    }
-
-            ////    running = true;
-
-            ////    new Task(() =>
-            ////        {
-            ////            long blockIndex = 200000;
-
-            ////            while (true)
-            ////            {
-            ////                var filterb = Builders<MapBlock>.Filter.Eq(info => info.BlockIndex, blockIndex);
-            ////                var block = this.mongoData.MapBlock.Find(filterb).ToList().FirstOrDefault();
-
-            ////                if (block == null)
-            ////                {
-            ////                    break;
-            ////                }
-
-            ////                var filter = Builders<MapTransactionAddress>.Filter.Eq(info => info.BlockIndex, blockIndex);
-            ////                var collection = this.mongoData.MapTransactionAddress.Find(filter).ToList();
-
-            ////                if (!collection.Any())
-            ////                {
-            ////                    blockIndex++;
-            ////                    continue;
-            ////                }
-
-            ////                this.tracer.Trace("MongoBuilder", string.Format("Fetching Block {0} - Items {1}", blockIndex, collection.Count()));
-
-            ////                collection.ForEach(x =>
-            ////                    {
-            ////                        this.tracer.Trace("MongoBuilder", string.Format("Block {0} - Updating field {1}", blockIndex, x.Id));
-
-            ////                        var filterInner = Builders<MapTransactionAddress>.Filter.Eq(info => info.Id, x.Id);
-            ////                        var update = Builders<MapTransactionAddress>.Update.Set(info => info.Value, x.Value);
-            ////                        this.mongoData.MapTransactionAddress.UpdateOne(filterInner, update);
-            ////                    });
-
-            ////                blockIndex++;
-            ////            }
-
-            ////            this.tracer.Trace("MongoBuilder", string.Format("Complete Converting"));
-            ////        }).Start();
-            ////}
             return Task.FromResult(1);
         }
     }

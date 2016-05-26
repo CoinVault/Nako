@@ -59,9 +59,6 @@ namespace Nako
             Console.Read();
         }
 
-        /// <summary>
-        /// Config location.
-        /// </summary>
         private static string GetConfigPath(string[] args)
         {
             var location = string.Empty;

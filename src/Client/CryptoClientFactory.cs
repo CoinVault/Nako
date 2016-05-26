@@ -18,7 +18,7 @@ namespace Nako.Client
     #endregion
 
     /// <summary>
-    /// The crypto client factory.
+    ///  a factory to create clients.
     /// </summary>
     public class CryptoClientFactory
     {
@@ -41,24 +41,6 @@ namespace Nako.Client
         /// <summary>
         /// A static method to create a client.
         /// </summary>
-        /// <param name="connection">
-        /// The connection host.
-        /// </param>
-        /// <param name="port">
-        /// The port the client is listening on.
-        /// </param>
-        /// <param name="user">
-        /// The user name.
-        /// </param>
-        /// <param name="encPass">
-        /// The encrypted password.
-        /// </param>
-        /// <param name="secure">
-        /// Indicator to use (https).
-        /// </param>
-        /// <returns>
-        /// A new instance of <see cref="BitcoinClient"/>.
-        /// </returns>
         public static BitcoinClient Create(string connection, int port, string user, string encPass, bool secure)
         {
             // Set cache key name

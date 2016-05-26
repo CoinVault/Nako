@@ -25,33 +25,15 @@ namespace Nako.Sync.SyncTasks
     /// </summary>
     public class BlockReorger : TaskStarter
     {
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
-        /// <summary>
-        /// The operations.
-        /// </summary>
         private readonly ISyncOperations operations;
 
-        /// <summary>
-        /// The connection.
-        /// </summary>
         private readonly SyncConnection connection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockReorger"/> class.
         /// </summary>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
-        /// <param name="syncOperations">
-        /// The sync operations.
-        /// </param>
-        /// <param name="syncConnection">
-        /// The sync connection.
-        /// </param>
         public BlockReorger(Tracer tracer, ISyncOperations syncOperations, SyncConnection syncConnection)
             : base(tracer)
         {
@@ -71,12 +53,6 @@ namespace Nako.Sync.SyncTasks
             }
         }
 
-        /// <summary>
-        /// The on execute.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public override Task OnExecute()
         {
             this.tracer.Trace("BlockReorger", "Checking if re-org is required");

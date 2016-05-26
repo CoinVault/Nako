@@ -28,9 +28,6 @@ namespace Nako.Client
 
     #endregion
 
-    /// <summary>
-    /// The bit net client.
-    /// </summary>
     public class BitcoinClient : IDisposable
     {
         #region Constructors and Destructors
@@ -57,9 +54,6 @@ namespace Nako.Client
         /// <summary>
         /// Initializes a new instance of the <see cref="BitcoinClient"/> class.
         /// </summary>
-        /// <param name="uri">
-        /// The s uri.
-        /// </param>
         public BitcoinClient(string uri)
         {
             this.Url = new Uri(uri);
@@ -69,12 +63,6 @@ namespace Nako.Client
         /// <summary>
         /// Initializes a new instance of the <see cref="BitcoinClient"/> class.
         /// </summary>
-        /// <param name="uri">
-        /// The uri.
-        /// </param>
-        /// <param name="credentials">
-        /// The Credentials.
-        /// </param>
         public BitcoinClient(string uri, NetworkCredential credentials)
         {
             this.Url = new Uri(uri);
@@ -119,24 +107,6 @@ namespace Nako.Client
         /// <summary>
         /// A static method to create a client.
         /// </summary>
-        /// <param name="connection">
-        /// The connection host.
-        /// </param>
-        /// <param name="port">
-        /// The port the client is listening on.
-        /// </param>
-        /// <param name="user">
-        /// The user name.
-        /// </param>
-        /// <param name="pass">
-        /// The password.
-        /// </param>
-        /// <param name="secure">
-        /// Indicator to use (https).
-        /// </param>
-        /// <returns>
-        /// A new instance of <see cref="BitcoinClient"/>.
-        /// </returns>
         public static BitcoinClient Create(string connection, int port, string user, string pass, bool secure)
         {
             var schema = secure ? "https" : "http";
@@ -162,9 +132,6 @@ namespace Nako.Client
             return res;
         }
 
-        /// <summary>
-        /// The dispose.
-        /// </summary>
         public void Dispose()
         {
             this.Client.Dispose();
@@ -460,18 +427,6 @@ namespace Nako.Client
         /// <summary>
         /// Create a crypto client exception.
         /// </summary>
-        /// <param name="response">
-        /// The response.
-        /// </param>
-        /// <param name="code">
-        /// The error code.
-        /// </param>
-        /// <param name="msg">
-        /// The error message.
-        /// </param>
-        /// <returns>
-        /// The <see cref="BitcoinClientException"/>.
-        /// </returns>
         private static BitcoinClientException CreateException(HttpResponseMessage response, int code, string msg)
         {
             return new BitcoinClientException(string.Format("{0} ({1})", msg, code))
@@ -486,18 +441,6 @@ namespace Nako.Client
         /// <summary>
         /// Send the request and wrap any exception.
         /// </summary>
-        /// <param name="client">
-        /// The client.
-        /// </param>
-        /// <param name="url">
-        /// The url.
-        /// </param>
-        /// <param name="content">
-        /// The content.
-        /// </param>
-        /// <returns>
-        /// The response.
-        /// </returns>
         private static async Task<HttpResponseMessage> Send(HttpClient client, Uri url, HttpContent content)
         {
             try
@@ -513,18 +456,6 @@ namespace Nako.Client
         /// <summary>
         /// Make a call to crypto API.
         /// </summary>
-        /// <typeparam name="T">
-        /// The type.
-        /// </typeparam>
-        /// <param name="method">
-        /// The s Method.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameters.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         private async Task<T> Call<T>(string method, params object[] parameters)
         {
             var rpcReq = new JsonRpcRequest(1, method, parameters);
@@ -548,15 +479,6 @@ namespace Nako.Client
         /// <summary>
         /// Make a call to crypto API.
         /// </summary>
-        /// <param name="method">
-        /// The s Method.
-        /// </param>
-        /// <param name="parameters">
-        /// The parameters.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         private async Task Call(string method, params object[] parameters)
         {
             var rpcReq = new JsonRpcRequest(1, method, parameters);
@@ -578,18 +500,6 @@ namespace Nako.Client
         /// <summary>
         /// Check the crypto client response is ok.
         /// </summary>
-        /// <typeparam name="T">
-        /// The type.
-        /// </typeparam>
-        /// <param name="response">
-        /// The response.
-        /// </param>
-        /// <exception cref="BitcoinClientException">
-        /// The exception message.
-        /// </exception>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         private async Task<T> CheckResponseOk<T>(HttpResponseMessage response)
         {
             try

@@ -18,26 +18,8 @@ namespace Nako.Api
 
     #endregion
 
-    /// <summary>
-    /// The extension.
-    /// </summary>
     public static class Extension
     {
-        /// <summary>
-        /// The create ok response.
-        /// </summary>
-        /// <param name="request">
-        /// The request.
-        /// </param>
-        /// <param name="value">
-        /// The value.
-        /// </param>
-        /// <typeparam name="T">
-        /// The response type.
-        /// </typeparam>
-        /// <returns>
-        /// The <see cref="HttpResponseMessage"/>.
-        /// </returns>
         public static HttpResponseMessage CreateOkResponse<T>(this HttpRequestMessage request, T value)
         {
             // the indentation is to format the json response so its human readable.

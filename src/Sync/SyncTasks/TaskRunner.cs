@@ -20,33 +20,15 @@ namespace Nako.Sync.SyncTasks
 
     #endregion
 
-    /// <summary>
-    /// The task runner.
-    /// </summary>
     public abstract class TaskRunner
     {
-        /// <summary>
-        /// The config.
-        /// </summary>
         private readonly NakoApplication application;
 
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskRunner"/> class.
         /// </summary>
-        /// <param name="application">
-        /// The application.
-        /// </param>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
         protected TaskRunner(NakoApplication application, NakoConfiguration configuration, Tracer tracer)
         {
             this.tracer = tracer;
@@ -54,33 +36,12 @@ namespace Nako.Sync.SyncTasks
             this.Delay = TimeSpan.FromSeconds(configuration.BlockFinderInterval);
         }
 
-        /// <summary>
-        /// Gets or sets the delay.
-        /// </summary>
         public TimeSpan Delay { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether abort.
-        /// </summary>
         public bool Abort { get; set; }
 
-        /// <summary>
-        /// Gets or sets the runner.
-        /// </summary>
         protected Runner Runner { get; set; }
 
-        /// <summary>
-        /// The run.
-        /// </summary>
-        /// <param name="runner">
-        /// The runner.
-        /// </param>
-        /// <param name="tokenSource">
-        /// The cancellation token.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public Task Run(Runner runner, CancellationTokenSource tokenSource)
         {
             this.Runner = runner;
@@ -126,12 +87,6 @@ namespace Nako.Sync.SyncTasks
             return task;
         }
 
-        /// <summary>
-        /// The on execute.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public abstract Task<bool> OnExecute();
     }
 }

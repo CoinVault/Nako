@@ -23,49 +23,19 @@ namespace Nako.Sync.SyncTasks
 
     #endregion
 
-    /// <summary>
-    /// The block sync.
-    /// </summary>
     public class PoolFinder : TaskRunner
     {
-        /// <summary>
-        /// The config.
-        /// </summary>
         private readonly NakoConfiguration config;
 
-        /// <summary>
-        /// The sync operations.
-        /// </summary>
         private readonly ISyncOperations syncOperations;
 
-        /// <summary>
-        /// The sync connection.
-        /// </summary>
         private readonly SyncConnection syncConnection;
 
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PoolFinder"/> class.
         /// </summary>
-        /// <param name="application">
-        /// The application.
-        /// </param>
-        /// <param name="config">
-        /// The config.
-        /// </param>
-        /// <param name="syncOperations">
-        /// The sync operations.
-        /// </param>
-        /// <param name="syncConnection">
-        /// The sync connection.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
         public PoolFinder(NakoApplication application, NakoConfiguration config, ISyncOperations syncOperations, SyncConnection syncConnection, Tracer tracer)
             : base(application, config, tracer)
         {
@@ -96,7 +66,7 @@ namespace Nako.Sync.SyncTasks
                 return false;
             }
 
-            var stoper = StopwatchExtension.CreateAndStart();
+            var stoper = Stopwatch.Start();
 
             var pool = await this.syncOperations.FindPoolTransactions(this.syncConnection, syncingBlocks);
 

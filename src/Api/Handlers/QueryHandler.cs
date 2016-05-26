@@ -13,7 +13,6 @@ namespace Nako.Api.Handlers
     #region Using Directives
 
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Nako.Api.Handlers.Types;
     using Nako.Config;
@@ -23,29 +22,17 @@ namespace Nako.Api.Handlers
     #endregion
 
     /// <summary>
-    /// The coin operations.
+    /// A handler that make request on the blockchain.
     /// </summary>
     public class QueryHandler 
     {
-        /// <summary>
-        /// The configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
-        /// <summary>
-        /// The storage.
-        /// </summary>
         private readonly IStorage storage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryHandler"/> class.
         /// </summary>
-        /// <param name="configuration">
-        /// The configuration.
-        /// </param>
-        /// <param name="storage">
-        /// The storage.
-        /// </param>
         public QueryHandler(NakoConfiguration configuration, IStorage storage)
         {
             this.storage = storage;
@@ -54,20 +41,6 @@ namespace Nako.Api.Handlers
 
         #region Public Methods and Operators
 
-      
-
-        /// <summary>
-        /// The get address.
-        /// </summary>
-        /// <param name="address">
-        /// The address.
-        /// </param>
-        /// <param name="confirmations">
-        /// The confirmations.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public QueryAddress GetAddressTransactions(string address, long confirmations)
         {
             var stats = this.storage.AddressGetBalance(address, confirmations);
@@ -220,18 +193,6 @@ namespace Nako.Api.Handlers
             };
         }
 
-        /// <summary>
-        /// The get block.
-        /// </summary>
-        /// <param name="blockHash">
-        /// The block hash.
-        /// </param>
-        /// <param name="getTransactions">
-        /// The get Transactions.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public QueryBlock GetBlock(string blockHash, bool getTransactions = true)
         {
             var block = this.storage.BlockGetByHash(blockHash);
@@ -275,18 +236,6 @@ namespace Nako.Api.Handlers
             };
         }
 
-        /// <summary>
-        /// The get block.
-        /// </summary>
-        /// <param name="blockIndex">
-        /// The block index.
-        /// </param>
-        /// <param name="getTransactions">
-        /// The get Transactions.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public QueryBlock GetBlock(long blockIndex, bool getTransactions = true)
         {
             var block = this.storage.BlockGetByIndex(blockIndex);
@@ -330,15 +279,6 @@ namespace Nako.Api.Handlers
             };
         }
 
-        /// <summary>
-        /// The get last block.
-        /// </summary>
-        /// <param name="getTransactions">
-        /// The get Transactions.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public QueryBlock GetLastBlock(bool getTransactions = true)
         {
             var block = this.storage.BlockGetCompleteBlockCount(1).FirstOrDefault();
@@ -382,15 +322,6 @@ namespace Nako.Api.Handlers
             };
         }
 
-        /// <summary>
-        /// The get transaction.
-        /// </summary>
-        /// <param name="transactionId">
-        /// The transaction id.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public QueryTransaction GetTransaction(string transactionId)
         {
             var transaction = this.storage.BlockTransactionGet(transactionId);

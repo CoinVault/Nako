@@ -29,31 +29,13 @@ namespace Nako.Sync.SyncTasks
     /// </summary>
     public class BlockStore : TaskRunner<SyncBlockTransactionsOperation>
     {
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
-        /// <summary>
-        /// The storage operations.
-        /// </summary>
         private readonly IStorageOperations storageOperations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockStore"/> class.
         /// </summary>
-        /// <param name="application">
-        /// The application.
-        /// </param>
-        /// <param name="config">
-        /// The config.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
-        /// <param name="storageOperations">
-        /// The storage Operations.
-        /// </param>
         public BlockStore(NakoApplication application, NakoConfiguration config, Tracer tracer, IStorageOperations storageOperations)
             : base(application, config, tracer)
         {
@@ -68,7 +50,7 @@ namespace Nako.Sync.SyncTasks
 
             if (this.TryDequeue(out item))
             {
-                var stoper = StopwatchExtension.CreateAndStart();
+                var stoper = Stopwatch.Start();
 
                 this.storageOperations.ValidateBlock(item);
 

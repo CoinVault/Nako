@@ -30,45 +30,21 @@ namespace Nako.Storage.Mongo
     #endregion
 
     /// <summary>
-    /// The CoinOperations interface.
+    /// Mongo storage operations.
     /// </summary>
     public class MongoStorageOperations : IStorageOperations
     {
-        /// <summary>
-        /// The storage.
-        /// </summary>
         private readonly IStorage storage;
 
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
-        /// <summary>
-        /// The configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
-        /// <summary>
-        /// The data.
-        /// </summary>
         private readonly MongoData data;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoStorageOperations"/> class.
         /// </summary>
-        /// <param name="storage">
-        /// The storage.
-        /// </param>
-        /// <param name="mongoData">
-        /// The mongo Data.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
-        /// <param name="nakoConfiguration">
-        /// The Configuration.
-        /// </param>
         public MongoStorageOperations(IStorage storage, MongoData mongoData, Tracer tracer, NakoConfiguration nakoConfiguration)
         {
             this.data = mongoData;
@@ -79,12 +55,6 @@ namespace Nako.Storage.Mongo
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The validate block.
-        /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
         public void ValidateBlock(SyncBlockTransactionsOperation item)
         {
             if (item.BlockInfo != null)
@@ -124,15 +94,6 @@ namespace Nako.Storage.Mongo
             }
         }
 
-        /// <summary>
-        /// The insert transactions.
-        /// </summary>
-        /// <param name="item">
-        /// The item.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
         public InsertStats InsertTransactions(SyncBlockTransactionsOperation item)
         {
             var stats = new InsertStats { Items = new List<MapTransactionAddress>() };
@@ -221,23 +182,11 @@ namespace Nako.Storage.Mongo
         
         #endregion
 
-        /// <summary>
-        /// The complete block.
-        /// </summary>
-        /// <param name="block">
-        /// The block.
-        /// </param>
         private void CompleteBlock(BlockInfo block)
         {
             this.data.CompleteBlock(block.Hash);
         }
 
-        /// <summary>
-        /// The complete block.
-        /// </summary>
-        /// <param name="block">
-        /// The block.
-        /// </param>
         private void CreateBlock(BlockInfo block)
         {
             var blockInfo = new MapBlock
@@ -255,18 +204,6 @@ namespace Nako.Storage.Mongo
             this.data.InsertBlock(blockInfo);
         }
 
-        /// <summary>
-        /// Gets a batch of transactions.
-        /// </summary>
-        /// <param name="maxItems">
-        /// The max Items.
-        /// </param>
-        /// <param name="queue">
-        /// The transaction queue.
-        /// </param>
-        /// <returns>
-        /// A batch of transactions.
-        /// </returns>
         private IEnumerable<DecodedRawTransaction> GetTransactionBatch(int maxItems, Queue<DecodedRawTransaction> queue)
         {
             var total = 0;
@@ -285,33 +222,12 @@ namespace Nako.Storage.Mongo
             return items;
         }
 
-        /// <summary>
-        /// The invalid block found.
-        /// </summary>
-        /// <param name="lastBlock">
-        /// The last block.
-        /// </param>
-        /// <param name="item">
-        /// The item.
-        /// </param>
         private void InvalidBlockFound(SyncBlockInfo lastBlock, SyncBlockTransactionsOperation item)
         {
             // Re-org happened.
             throw new SyncRestartException();
         }
 
-        /// <summary>
-        /// The create transaction inserts.
-        /// </summary>
-        /// <param name="block">
-        /// The block.
-        /// </param>
-        /// <param name="transactions">
-        /// The transactions.
-        /// </param>
-        /// <returns>
-        /// The collection.
-        /// </returns>
         private IEnumerable<SyncTransactionInfo> CreateTransactions(BlockInfo block, IEnumerable<DecodedRawTransaction> transactions)
         {
             var trxInfps = transactions.Select(trx => new SyncTransactionInfo
@@ -323,18 +239,6 @@ namespace Nako.Storage.Mongo
             return trxInfps;
         }
 
-        /// <summary>
-        /// The create transaction inserts.
-        /// </summary>
-        /// <param name="blockIndex">
-        /// The blockIndex.
-        /// </param>
-        /// <param name="transactions">
-        /// The block.
-        /// </param>
-        /// <returns>
-        /// The collection.
-        /// </returns>
         private IEnumerable<MapTransactionAddress> CreateInputs(long blockIndex, IEnumerable<DecodedRawTransaction> transactions)
         {
             foreach (var transaction in transactions)
@@ -366,15 +270,6 @@ namespace Nako.Storage.Mongo
             }
         }
 
-        /// <summary>
-        /// The create outputs.
-        /// </summary>
-        /// <param name="transactions">
-        /// The transactions.
-        /// </param>
-        /// <returns>
-        /// The dynamic.
-        /// </returns>
         private IEnumerable<dynamic> CreateOutputs(IEnumerable<DecodedRawTransaction> transactions)
         {
             foreach (var transaction in transactions)

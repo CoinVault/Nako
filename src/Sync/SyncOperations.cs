@@ -25,6 +25,8 @@ namespace Nako.Sync
     using Nako.Operations.Types;
     using Nako.Storage;
 
+    using Stopwatch = Nako.Extensions.Stopwatch;
+
     #endregion
 
     /// <summary>
@@ -32,33 +34,15 @@ namespace Nako.Sync
     /// </summary>
     public class SyncOperations : ISyncOperations
     {
-        /// <summary>
-        /// The storage.
-        /// </summary>
         private readonly IStorage storage;
 
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
-        /// <summary>
-        /// The configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncOperations"/> class.
         /// </summary>
-        /// <param name="storage">
-        /// The storage.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
-        /// <param name="nakoConfiguration">
-        /// The Configuration.
-        /// </param>
         public SyncOperations(IStorage storage, Tracer tracer, NakoConfiguration nakoConfiguration)
         {
             this.configuration = nakoConfiguration;
@@ -68,83 +52,26 @@ namespace Nako.Sync
 
         #region Public Methods and Operators
 
-        /// <summary>
-        /// The sync block.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="container">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public Task<SyncBlockOperation> FindBlock(SyncConnection connection, SyncingBlocks container)
         {
             return this.FindBlockInternal(connection, container);
         }
 
-        /// <summary>
-        /// The sync block.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="container">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public Task<SyncPoolTransactions> FindPoolTransactions(SyncConnection connection, SyncingBlocks container)
         {
             return this.FindPoolInternal(connection, container);
         }
 
-        /// <summary>
-        /// The sync memory pool.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="poolTransactions">
-        /// Transactions not confirmed yet.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public Task<SyncBlockTransactionsOperation> SyncPool(SyncConnection connection, SyncPoolTransactions poolTransactions)
         {
             return this.SyncPoolInternal(connection, poolTransactions);
         }
 
-        /// <summary>
-        /// The sync transactions.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="block">
-        /// The block.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public Task<SyncBlockTransactionsOperation> SyncBlock(SyncConnection connection, BlockInfo block)
         {
             return this.SyncBlockInternal(connection, block);
         }
 
-        /// <summary>
-        /// The check block reorganization.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public async Task CheckBlockReorganization(SyncConnection connection)
         {
             while (true)
@@ -173,24 +100,6 @@ namespace Nako.Sync
 
         #region Methods
 
-        /// <summary>
-        /// Get blocks to sync.
-        /// </summary>
-        /// <param name="client">
-        /// The client.
-        /// </param>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="lastCryptoBlockIndex">
-        /// last block index.
-        /// </param>
-        /// <param name="syncingBlocks">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// Collection of blocks to sync.
-        /// </returns>
         private async Task<SyncBlockOperation> GetNextBlockToSync(BitcoinClient client, SyncConnection connection, long lastCryptoBlockIndex, SyncingBlocks syncingBlocks)
         {
             if (syncingBlocks.LastBlock == null)
@@ -251,21 +160,9 @@ namespace Nako.Sync
             return new SyncBlockOperation { BlockInfo = nextBlock, LastCryptoBlockIndex = lastCryptoBlockIndex };
         }
 
-        /// <summary>
-        /// Synchronize blocks.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="syncingBlocks">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// Collection of synced blocks.
-        /// </returns>
         private async Task<SyncBlockOperation> FindBlockInternal(SyncConnection connection, SyncingBlocks syncingBlocks)
         {
-            var stoper = StopwatchExtension.CreateAndStart();
+            var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
 
@@ -283,21 +180,9 @@ namespace Nako.Sync
             return blockToSync;
         }
 
-        /// <summary>
-        /// Sync the memory pool.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="syncingBlocks">
-        /// The syncing Blocks.
-        /// </param>
-        /// <returns>
-        /// A task.
-        /// </returns>
         private async Task<SyncPoolTransactions> FindPoolInternal(SyncConnection connection, SyncingBlocks syncingBlocks)
         {
-            var stoper = StopwatchExtension.CreateAndStart();
+            var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
             var memPool = await client.GetRawMemPoolAsync();
@@ -320,24 +205,6 @@ namespace Nako.Sync
             return new SyncPoolTransactions { Transactions = newTransactionsLimited };
         }
 
-        /// <summary>
-        /// Sync a block transactions.
-        /// </summary>
-        /// <param name="client">
-        /// The client.
-        /// </param>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="transactionsToSync">
-        /// The transactions to sync.
-        /// </param>
-        /// <param name="throwIfNotFound">
-        /// The throw If Not Found.
-        /// </param>
-        /// <returns>
-        /// A task operation.
-        /// </returns>
         private async Task<SyncBlockTransactionsOperation> SyncBlockTransactions(BitcoinClient client, SyncConnection connection, IEnumerable<string> transactionsToSync, bool throwIfNotFound)
         {
             var transactions = new List<DecodedRawTransaction>();
@@ -348,7 +215,7 @@ namespace Nako.Sync
             {
                 var itemList = batch.ToList();
 
-                var stoper = new Stopwatch();
+                var stoper = new System.Diagnostics.Stopwatch();
                 stoper.Start();
 
                 var waits = itemList.Select(async item =>
@@ -386,21 +253,9 @@ namespace Nako.Sync
             return new SyncBlockTransactionsOperation { Transactions = transactions };
         }
 
-        /// <summary>
-        /// Sync the memory pool.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="poolTransactions">
-        /// The pool Transactions.
-        /// </param>
-        /// <returns>
-        /// A task.
-        /// </returns>
         private async Task<SyncBlockTransactionsOperation> SyncPoolInternal(SyncConnection connection, SyncPoolTransactions poolTransactions)
         {
-            var stoper = StopwatchExtension.CreateAndStart();
+            var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
 
@@ -413,21 +268,9 @@ namespace Nako.Sync
             return returnBlock;
         }
 
-        /// <summary>
-        /// Sync transactions in a block.
-        /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="block">
-        /// The block.
-        /// </param>
-        /// <returns>
-        /// A task.
-        /// </returns>
         private async Task<SyncBlockTransactionsOperation> SyncBlockInternal(SyncConnection connection, BlockInfo block)
         {
-            var stoper = StopwatchExtension.CreateAndStart();
+            var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
 

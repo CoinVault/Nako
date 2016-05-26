@@ -26,12 +26,6 @@ namespace Nako.Client
         /// <summary>
         /// Initializes a new instance of the <see cref="BitcoinCommunicationException"/> class.
         /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        /// <param name="ex">
-        /// The inner exception.
-        /// </param>
         public BitcoinCommunicationException(string message, Exception ex)
             : base(message, ex)
         {

@@ -16,9 +16,6 @@ namespace Nako.Api.Handlers.Types
 
     #endregion
 
-    /// <summary>
-    /// The Statistics.
-    /// </summary>
     public class Statistics
     {
         #region Public Properties
@@ -29,7 +26,7 @@ namespace Nako.Api.Handlers.Types
         public string CoinTag { get; set; }
 
         /// <summary>
-        /// Gets or sets the transactions in pool.
+        /// Gets or sets the number of transactions in pool.
         /// </summary>
         public int TransactionsInPool { get; set; }
 
@@ -39,7 +36,7 @@ namespace Nako.Api.Handlers.Types
         public long SyncBlockIndex { get; set; } 
 
         /// <summary>
-        /// Gets or sets the CoinTag.
+        /// Gets or sets some data bout a coin.
         /// </summary>
         public ClientInfo ClientInfo { get; set; }
 

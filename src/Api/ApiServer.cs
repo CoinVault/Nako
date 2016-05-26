@@ -32,47 +32,23 @@ namespace Nako.Api
     #endregion
 
     /// <summary>
-    /// The Server.
+    /// A server to start an OWIN selfhost api.
     /// </summary>
     public class ApiServer 
     {
-        /// <summary>
-        /// The application.
-        /// </summary>
         private readonly NakoApplication application;
 
-        /// <summary>
-        /// The configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
-        // This code configures Web API. The ApiServer class is specified as a type
-        // parameter in the WebApp.Start method.
+        //// This code configures Web API. The ApiServer class is specified as a type
+        //// parameter in the WebApp.Start method.
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ApiServer"/> class.
-        /// </summary>
-        /// <param name="nakoApplication">
-        /// The application.
-        /// </param>
-        /// <param name="nakoConfiguration">
-        /// The configuration.
-        /// </param>
         public ApiServer(NakoApplication nakoApplication, NakoConfiguration nakoConfiguration)
         {
             this.configuration = nakoConfiguration;
             this.application = nakoApplication;
         }
 
-        /// <summary>
-        /// The create operations.
-        /// </summary>
-        /// <param name="container">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public Task StartApi(IContainer container)
         {
             this.application.CreateApiToken();
@@ -85,9 +61,6 @@ namespace Nako.Api
                         var url = string.Format("http://+:{0}", this.configuration.SyncApiPort);
                         var options = new StartOptions(url);
 
-                        ////options.Urls.Add("http://localhost:9000");
-                        ////options.Urls.Add("http://127.0.0.1:9000");
-                        ////options.Urls.Add(string.Format("http://{0}:9000", Environment.MachineName));
                         options.Urls.ToList().ForEach(u => Console.WriteLine("Self host server running at {0}", u));
 
                         Console.WriteLine(@"Help: If url not working add to netsh - command = netsh http add urlacl url=http://+:{0}/ user=machine\username", this.configuration.SyncApiPort);
@@ -113,14 +86,8 @@ namespace Nako.Api
         }
 
         /// <summary>
-        /// The configuration.
+        /// Configuration of the OWIN api, setup swagger and autofac(DI).
         /// </summary>
-        /// <param name="appBuilder">
-        /// The app builder.
-        /// </param>
-        /// <param name="container">
-        /// The container.
-        /// </param>
         public void Configuration(IAppBuilder appBuilder, IContainer container)
         {
             // Configure Web API for self-host. 

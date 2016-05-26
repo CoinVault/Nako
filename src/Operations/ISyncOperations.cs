@@ -27,68 +27,26 @@ namespace Nako.Operations
         /// <summary>
         /// The sync block.
         /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="container">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         Task<SyncBlockOperation> FindBlock(SyncConnection connection, SyncingBlocks container);
 
         /// <summary>
         /// The sync block.
         /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="container">
-        /// The container.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         Task<SyncPoolTransactions> FindPoolTransactions(SyncConnection connection, SyncingBlocks container);
 
         /// <summary>
         /// The sync memory pool.
         /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="poolTransactions">
-        /// Transactions not confirmed yet.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         Task<SyncBlockTransactionsOperation> SyncPool(SyncConnection connection, SyncPoolTransactions poolTransactions);
 
         /// <summary>
         /// The sync transactions.
         /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <param name="block">
-        /// The block.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         Task<SyncBlockTransactionsOperation> SyncBlock(SyncConnection connection, BlockInfo block);
 
         /// <summary>
         /// The check block reorganization.
         /// </summary>
-        /// <param name="connection">
-        /// The connection.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         Task CheckBlockReorganization(SyncConnection connection);
     }
 }

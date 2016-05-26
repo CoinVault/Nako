@@ -19,22 +19,16 @@ namespace Nako.Api.Handlers
     #endregion
 
     /// <summary>
-    /// The exchange rates controller.
+    /// Controller to expose an api that queries the blockchain.
     /// </summary>
     [RoutePrefix("api/query")]
     public class QueryController : ApiController
     {
-        /// <summary>
-        /// The handler.
-        /// </summary>
         private readonly QueryHandler handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryController"/> class.
         /// </summary>
-        /// <param name="queryHandler">
-        /// The query handler.
-        /// </param>
         public QueryController(QueryHandler queryHandler)
         {
             this.handler = queryHandler;

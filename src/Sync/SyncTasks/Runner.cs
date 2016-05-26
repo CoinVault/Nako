@@ -35,19 +35,13 @@ namespace Nako.Sync.SyncTasks
         private readonly IEnumerable<TaskRunner> taskRunners;
 
         /// <summary>
-        /// The taskStarters.
+        /// The task starters.
         /// </summary>
         private readonly IEnumerable<TaskStarter> taskStarters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Runner"/> class.
         /// </summary>
-        /// <param name="taskStarters">
-        /// The task Starters.
-        /// </param>
-        /// <param name="taskRunners">
-        /// The task runners.
-        /// </param>
         public Runner(TaskStarter[] taskStarters, TaskRunner[] taskRunners)
         {
             this.taskStarters = taskStarters;
@@ -55,28 +49,13 @@ namespace Nako.Sync.SyncTasks
             this.SyncingBlocks = new SyncingBlocks { CurrentSyncing = new ConcurrentDictionary<string, BlockInfo>(), CurrentPoolSyncing = new List<string>() };
         }
 
-        /// <summary>
-        /// Gets or sets the blocks.
-        /// </summary>
         public SyncingBlocks SyncingBlocks { get; set; }
 
-        /// <summary>
-        /// The get.
-        /// </summary>
-        /// <typeparam name="T">
-        /// The runner type.
-        /// </typeparam>
-        /// <returns>
-        /// The <see cref="T"/>.
-        /// </returns>
         public T Get<T>() where T : TaskRunner
         {
             return this.taskRunners.OfType<T>().Single();
         }
 
-        /// <summary>
-        /// The block and deplete.
-        /// </summary>
         public void BlockAndDeplete()
         {
             this.SyncingBlocks.Blocked = true;
@@ -89,9 +68,6 @@ namespace Nako.Sync.SyncTasks
             this.SyncingBlocks.CurrentSyncing.Clear();
         }
 
-        /// <summary>
-        /// The un block.
-        /// </summary>
         public void UnBlock()
         {
             this.taskRunners.OfType<IBlockableItem>().ForEach(f => f.Blocked = false);
@@ -99,14 +75,8 @@ namespace Nako.Sync.SyncTasks
         }
 
         /// <summary>
-        /// The run all.
+        /// Run all tasks.
         /// </summary>
-        /// <param name="cancellationToken">
-        /// The cancellation token.
-        /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
         public IEnumerable<Task> RunAll(CancellationTokenSource cancellationToken)
         {
             // execute all the starters sequentially

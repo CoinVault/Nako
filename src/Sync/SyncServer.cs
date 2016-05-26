@@ -31,19 +31,10 @@ namespace Nako.Sync
     {
         #region Fields
 
-        /// <summary>
-        /// Gets or sets the configuration.
-        /// </summary>
         private readonly NakoConfiguration configuration;
 
-        /// <summary>
-        /// The application.
-        /// </summary>
         private readonly NakoApplication application;
 
-        /// <summary>
-        /// The tracer.
-        /// </summary>
         private readonly Tracer tracer;
 
         #endregion
@@ -53,15 +44,6 @@ namespace Nako.Sync
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncServer"/> class.
         /// </summary>
-        /// <param name="nakoConfiguration">
-        /// The sync Configuration.
-        /// </param>
-        /// <param name="nakoApplication">
-        /// The Application.
-        /// </param>
-        /// <param name="tracer">
-        /// The tracer.
-        /// </param>
         public SyncServer(NakoConfiguration nakoConfiguration, NakoApplication nakoApplication, Tracer tracer)
         {
             this.tracer = tracer;

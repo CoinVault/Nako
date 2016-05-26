@@ -29,12 +29,12 @@ namespace Nako.Operations.Types
         public int Transactions { get; set; }
 
         /// <summary>
-        /// Gets or sets the transactions.
+        /// Gets or sets the inputs.
         /// </summary>
         public int Inputs { get; set; }
 
         /// <summary>
-        /// Gets or sets the transactions.
+        /// Gets or sets the outputs.
         /// </summary>
         public int Outputs { get; set; }
 

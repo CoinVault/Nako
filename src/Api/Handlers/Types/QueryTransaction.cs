@@ -17,9 +17,6 @@ namespace Nako.Api.Handlers.Types
 
     #endregion
 
-    /// <summary>
-    /// The query transaction.
-    /// </summary>
     public class QueryTransaction
     {
         #region Public Properties
@@ -50,17 +47,17 @@ namespace Nako.Api.Handlers.Types
         public string TransactionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the coin base.
+        /// Gets or sets the confirmations.
         /// </summary>
         public long Confirmations { get; set; }
 
         /// <summary>
-        /// Gets or sets the block.
+        /// Gets or sets the transaction inputs.
         /// </summary>
         public IEnumerable<QueryTransactionInput> Inputs { get; set; }
 
         /// <summary>
-        /// Gets or sets the block.
+        /// Gets or sets the transaction outputs.
         /// </summary>
         public IEnumerable<QueryTransactionOutput> Outputs { get; set; }
 

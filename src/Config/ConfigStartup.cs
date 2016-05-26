@@ -19,20 +19,11 @@ namespace Nako.Config
 
     #endregion
 
-    /// <summary>
-    /// The config.
-    /// </summary>
     public class ConfigStartup
     {
         /// <summary>
         /// The load configuration.
         /// </summary>
-        /// <param name="location">
-        /// The location.
-        /// </param>
-        /// <returns>
-        /// The <see cref="NakoConfiguration"/>.
-        /// </returns>
         public static NakoConfiguration LoadConfiguration(string location)
         {
             if (location != null)
