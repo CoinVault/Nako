@@ -13,7 +13,6 @@ namespace Nako.Sync
     #region Using Directives
 
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -24,8 +23,6 @@ namespace Nako.Sync
     using Nako.Operations;
     using Nako.Operations.Types;
     using Nako.Storage;
-
-    using Stopwatch = Nako.Extensions.Stopwatch;
 
     #endregion
 

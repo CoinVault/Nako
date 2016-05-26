@@ -10,13 +10,7 @@
 
 namespace Nako.Extensions
 {
-    #region Using Directives
-
-    using System.Diagnostics;
-
-    #endregion
-
-    public partial class Stopwatch
+    public class Stopwatch
     {
         #region Public Methods and Operators
 

@@ -42,7 +42,6 @@ namespace Nako.Api
 
         //// This code configures Web API. The ApiServer class is specified as a type
         //// parameter in the WebApp.Start method.
-
         public ApiServer(NakoApplication nakoApplication, NakoConfiguration nakoConfiguration)
         {
             this.configuration = nakoConfiguration;
