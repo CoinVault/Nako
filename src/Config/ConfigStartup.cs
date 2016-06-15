@@ -26,7 +26,7 @@ namespace Nako.Config
         /// </summary>
         public static NakoConfiguration LoadConfiguration(string location)
         {
-            if (location != null)
+            if (!string.IsNullOrEmpty(location))
             {
                 Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 config.AppSettings.File = location;
