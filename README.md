@@ -2,7 +2,7 @@
 A server application to index Blockchain transactions by addresses for Bitcoin and Altcoins.  
 Nako exposes a REST api to query the blockchain data.
 
-CoinVault uses Nako as a block explorer, Nako is light wait and uses mongodb to index transactions by addresses.
+CoinVault uses Nako as a block Explorer, Nako is lightweight and uses mongodb to index transactions by addresses.
 
 ### Features
 - Language C#
