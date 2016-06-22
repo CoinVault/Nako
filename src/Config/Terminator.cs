@@ -13,6 +13,7 @@ namespace Nako.Config
     #region Using Directives
 
     using System;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     #endregion
@@ -21,8 +22,11 @@ namespace Nako.Config
     {
         private readonly NakoApplication nakoApplication;
 
-        public Terminator(NakoApplication application)
+        private readonly Tracer tracer;
+
+        public Terminator(NakoApplication application, Tracer tracer)
         {
+            this.tracer = tracer;
             this.nakoApplication = application;
         }
 
@@ -30,9 +34,14 @@ namespace Nako.Config
         {
             Task.Run(() =>
             {
-                Console.WriteLine("Press any key to exist");
-                Console.Read();
-                
+                SetConsoleCtrlHandler(ConsoleCtrlCheck, true);
+
+                this.tracer.Trace("Terminator", "Press any key to exist");
+
+                this.tracer.ReadLine();
+
+                this.tracer.Trace("Terminator", "Terminating by command");
+
                 if (this.nakoApplication.SyncTokenSource != null)
                 {
                     this.nakoApplication.SyncTokenSource.Cancel();
@@ -41,5 +50,54 @@ namespace Nako.Config
                 this.nakoApplication.ExitApplication = true;
             });
         }
+
+        private bool ConsoleCtrlCheck(CtrlTypes ctrlType)
+        {
+            // When the application is signalled a Ctrl-C or the proccesses is terminated
+
+            switch (ctrlType)
+            {
+                case CtrlTypes.CTRL_C_EVENT:
+                case CtrlTypes.CTRL_BREAK_EVENT:
+                case CtrlTypes.CTRL_CLOSE_EVENT:
+                case CtrlTypes.CTRL_LOGOFF_EVENT:
+                case CtrlTypes.CTRL_SHUTDOWN_EVENT:
+
+                    this.tracer.Trace("Terminator", "Terminating by event");
+
+                    if (this.nakoApplication.SyncTokenSource != null)
+                    {
+                        this.nakoApplication.SyncTokenSource.Cancel();
+                    }
+
+                    this.nakoApplication.ExitApplication = true;
+
+                    break;
+            }
+
+            return true;
+        }
+
+        #region unmanaged
+
+        // Declare the SetConsoleCtrlHandler function as external and receiving a delegate.
+        [DllImport("Kernel32")]
+        public static extern bool SetConsoleCtrlHandler(HandlerRoutine Handler, bool Add);
+
+        // A delegate type to be used as the handler routine for SetConsoleCtrlHandler.
+        public delegate bool HandlerRoutine(CtrlTypes CtrlType);
+
+        // An enumerated type for the control messages sent to the handler routine.
+        public enum CtrlTypes
+        {
+
+            CTRL_C_EVENT = 0,
+            CTRL_BREAK_EVENT,
+            CTRL_CLOSE_EVENT,
+            CTRL_LOGOFF_EVENT = 5,
+            CTRL_SHUTDOWN_EVENT
+        }
+
+        #endregion
     }
 }

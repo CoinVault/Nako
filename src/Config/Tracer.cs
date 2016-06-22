@@ -30,6 +30,12 @@ namespace Nako.Config
             Console.WriteLine("{0} {1} {2} : {3}", DateTime.UtcNow.ToString(@"d\.hh\:mm\:ss"), this.configuration.CoinTag, command, message);
         }
 
+        public void TraceError(string command, string message, ConsoleColor consoleColor = ConsoleColor.Red)
+        {
+            Console.ForegroundColor = consoleColor;
+            Console.WriteLine("{0} {1} {2} : {3}", DateTime.UtcNow.ToString(@"d\.hh\:mm\:ss"), this.configuration.CoinTag, command, message);
+        }
+
         public string ReadLine()
         {
             return Console.ReadLine();

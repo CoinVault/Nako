@@ -40,11 +40,14 @@ namespace Nako.Api
 
         private readonly NakoConfiguration configuration;
 
+        private readonly Tracer tracer;
+
         //// This code configures Web API. The ApiServer class is specified as a type
         //// parameter in the WebApp.Start method.
-        public ApiServer(NakoApplication nakoApplication, NakoConfiguration nakoConfiguration)
+        public ApiServer(NakoApplication nakoApplication, NakoConfiguration nakoConfiguration, Tracer tracer)
         {
             this.configuration = nakoConfiguration;
+            this.tracer = tracer;
             this.application = nakoApplication;
         }
 
@@ -60,12 +63,10 @@ namespace Nako.Api
                         var url = string.Format("http://+:{0}", this.configuration.SyncApiPort);
                         var options = new StartOptions(url);
 
-                        options.Urls.ToList().ForEach(u => Console.WriteLine("Self host server running at {0}", u));
-
-                        Console.WriteLine(@"Help: If url not working add to netsh - command = netsh http add urlacl url=http://+:{0}/ user=machine\username", this.configuration.SyncApiPort);
-
                         using (WebApp.Start(options, appBuilder => this.Configuration(appBuilder, container)))
                         {
+                            this.tracer.Trace("API", string.Format("Self host server running at {0}", url));
+
                             Task.Delay(Timeout.Infinite, this.application.ApiToken).Wait(this.application.ApiToken);
                         }
                     }
@@ -76,8 +77,8 @@ namespace Nako.Api
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.ToString());
-                        Console.ReadLine();
+                        this.tracer.TraceError("API", ex.ToString());
+                        //Console.ReadLine();
                         throw;
                     }
                 }, 

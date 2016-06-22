@@ -108,22 +108,29 @@ namespace Nako.Sync
 
                                 foreach (var innerException in ae.Flatten().InnerExceptions)
                                 {
-                                    this.tracer.Trace("Sync", innerException.ToString());
+                                    this.tracer.TraceError("Sync", innerException.ToString());
                                 }
 
-                                this.tracer.Trace("Sync", "Signalling token cancelation");
+                                //this.tracer.TraceError("Sync", "Signalling token cancelation");
 
                                 tokenSource.Cancel();
 
-                                this.tracer.Trace("Sync", "Press any key to exist");
-                                this.tracer.ReadLine();
+                                var retryInterval = 60;
 
-                                break;
+                                this.tracer.TraceError("Sync", string.Format("Unexpected error retry in {0} seconds", retryInterval));
+                                //this.tracer.ReadLine();
+
+                                // we want Nako to continue running even if errors are found.
+                                // so if an unepxected error happened we log it wait and start again
+
+                                Task.Delay(TimeSpan.FromSeconds(retryInterval), this.application.SyncToken).Wait(this.application.SyncToken);
+
+                                continue;
                             }
                             catch (Exception ex)
                             {
-                                this.tracer.Trace("Sync", ex.ToString());
-                                this.tracer.Trace("Sync", "Press any key to exist");
+                                this.tracer.TraceError("Sync", ex.ToString());
+                                this.tracer.TraceError("Sync", "Press any key to exist");
                                 this.tracer.ReadLine();
                                 break;
                             }

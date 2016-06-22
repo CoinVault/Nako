@@ -37,9 +37,9 @@ namespace Nako
         /// </summary>
         internal static void Main(string[] args)
         {
-            Console.BufferHeight = 1000;
-            Console.WindowHeight = 25;
-            Console.WindowWidth = 150;
+            //Console.BufferHeight = 1000;
+            //Console.WindowHeight = 25;
+            //Console.WindowWidth = 150;
 
             var location = GetConfigPath(args);
 
@@ -56,7 +56,7 @@ namespace Nako
             container.Resolve<NakoApplication>().ApiTokenSource.Cancel();
             container.Resolve<NakoApplication>().ApiToken.WaitHandle.WaitOne();
 
-            Console.Read();
+            //Console.Read();
         }
 
         private static string GetConfigPath(string[] args)
