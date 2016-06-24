@@ -1,0 +1,25 @@
+FROM coinvault/client-base:latest
+
+ENV COIN_URL https://download.litecoin.org/litecoin-0.10.4.0/linux/litecoin-0.10.4.0-linux64.tar.gz
+
+RUN set -ex \
+
+	# get the binaries extract and delete the download file
+	&& wget -O downloadfile $COIN_URL \
+	&& tar -xzvf downloadfile -C /usr/local --strip-components=1 --exclude=*-qt \
+	&& rm downloadfile \
+
+	# remove build dependencies
+	&& apt-get purge -y --auto-remove wget
+
+RUN  mkdir /root/.litecoin/
+
+COPY litecoin.conf /root/.litecoin/
+
+VOLUME /root/.litecoin
+
+WORKDIR /usr/local/bin
+
+EXPOSE 9332 9333
+
+CMD ["litecoind"]

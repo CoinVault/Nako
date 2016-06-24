@@ -1,0 +1,15 @@
+FROM mono:4
+
+RUN mkdir -p /usr/src/app/source /usr/src/app/build
+#WORKDIR /usr/src/app/source
+
+#COPY /Release /usr/src/app/source
+COPY /Release /usr/src/app/build
+#RUN nuget restore -NonInteractive
+#RUN xbuild /property:Configuration=Release /property:OutDir=/usr/src/app/build/
+WORKDIR /usr/src/app/build
+
+EXPOSE 9000
+
+CMD [ "mono",  "./Nako.exe" ]
+
