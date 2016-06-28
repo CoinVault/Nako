@@ -116,19 +116,19 @@ namespace Nako.Client
         /// <inheritdoc />
         public async Task BackupWalletAsync(string destination)
         {
-            await this.Call("backupwallet", destination);
+            await this.CallAsync("backupwallet", destination);
         }
 
         /// <inheritdoc />
         public async Task<string> CreateRawTransactionAsync(CreateRawTransaction rawTransaction)
         {
-            return await this.Call<string>("createrawtransaction", rawTransaction.Inputs, rawTransaction.Outputs);
+            return await this.CallAsync<string>("createrawtransaction", rawTransaction.Inputs, rawTransaction.Outputs);
         }
 
         /// <inheritdoc />
         public async Task<DecodedRawTransaction> DecodeRawTransactionAsync(string rawTransactionHex)
         {
-            var res = await this.Call<DecodedRawTransaction>("decoderawtransaction", rawTransactionHex);
+            var res = await this.CallAsync<DecodedRawTransaction>("decoderawtransaction", rawTransactionHex);
             return res;
         }
 
@@ -140,31 +140,31 @@ namespace Nako.Client
         /// <inheritdoc />
         public async Task<string> DumpPrivkeyAsync(string address)
         {
-            return await this.Call<string>("dumpprivkey", address);
+            return await this.CallAsync<string>("dumpprivkey", address);
         }
 
         /// <inheritdoc />
         public async Task EncryptWalletAsync(string passphrase)
         {
-            await this.Call("encryptwallet", passphrase);
+            await this.CallAsync("encryptwallet", passphrase);
         }
 
         /// <inheritdoc />
         public async Task<string> GetAccountAddressAsync(string account)
         {
-            return await this.Call<string>("getaccountaddress", account);
+            return await this.CallAsync<string>("getaccountaddress", account);
         }
 
         /// <inheritdoc />
         public async Task<string> GetAccountAsync(string address)
         {
-            return await this.Call<string>("getaccount", address);
+            return await this.CallAsync<string>("getaccount", address);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<string>> GetAddressesByAccountAsync(string account)
         {
-            return await this.Call<IEnumerable<string>>("getaddressesbyaccount", account);
+            return await this.CallAsync<IEnumerable<string>>("getaddressesbyaccount", account);
         }
 
         /// <inheritdoc />
@@ -172,20 +172,32 @@ namespace Nako.Client
         {
             if (account == null)
             {
-                return await this.Call<decimal>("getbalance");
+                return await this.CallAsync<decimal>("getbalance");
             }
 
-            return await this.Call<decimal>("getbalance", account, minconf);
+            return await this.CallAsync<decimal>("getbalance", account, minconf);
         }
 
         /// <inheritdoc />
         public async Task<BlockInfo> GetBlockAsync(string hash)
         {
-            return await this.Call<BlockInfo>("getblock", hash);
+            return await this.CallAsync<BlockInfo>("getblock", hash);
+        }
+
+        /// <inheritdoc />
+        public Task<BlockInfo> GetBlock(string hash)
+        {
+            return this.Call<BlockInfo>("getblock", hash);
         }
 
         /// <inheritdoc />
         public async Task<int> GetBlockCountAsync()
+        {
+            return await this.CallAsync<int>("getblockcount");
+        }
+
+        /// <inheritdoc />
+        public async Task<int> GetBlockCount()
         {
             return await this.Call<int>("getblockcount");
         }
@@ -193,55 +205,67 @@ namespace Nako.Client
         /// <inheritdoc />
         public async Task<string> GetblockHashAsync(long index)
         {
-            return await this.Call<string>("getblockhash", index);
+            return await this.CallAsync<string>("getblockhash", index);
+        }
+
+        /// <inheritdoc />
+        public Task<string> GetblockHash(long index)
+        {
+            return this.Call<string>("getblockhash", index);
         }
 
         /// <inheritdoc />
         public async Task<int> GetConnectionCountAsync()
         {
-            return await this.Call<int>("getconnectioncount");
+            return await this.CallAsync<int>("getconnectioncount");
         }
 
         /// <inheritdoc />
         public async Task<decimal> GetDifficultyAsync()
         {
-            return await this.Call<decimal>("getdifficulty");
+            return await this.CallAsync<decimal>("getdifficulty");
         }
 
         /// <inheritdoc />
         public async Task<bool> GetGenerateAsync()
         {
-            return await this.Call<bool>("getgenerate");
+            return await this.CallAsync<bool>("getgenerate");
         }
 
         /// <inheritdoc />
         public async Task<decimal> GetHashesPerSecAsync()
         {
-            return await this.Call<decimal>("gethashespersec");
+            return await this.CallAsync<decimal>("gethashespersec");
         }
 
         /// <inheritdoc />
         public async Task<ClientInfo> GetInfoAsync()
         {
-            return await this.Call<ClientInfo>("getinfo");
+            return await this.CallAsync<ClientInfo>("getinfo");
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<PeerInfo>> GetPeerInfo()
         {
-            return await this.Call<IEnumerable<PeerInfo>>("getpeerinfo");
+            return await this.CallAsync<IEnumerable<PeerInfo>>("getpeerinfo");
         }
 
         /// <inheritdoc />
         public async Task<string> GetNewAddressAsync(string account)
         {
-            return await this.Call<string>("getnewaddress", account);
+            return await this.CallAsync<string>("getnewaddress", account);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<string>> GetRawMemPoolAsync()
         {
-            return await this.Call<IEnumerable<string>>("getrawmempool");
+            return await this.CallAsync<IEnumerable<string>>("getrawmempool");
+        }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<string>> GetRawMemPool()
+        {
+            return this.Call<IEnumerable<string>>("getrawmempool");
         }
 
         /// <inheritdoc />
@@ -249,11 +273,24 @@ namespace Nako.Client
         {
             if (verbose == 0)
             {
-                var hex = await this.Call<string>("getrawtransaction", txid, verbose);
+                var hex = await this.CallAsync<string>("getrawtransaction", txid, verbose);
                 return new DecodedRawTransaction { Hex = hex };
             }
 
-            var res = await this.Call<DecodedRawTransaction>("getrawtransaction", txid, verbose);
+            var res = await this.CallAsync<DecodedRawTransaction>("getrawtransaction", txid, verbose);
+
+            return res;
+        }
+
+        public Task<DecodedRawTransaction> GetRawTransaction(string txid, int verbose = 0)
+        {
+            if (verbose == 0)
+            {
+                var hex = this.Call<string>("getrawtransaction", txid, verbose);
+                return Task.FromResult(new DecodedRawTransaction { Hex = hex.Result });
+            }
+
+            var res = this.Call<DecodedRawTransaction>("getrawtransaction", txid, verbose);
 
             return res;
         }
@@ -261,122 +298,122 @@ namespace Nako.Client
         /// <inheritdoc />
         public async Task<decimal> GetReceivedByAccountAsync(string account, int minconf = 1)
         {
-            return await this.Call<decimal>("getreceivedbyaccount", account, minconf);
+            return await this.CallAsync<decimal>("getreceivedbyaccount", account, minconf);
         }
 
         /// <inheritdoc />
         public async Task<decimal> GetReceivedByAddressAsync(string address, int minconf = 1)
         {
-            return await this.Call<decimal>("getreceivedbyaddress", address, minconf);
+            return await this.CallAsync<decimal>("getreceivedbyaddress", address, minconf);
         }
 
         /// <inheritdoc />
         public async Task<TransactionInfo> GetTransactionAsync(string txid)
         {
-            return await this.Call<TransactionInfo>("gettransaction", txid);
+            return await this.CallAsync<TransactionInfo>("gettransaction", txid);
         }
 
         /// <inheritdoc />
         public async Task<TransactionOutputInfo> GetTxOutAsync(string txid, int outputIndex, bool includemempool = true)
         {
-            return await this.Call<TransactionOutputInfo>("gettxout", txid, outputIndex, includemempool);
+            return await this.CallAsync<TransactionOutputInfo>("gettxout", txid, outputIndex, includemempool);
         }
 
         /// <inheritdoc />
         public async Task<WorkInfo> GetWorkAsync()
         {
-            return await this.Call<WorkInfo>("getwork");
+            return await this.CallAsync<WorkInfo>("getwork");
         }
 
         /// <inheritdoc />
         public async Task<bool> GetWorkAsync(string data)
         {
-            return await this.Call<bool>("getwork", data);
+            return await this.CallAsync<bool>("getwork", data);
         }
 
         /// <inheritdoc />
         public async Task<string> HelpAsync(string command = "")
         {
-            return await this.Call<string>("help", command);
+            return await this.CallAsync<string>("help", command);
         }
 
         /// <inheritdoc />
         public async Task ImportPrivkeyAsync(string bitcoinprivkey, string label, bool rescan = true)
         {
-            await this.Call("importprivkey", bitcoinprivkey, label, rescan);
+            await this.CallAsync("importprivkey", bitcoinprivkey, label, rescan);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<TransactionAccountInfo>> ListAccountsAsync(int minconf = 1)
         {
-            return await this.Call<IEnumerable<TransactionAccountInfo>>("listaccounts", minconf);
+            return await this.CallAsync<IEnumerable<TransactionAccountInfo>>("listaccounts", minconf);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<TransactionInfo>> ListReceivedByAccountAsync(int minconf = 1, bool includeEmpty = false)
         {
-            return await this.Call<IEnumerable<TransactionInfo>>("listreceivedbyaccount", minconf, includeEmpty);
+            return await this.CallAsync<IEnumerable<TransactionInfo>>("listreceivedbyaccount", minconf, includeEmpty);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<TransactionInfo>> ListReceivedByAddressAsync(int minconf = 1, bool includeEmpty = false)
         {
-            return await this.Call<IEnumerable<TransactionInfo>>("listreceivedbyaddress", minconf, includeEmpty);
+            return await this.CallAsync<IEnumerable<TransactionInfo>>("listreceivedbyaddress", minconf, includeEmpty);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<TransactionAccountInfo>> ListTransactionsAsync(string account, int count = 10)
         {
-            return await this.Call<IEnumerable<TransactionAccountInfo>>("listtransactions", account, count);
+            return await this.CallAsync<IEnumerable<TransactionAccountInfo>>("listtransactions", account, count);
         }
 
         /// <inheritdoc />
         public async Task<IEnumerable<TransactionUnspentInfo>> ListUnspent(int minconf = 1, int maxconf = 999999)
         {
-            return await this.Call<IEnumerable<TransactionUnspentInfo>>("listunspent", minconf, maxconf);
+            return await this.CallAsync<IEnumerable<TransactionUnspentInfo>>("listunspent", minconf, maxconf);
         }
 
         /// <inheritdoc />
         public async Task<bool> MoveAsync(string fromAccount, string toAccount, decimal amount, int minconf = 1, string comment = "")
         {
-            return await this.Call<bool>("move", fromAccount, toAccount, amount, minconf, comment);
+            return await this.CallAsync<bool>("move", fromAccount, toAccount, amount, minconf, comment);
         }
         
 
         /// <inheritdoc />
         public async Task<string> SendFromAsync(string fromAccount, string toAddress, decimal amount, int minconf = 1, string comment = "", string commentTo = "")
         {
-            return await this.Call<string>("sendfrom", fromAccount, toAddress, amount, minconf, comment, commentTo);
+            return await this.CallAsync<string>("sendfrom", fromAccount, toAddress, amount, minconf, comment, commentTo);
         }
 
         /// <inheritdoc />
         public async Task<string> SendToAddressAsync(string address, decimal amount, string comment, string commentTo)
         {
-            return await this.Call<string>("sendtoaddress", address, amount, comment, commentTo);
+            return await this.CallAsync<string>("sendtoaddress", address, amount, comment, commentTo);
         }
 
         /// <inheritdoc />
         public async Task<string> SentRawTransactionAsync(string hexString)
         {
-            return await this.Call<string>("sendrawtransaction", hexString);
+            return await this.CallAsync<string>("sendrawtransaction", hexString);
         }
 
         /// <inheritdoc />
         public async Task SetAccountAsync(string address, string account)
         {
-            await this.Call("setaccount", address, account);
+            await this.CallAsync("setaccount", address, account);
         }
 
         /// <inheritdoc />
         public async Task SetGenerateAsync(bool generate, int genproclimit = 1)
         {
-            await this.Call("setgenerate", generate, genproclimit);
+            await this.CallAsync("setgenerate", generate, genproclimit);
         }
 
         /// <inheritdoc />
         public async Task SetTxFeeAsync(decimal amount)
         {
-            await this.Call("settxfee", amount);
+            await this.CallAsync("settxfee", amount);
         }
 
         /// <inheritdoc />
@@ -386,38 +423,38 @@ namespace Nako.Client
             var inputs = rawTransaction.Inputs.Any() ? rawTransaction.Inputs : null;
             var privateKeys = rawTransaction.PrivateKeys.Any() ? rawTransaction.PrivateKeys : null;
 
-            var res = await this.Call<SignedRawTransaction>("signrawtransaction", hex, inputs, privateKeys);
+            var res = await this.CallAsync<SignedRawTransaction>("signrawtransaction", hex, inputs, privateKeys);
             return res;
         }
 
         /// <inheritdoc />
         public async Task StopAsync()
         {
-            await this.Call("stop");
+            await this.CallAsync("stop");
         }
 
         /// <inheritdoc />
         public async Task<ValidateAddressResult> ValidateAddressAsync(string address)
         {
-            return await this.Call<ValidateAddressResult>("validateaddress", address);
+            return await this.CallAsync<ValidateAddressResult>("validateaddress", address);
         }
 
         /// <inheritdoc />
         public async Task WalletLockAsync()
         {
-            await this.Call("walletlock");
+            await this.CallAsync("walletlock");
         }
 
         /// <inheritdoc />
         public async Task WalletPassphraseAsync(string passphrase, int sectimeout)
         {
-            await this.Call("walletpassphrase", passphrase, sectimeout);
+            await this.CallAsync("walletpassphrase", passphrase, sectimeout);
         }
 
         /// <inheritdoc />
         public async Task WalletPassphraseChangeAsync(string passphrase, string newPassphrase)
         {
-            await this.Call("walletpassphrasechange", passphrase, newPassphrase);
+            await this.CallAsync("walletpassphrasechange", passphrase, newPassphrase);
         }
 
         #endregion
@@ -441,7 +478,7 @@ namespace Nako.Client
         /// <summary>
         /// Send the request and wrap any exception.
         /// </summary>
-        private static async Task<HttpResponseMessage> Send(HttpClient client, Uri url, HttpContent content)
+        private static async Task<HttpResponseMessage> SendAsync(HttpClient client, Uri url, HttpContent content)
         {
             try
             {
@@ -454,9 +491,24 @@ namespace Nako.Client
         }
 
         /// <summary>
+        /// Send the request and wrap any exception.
+        /// </summary>
+        private static Task<HttpResponseMessage> Send(HttpClient client, Uri url, HttpContent content)
+        {
+            try
+            {
+                return client.PostAsync(url, content);
+            }
+            catch (Exception ex)
+            {
+                throw new BitcoinCommunicationException(string.Format("Bitcoin Failed Url = '{0}'", url), ex);
+            }
+        }
+
+        /// <summary>
         /// Make a call to crypto API.
         /// </summary>
-        private async Task<T> Call<T>(string method, params object[] parameters)
+        private async Task<T> CallAsync<T>(string method, params object[] parameters)
         {
             var rpcReq = new JsonRpcRequest(1, method, parameters);
 
@@ -469,8 +521,8 @@ namespace Nako.Client
             {
                 request.Headers.ContentType = new MediaTypeHeaderValue("application/json-rpc");
 
-                var response = await Send(this.Client, this.Url, request);
-                var ret = await this.CheckResponseOk<T>(response);
+                var response = await SendAsync(this.Client, this.Url, request);
+                var ret = await this.CheckResponseOkAsync<T>(response);
 
                 return ret;
             }
@@ -479,7 +531,30 @@ namespace Nako.Client
         /// <summary>
         /// Make a call to crypto API.
         /// </summary>
-        private async Task Call(string method, params object[] parameters)
+        private Task<T> Call<T>(string method, params object[] parameters)
+        {
+            var rpcReq = new JsonRpcRequest(1, method, parameters);
+
+            var serialized = JsonConvert.SerializeObject(rpcReq);
+
+            // serialize json for the request
+            var byteArray = Encoding.UTF8.GetBytes(serialized);
+
+            using (var request = new StreamContent(new MemoryStream(byteArray)))
+            {
+                request.Headers.ContentType = new MediaTypeHeaderValue("application/json-rpc");
+
+                var response = Send(this.Client, this.Url, request);
+                var ret = this.CheckResponseOk<T>(response.Result);
+
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// Make a call to crypto API.
+        /// </summary>
+        private async Task CallAsync(string method, params object[] parameters)
         {
             var rpcReq = new JsonRpcRequest(1, method, parameters);
 
@@ -492,15 +567,15 @@ namespace Nako.Client
             {
                 request.Headers.ContentType = new MediaTypeHeaderValue("application/json-rpc");
 
-                var response = await Send(this.Client, this.Url, request);
-                await this.CheckResponseOk<string>(response);
+                var response = await SendAsync(this.Client, this.Url, request);
+                await this.CheckResponseOkAsync<string>(response);
             }
         }
 
         /// <summary>
         /// Check the crypto client response is ok.
         /// </summary>
-        private async Task<T> CheckResponseOk<T>(HttpResponseMessage response)
+        private async Task<T> CheckResponseOkAsync<T>(HttpResponseMessage response)
         {
             try
             {
@@ -519,6 +594,41 @@ namespace Nako.Client
                         }
 
                         return ret.Result;
+                    }
+                }
+            }
+            catch (BitcoinClientException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new BitcoinClientException(string.Format("Failed parsing the result, StatusCode={0}, row message={1}", response.StatusCode, response.Content.ReadAsStringAsync().Result), ex);
+            }
+        }
+
+        /// <summary>
+        /// Check the crypto client response is ok.
+        /// </summary>
+        private Task<T> CheckResponseOk<T>(HttpResponseMessage response)
+        {
+            try
+            {
+                using (var jsonStream = response.Content.ReadAsStreamAsync().Result)
+                {
+                    using (var jsonStreamReader = new StreamReader(jsonStream))
+                    {
+                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(jsonStreamReader.ReadToEndAsync().Result);
+
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            var code = ret != null && ret.Error != null ? ret.Error.Code : 0;
+                            var msg = ret != null && ret.Error != null ? ret.Error.Message : "Error";
+
+                            throw CreateException(response, code, msg);
+                        }
+
+                        return Task.FromResult(ret.Result);
                     }
                 }
             }

@@ -74,7 +74,7 @@ namespace Nako.Sync.SyncTasks
                     string.Format("Seconds = {0} - BlockIndex = {1} - TotalItems = {2}", stoper.Elapsed.TotalSeconds, item.BlockInfo.Height, count.Transactions + count.Inputs + count.Outputs) :
                     string.Format("Seconds = {0} - PoolSync - TotalItems = {1}", stoper.Elapsed.TotalSeconds, count.Transactions + count.Inputs + count.Outputs);
 
-                this.tracer.Trace("BlockStore ", message);
+                this.tracer.Trace("BlockStore ", message, ConsoleColor.White);
 
                 return await Task.FromResult(true);
             }

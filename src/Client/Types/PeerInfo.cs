@@ -27,13 +27,13 @@ namespace Nako.Client.Types
 
         public string Services { get; set; }
 
-        public int LastSend { get; set; }
+        public long LastSend { get; set; }
 
-        public int LastRecv { get; set; }
+        public long LastRecv { get; set; }
 
-        public int BytesSent { get; set; }
+        public long BytesSent { get; set; }
 
-        public int BytesRecv { get; set; }
+        public long BytesRecv { get; set; }
 
         public int ConnTime { get; set; }
 
@@ -45,17 +45,17 @@ namespace Nako.Client.Types
 
         public bool Inbound { get; set; }
 
-        public int StartingHeight { get; set; }
+        public long StartingHeight { get; set; }
 
         public int BanScore { get; set; }
 
         [JsonProperty("synced_headers")]
-        public int SyncedHeaders { get; set; }
+        public long SyncedHeaders { get; set; }
 
         [JsonProperty("synced_blocks")]
-        public int SyncedBlocks { get; set; }
+        public long SyncedBlocks { get; set; }
 
-        public IList<int> InFlight { get; set; }
+        public IList<long> InFlight { get; set; }
 
         public bool WhiteListed { get; set; }
     }

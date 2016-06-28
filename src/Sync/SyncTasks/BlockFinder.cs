@@ -71,7 +71,7 @@ namespace Nako.Sync.SyncTasks
 
             var stoper = Stopwatch.Start();
 
-            var block = await this.syncOperations.FindBlock(this.syncConnection, syncingBlocks);
+            var block = this.syncOperations.FindBlock(this.syncConnection, syncingBlocks).Result;
 
             if (block == null || block.BlockInfo == null)
             {
@@ -83,8 +83,8 @@ namespace Nako.Sync.SyncTasks
             this.tracer.Trace("BlockFinder", string.Format("Seconds = {0} - SyncedIndex = {1}/{2} - {3} {4}", stoper.Elapsed.TotalSeconds, block.BlockInfo.Height, block.LastCryptoBlockIndex, block.LastCryptoBlockIndex - block.BlockInfo.Height, block.IncompleteBlock ? "Incomplete" : string.Empty), ConsoleColor.DarkCyan);
 
             this.Runner.Get<BlockSyncer>().Enqueue(block);
-            
-            return true;
+
+            return await Task.FromResult(true);
         }
     }
 }

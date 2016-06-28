@@ -61,7 +61,7 @@ namespace Nako.Sync.SyncTasks
                                 continue;
                             }
 
-                            this.tracer.Trace("TaskRunner-" + this.GetType().Name, string.Format("Delay = {0}", this.Delay.TotalSeconds), ConsoleColor.DarkRed);
+                            this.tracer.Trace("TaskRunner-" + this.GetType().Name, string.Format("Delay = {0}", this.Delay.TotalSeconds));
 
                             cancellationToken.ThrowIfCancellationRequested();
 

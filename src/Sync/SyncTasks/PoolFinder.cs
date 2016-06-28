@@ -68,7 +68,7 @@ namespace Nako.Sync.SyncTasks
 
             var stoper = Stopwatch.Start();
 
-            var pool = await this.syncOperations.FindPoolTransactions(this.syncConnection, syncingBlocks);
+            var pool = this.syncOperations.FindPoolTransactions(this.syncConnection, syncingBlocks).Result;
 
             if (!pool.Transactions.Any())
             {
@@ -81,7 +81,7 @@ namespace Nako.Sync.SyncTasks
 
             this.Runner.Get<BlockSyncer>().Enqueue(new SyncBlockOperation { PoolTransactions = pool });
 
-            return false;
+            return await Task.FromResult(false);
         }
     }
 }

@@ -55,9 +55,9 @@ namespace Nako.Config
             {
                 CoinTag = coinTag,
 
-                ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString").Replace("{CoinTag}", coinTag),
+                ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString").Replace("{CoinTag}", coinTag.ToLower()),
 
-                RpcDomain = ConfigurationManager.AppSettings.Get("RpcDomain").Replace("{CoinTag}", coinTag),
+                RpcDomain = ConfigurationManager.AppSettings.Get("RpcDomain").Replace("{CoinTag}", coinTag.ToLower()),
                 RpcPassword = ConfigurationManager.AppSettings.Get("RpcPassword"),
                 RpcAccessPort = Convert.ToInt16(ConfigurationManager.AppSettings.Get("RpcAccessPort")),
                 RpcUser = ConfigurationManager.AppSettings.Get("RpcUser"),

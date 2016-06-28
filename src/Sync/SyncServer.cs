@@ -115,9 +115,9 @@ namespace Nako.Sync
 
                                 tokenSource.Cancel();
 
-                                var retryInterval = 60;
+                                var retryInterval = 10;
 
-                                this.tracer.TraceError("Sync", string.Format("Unexpected error retry in {0} seconds", retryInterval));
+                                this.tracer.TraceError("Sync", string.Format("Unexpected error retry in {0} seconds", retryInterval), ConsoleColor.Gray);
                                 //this.tracer.ReadLine();
 
                                 // we want Nako to continue running even if errors are found.

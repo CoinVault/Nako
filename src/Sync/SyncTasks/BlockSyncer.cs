@@ -67,7 +67,7 @@ namespace Nako.Sync.SyncTasks
                 {
                     if (item.BlockInfo != null)
                     {
-                        var block = await this.syncOperations.SyncBlock(this.syncConnection, item.BlockInfo);
+                        var block = this.syncOperations.SyncBlock(this.syncConnection, item.BlockInfo).Result;
 
                         var inputs = block.Transactions.SelectMany(s => s.VIn).Count();
                         var outputs = block.Transactions.SelectMany(s => s.VOut).Count();
@@ -79,7 +79,7 @@ namespace Nako.Sync.SyncTasks
 
                     if (item.PoolTransactions != null)
                     {
-                        var pool = await this.syncOperations.SyncPool(this.syncConnection, item.PoolTransactions);
+                        var pool = this.syncOperations.SyncPool(this.syncConnection, item.PoolTransactions).Result;
 
                         var inputs = pool.Transactions.SelectMany(s => s.VIn).Count();
                         var outputs = pool.Transactions.SelectMany(s => s.VOut).Count();
@@ -107,7 +107,7 @@ namespace Nako.Sync.SyncTasks
                 return true;
             }
 
-            return false;
+            return await Task.FromResult(false);
         }
     }
 }
