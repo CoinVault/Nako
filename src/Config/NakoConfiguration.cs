@@ -13,17 +13,11 @@ namespace Nako.Config
     {
         #region Public Properties
 
-        public int BlockStoreInterval { get; set; }
-
-        public int BlockSyncerInterval { get; set; }
-
-        public string ClientLocation { get; set; }
-
         public string CoinTag { get; set; }
 
         public string RpcPassword { get; set; }
 
-        public int BlockFinderInterval { get; set; }
+        public int SyncInterval { get; set; }
 
         public int DetailedTrace { get; set; }
 
@@ -32,8 +26,6 @@ namespace Nako.Config
         public int ParallelRequestsToTransactionRpc { get; set; }
 
         public int SyncApiPort { get; set; }
-
-        public int ParalleleTableStorageBatchCount { get; set; }
 
         public int RpcAccessPort { get; set; }
 
@@ -50,6 +42,8 @@ namespace Nako.Config
         public string RpcUser { get; set; }
 
         public string NotifyUrl { get; set; }
+
+        public string ConnectionString { get; set; }
 
         public int NotifyBatchCount { get; set; }
 

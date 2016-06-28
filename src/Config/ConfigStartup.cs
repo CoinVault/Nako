@@ -14,6 +14,8 @@ namespace Nako.Config
 
     using System;
     using System.Configuration;
+    using System.IO;
+    using System.Linq;
 
     using Nako.Storage;
 
@@ -24,44 +26,77 @@ namespace Nako.Config
         /// <summary>
         /// The load configuration.
         /// </summary>
-        public static NakoConfiguration LoadConfiguration(string location)
+        public static NakoConfiguration LoadConfiguration(string[] args)
         {
-            if (!string.IsNullOrEmpty(location))
+            ////var location = GetConfigPath(args);
+
+            ////if (!string.IsNullOrEmpty(location))
+            ////{
+            ////    Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            ////    config.AppSettings.File = location;
+            ////    config.Save(ConfigurationSaveMode.Modified);
+            ////    ConfigurationManager.RefreshSection("appSettings");
+            ////}
+
+
+            var coinTag = ConfigurationManager.AppSettings.Get("CoinTag");
+            
+            if (args.Any())
             {
-                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.File = location;
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("appSettings");
+                coinTag = args.First();
             }
 
-            Common.ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString");
-
-            var nakoConfig  = new NakoConfiguration
+            if (string.IsNullOrEmpty(coinTag) || coinTag.StartsWith("=="))
             {
-                CoinTag = ConfigurationManager.AppSettings.Get("CoinTag"), 
-                
-                RpcPassword = ConfigurationManager.AppSettings.Get("RpcPassword"), 
-                RpcAccessPort = Convert.ToInt16(ConfigurationManager.AppSettings.Get("RpcAccessPort")), 
-                RpcUser = ConfigurationManager.AppSettings.Get("RpcUser"), 
-                RpcDomain = ConfigurationManager.AppSettings.Get("RpcDomain"), 
-                RpcSecure = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("RpcSecure")), 
+                throw new ApplicationException("Please provide a CoinTag in config or as argument");
+            }
 
-                BlockFinderInterval = Convert.ToInt16(ConfigurationManager.AppSettings.Get("BlockFinderInterval")), 
-                BlockStoreInterval = Convert.ToInt16(ConfigurationManager.AppSettings.Get("BlockStoreInterval")), 
-                BlockSyncerInterval = Convert.ToInt16(ConfigurationManager.AppSettings.Get("BlockSyncerInterval")), 
-                SyncBlockchain = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("SyncBlockchain")), 
-                SyncMemoryPool = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("SyncMemoryPool")), 
-                StartBlockIndex = Convert.ToInt64(ConfigurationManager.AppSettings.Get("StartBlockIndex")), 
-                MaxItemsInQueue = Convert.ToInt16(ConfigurationManager.AppSettings.Get("MaxItemsInQueue")), 
-                ParallelRequestsToTransactionRpc = Convert.ToInt16(ConfigurationManager.AppSettings.Get("ParallelRequestsToTransactionRpc")), 
-                SyncApiPort = Convert.ToInt32(ConfigurationManager.AppSettings.Get("SyncApiPort")), 
-                DetailedTrace = Convert.ToInt32(ConfigurationManager.AppSettings.Get("DetailedTrace")), 
-                ParalleleTableStorageBatchCount = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ParalleleTableStorageBatchCount")), 
-                NotifyUrl = ConfigurationManager.AppSettings.Get("NotifyUrl"), 
-                NotifyBatchCount = Convert.ToInt16(ConfigurationManager.AppSettings.Get("NotifyBatchCount"))
+            var nakoConfig = new NakoConfiguration
+            {
+                CoinTag = coinTag,
+
+                ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString").Replace("{CoinTag}", coinTag),
+
+                RpcDomain = ConfigurationManager.AppSettings.Get("RpcDomain").Replace("{CoinTag}", coinTag),
+                RpcPassword = ConfigurationManager.AppSettings.Get("RpcPassword"),
+                RpcAccessPort = Convert.ToInt16(ConfigurationManager.AppSettings.Get("RpcAccessPort")),
+                RpcUser = ConfigurationManager.AppSettings.Get("RpcUser"),
+                RpcSecure = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("RpcSecure")),
+                
+                SyncApiPort = Convert.ToInt32(ConfigurationManager.AppSettings.Get("SyncApiPort")),
+                SyncBlockchain = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("SyncBlockchain")),
+                SyncMemoryPool = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("SyncMemoryPool")),
+                StartBlockIndex = Convert.ToInt64(ConfigurationManager.AppSettings.Get("StartBlockIndex")),
+                
+                NotifyUrl = ConfigurationManager.AppSettings.Get("NotifyUrl"),
+                NotifyBatchCount = Convert.ToInt16(ConfigurationManager.AppSettings.Get("NotifyBatchCount")),
+
+                SyncInterval = Convert.ToInt16(ConfigurationManager.AppSettings.Get("SyncInterval")),
+                MaxItemsInQueue = Convert.ToInt16(ConfigurationManager.AppSettings.Get("MaxItemsInQueue")),
+                DetailedTrace = Convert.ToInt32(ConfigurationManager.AppSettings.Get("DetailedTrace")),
+                ParallelRequestsToTransactionRpc = Convert.ToInt16(ConfigurationManager.AppSettings.Get("ParallelRequestsToTransactionRpc")),
             };
 
             return nakoConfig;
+        }
+
+        private static string GetConfigPath(string[] args)
+        {
+            var location = string.Empty;
+
+            if (args.Any())
+            {
+                location = args.First();
+
+                if (!File.Exists(location))
+                {
+                    Console.WriteLine("Config file not found {0}", location);
+                    Console.ReadKey();
+                    throw new ApplicationException("Path not found");
+                }
+            }
+
+            return location;
         }
     }
 }

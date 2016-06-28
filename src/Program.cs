@@ -37,17 +37,18 @@ namespace Nako
         /// </summary>
         internal static void Main(string[] args)
         {
-            //Console.BufferHeight = 1000;
-            //Console.WindowHeight = 25;
-            //Console.WindowWidth = 150;
-
-            var location = GetConfigPath(args);
+            if (!IsRunningOnMono())
+            {
+                Console.BufferHeight = 1000;
+                Console.WindowHeight = 25;
+                Console.WindowWidth = 150;
+            }
 
             var builder = new ContainerBuilder();
-            builder.RegisterInstance(ConfigStartup.LoadConfiguration(location)).As<NakoConfiguration>();
+            builder.RegisterInstance(ConfigStartup.LoadConfiguration(args)).As<NakoConfiguration>();
             builder.RegisterAssemblyModules(Assembly.GetExecutingAssembly());
             var container = builder.Build();
-            
+
             container.Resolve<ApiServer>().StartApi(container);
             container.Resolve<SyncServer>().StartSync(container);
             container.Resolve<Terminator>().Start();
@@ -59,23 +60,9 @@ namespace Nako
             //Console.Read();
         }
 
-        private static string GetConfigPath(string[] args)
+        public static bool IsRunningOnMono()
         {
-            var location = string.Empty;
-
-            if (args.Any())
-            {
-                location = args.First();
-
-                if (!File.Exists(location))
-                {
-                    Console.WriteLine("Config file not found {0}", location);
-                    Console.ReadKey();
-                    throw new ApplicationException("Path not found");
-                }
-            }
-
-            return location;
+            return Type.GetType("Mono.Runtime") != null;
         }
 
         #endregion

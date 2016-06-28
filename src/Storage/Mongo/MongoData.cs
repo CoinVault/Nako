@@ -39,11 +39,14 @@ namespace Nako.Storage.Mongo
 
         private readonly SyncConnection syncConnection;
 
-        public MongoData(Tracer tracer, SyncConnection connection)
+        private readonly NakoConfiguration configuration;
+
+        public MongoData(Tracer tracer, SyncConnection connection, NakoConfiguration nakoConfiguration)
         {
             this.syncConnection = connection;
             this.tracer = tracer;
-            this.mongoClient = new MongoClient(Common.ConnectionString);
+            this.configuration = nakoConfiguration;
+            this.mongoClient = new MongoClient(nakoConfiguration.ConnectionString);
             this.mongoDatabase = this.mongoClient.GetDatabase("Blockchain");
             this.MemoryTransactions = new ConcurrentDictionary<string, DecodedRawTransaction>();
         }

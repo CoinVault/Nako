@@ -33,7 +33,7 @@ namespace Nako.Sync.SyncTasks
         {
             this.tracer = tracer;
             this.application = application;
-            this.Delay = TimeSpan.FromSeconds(configuration.BlockFinderInterval);
+            this.Delay = TimeSpan.FromSeconds(configuration.SyncInterval);
         }
 
         public TimeSpan Delay { get; set; }

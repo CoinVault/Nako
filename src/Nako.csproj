@@ -166,7 +166,6 @@
     <Compile Include="Extensions\Stopwatch.cs" />
     <Compile Include="Storage\Mongo\MongoData.cs" />
     <Compile Include="Storage\StorageModule.cs" />
-    <Compile Include="Storage\Common.cs" />
     <Compile Include="Storage\IStorage.cs" />
     <Compile Include="Storage\Types\SyncTransactionAddressBalance.cs" />
     <Compile Include="Api\Handlers\Types\QueryAddressItem.cs" />
