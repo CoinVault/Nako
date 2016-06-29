@@ -1,5 +1,7 @@
 FROM mono:4
 
+RUN apt-get update && apt-get install nano 
+
 RUN mkdir -p /usr/src/app/source /usr/src/app/build
 #WORKDIR /usr/src/app/source
 
@@ -11,5 +13,5 @@ WORKDIR /usr/src/app/build
 
 EXPOSE 9000
 
-CMD [ "mono",  "./Nako.exe" ]
+ENTRYPOINT [ "mono",  "./Nako.exe" ]
 

@@ -1,0 +1,26 @@
+version: '2'
+services:
+  client:
+    container_name: dash-client
+    networks: 
+        - dash
+    image: coinvault/dash
+  nako:
+    container_name: dash-nako
+    networks: 
+        - dash
+    image: coinvault/nako
+    command: DASH
+    ports: 
+        - 9010:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: dash-mongo
+    networks: 
+        - dash
+    image: mongo:3.2
+networks:
+    dash:
+      driver: bridge

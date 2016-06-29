@@ -1,6 +1,6 @@
 FROM coinvault/client-base:latest
 
-ENV COIN_URL https://download.litecoin.org/litecoin-0.10.4.0/linux/litecoin-0.10.4.0-linux64.tar.gz
+ENV COIN_URL https://bitcoin.org/bin/bitcoin-core-0.12.1/bitcoin-0.12.1-linux64.tar.gz
 
 RUN set -ex \
 
@@ -12,14 +12,14 @@ RUN set -ex \
 	# remove build dependencies
 	&& apt-get purge -y --auto-remove wget
 
-RUN  mkdir /root/.litecoin/
+RUN  mkdir /root/.bitcoin/
 
-COPY litecoin.conf /root/.litecoin/
+COPY bitcoin.conf /root/.bitcoin/
 
-VOLUME /root/.litecoin
+VOLUME /root/.bitcoin
 
 WORKDIR /usr/local/bin
 
-EXPOSE 5000
+EXPOSE 8332 8333
 
-CMD ["litecoind"]
+CMD ["bitcoind"]
