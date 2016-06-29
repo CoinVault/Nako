@@ -1,5 +1,7 @@
 FROM coinvault/client-base:latest
 
+MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
+
 ENV COIN_URL https://bitcoin.org/bin/bitcoin-core-0.12.1/bitcoin-0.12.1-linux64.tar.gz
 
 RUN set -ex \

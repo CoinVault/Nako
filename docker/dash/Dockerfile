@@ -1,5 +1,7 @@
 FROM coinvault/client-base:latest
 
+MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
+
 ENV COIN_URL https://www.dash.org/binaries/dash-0.12.0.58-linux64.tar.gz
 
 RUN set -ex \
