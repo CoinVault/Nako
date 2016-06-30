@@ -2,7 +2,8 @@ FROM mono:4
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-RUN apt-get update && apt-get install nano 
+RUN apt-get update && apt-get install nano /
+    && echo -e "\nexport TERM=xterm" >> ~/.bashrc
 
 RUN mkdir -p /usr/src/app/source /usr/src/app/build
 #WORKDIR /usr/src/app/source
