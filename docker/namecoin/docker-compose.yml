@@ -1,0 +1,26 @@
+version: '2'
+services:
+  client:
+    container_name: nmc-client
+    networks: 
+        - nmc
+    image: coinvault/namecoin
+  nako:
+    container_name: nmc-nako
+    networks: 
+        - nmc
+    image: coinvault/nako
+    command: NMC
+    ports: 
+        - 9006:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: nmc-mongo
+    networks: 
+        - nmc
+    image: mongo:3.2
+networks:
+    nmc:
+      driver: bridge
