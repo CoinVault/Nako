@@ -185,7 +185,7 @@ namespace Nako.Client
         }
 
         /// <inheritdoc />
-        public Task<BlockInfo> GetBlock(string hash)
+        public BlockInfo GetBlock(string hash)
         {
             return this.Call<BlockInfo>("getblock", hash);
         }
@@ -197,9 +197,9 @@ namespace Nako.Client
         }
 
         /// <inheritdoc />
-        public async Task<int> GetBlockCount()
+        public int GetBlockCount()
         {
-            return await this.Call<int>("getblockcount");
+            return this.Call<int>("getblockcount");
         }
 
         /// <inheritdoc />
@@ -209,7 +209,7 @@ namespace Nako.Client
         }
 
         /// <inheritdoc />
-        public Task<string> GetblockHash(long index)
+        public string GetblockHash(long index)
         {
             return this.Call<string>("getblockhash", index);
         }
@@ -263,7 +263,7 @@ namespace Nako.Client
         }
 
         /// <inheritdoc />
-        public Task<IEnumerable<string>> GetRawMemPool()
+        public IEnumerable<string> GetRawMemPool()
         {
             return this.Call<IEnumerable<string>>("getrawmempool");
         }
@@ -282,12 +282,12 @@ namespace Nako.Client
             return res;
         }
 
-        public Task<DecodedRawTransaction> GetRawTransaction(string txid, int verbose = 0)
+        public DecodedRawTransaction GetRawTransaction(string txid, int verbose = 0)
         {
             if (verbose == 0)
             {
                 var hex = this.Call<string>("getrawtransaction", txid, verbose);
-                return Task.FromResult(new DecodedRawTransaction { Hex = hex.Result });
+                return new DecodedRawTransaction { Hex = hex };
             }
 
             var res = this.Call<DecodedRawTransaction>("getrawtransaction", txid, verbose);
@@ -493,11 +493,11 @@ namespace Nako.Client
         /// <summary>
         /// Send the request and wrap any exception.
         /// </summary>
-        private static Task<HttpResponseMessage> Send(HttpClient client, Uri url, HttpContent content)
+        private static HttpResponseMessage Send(HttpClient client, Uri url, HttpContent content)
         {
             try
             {
-                return client.PostAsync(url, content);
+                return client.PostAsync(url, content).Result;
             }
             catch (Exception ex)
             {
@@ -531,7 +531,7 @@ namespace Nako.Client
         /// <summary>
         /// Make a call to crypto API.
         /// </summary>
-        private Task<T> Call<T>(string method, params object[] parameters)
+        private T Call<T>(string method, params object[] parameters)
         {
             var rpcReq = new JsonRpcRequest(1, method, parameters);
 
@@ -545,7 +545,7 @@ namespace Nako.Client
                 request.Headers.ContentType = new MediaTypeHeaderValue("application/json-rpc");
 
                 var response = Send(this.Client, this.Url, request);
-                var ret = this.CheckResponseOk<T>(response.Result);
+                var ret = this.CheckResponseOk<T>(response);
 
                 return ret;
             }
@@ -610,7 +610,7 @@ namespace Nako.Client
         /// <summary>
         /// Check the crypto client response is ok.
         /// </summary>
-        private Task<T> CheckResponseOk<T>(HttpResponseMessage response)
+        private T CheckResponseOk<T>(HttpResponseMessage response)
         {
             try
             {
@@ -628,7 +628,7 @@ namespace Nako.Client
                             throw CreateException(response, code, msg);
                         }
 
-                        return Task.FromResult(ret.Result);
+                        return ret.Result;
                     }
                 }
             }

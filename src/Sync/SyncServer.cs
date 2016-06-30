@@ -120,7 +120,7 @@ namespace Nako.Sync
                                 this.tracer.TraceError("Sync", string.Format("Unexpected error retry in {0} seconds", retryInterval), ConsoleColor.Gray);
                                 //this.tracer.ReadLine();
 
-                                // we want Nako to continue running even if errors are found.
+                                // Nako is designed to be idempotent, we want to continue running even if errors are found.
                                 // so if an unepxected error happened we log it wait and start again
 
                                 Task.Delay(TimeSpan.FromSeconds(retryInterval), this.application.SyncToken).Wait(this.application.SyncToken);

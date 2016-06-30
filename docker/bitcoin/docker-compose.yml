@@ -1,0 +1,26 @@
+version: '2'
+services:
+  client:
+    container_name: btc-client
+    networks: 
+        - btc
+    image: coinvault/bitcoin
+  nako:
+    container_name: btc-nako
+    networks: 
+        - btc
+    image: coinvault/nako
+    command: BTC
+    ports: 
+        - 9000:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: btc-mongo
+    networks: 
+        - btc
+    image: mongo:3.2
+networks:
+    btc:
+      driver: bridge

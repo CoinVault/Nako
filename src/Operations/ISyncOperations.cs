@@ -27,22 +27,22 @@ namespace Nako.Operations
         /// <summary>
         /// The sync block.
         /// </summary>
-        Task<SyncBlockOperation> FindBlock(SyncConnection connection, SyncingBlocks container);
+        SyncBlockOperation FindBlock(SyncConnection connection, SyncingBlocks container);
 
         /// <summary>
         /// The sync block.
         /// </summary>
-        Task<SyncPoolTransactions> FindPoolTransactions(SyncConnection connection, SyncingBlocks container);
+        SyncPoolTransactions FindPoolTransactions(SyncConnection connection, SyncingBlocks container);
 
         /// <summary>
         /// The sync memory pool.
         /// </summary>
-        Task<SyncBlockTransactionsOperation> SyncPool(SyncConnection connection, SyncPoolTransactions poolTransactions);
+        SyncBlockTransactionsOperation SyncPool(SyncConnection connection, SyncPoolTransactions poolTransactions);
 
         /// <summary>
         /// The sync transactions.
         /// </summary>
-        Task<SyncBlockTransactionsOperation> SyncBlock(SyncConnection connection, BlockInfo block);
+        SyncBlockTransactionsOperation SyncBlock(SyncConnection connection, BlockInfo block);
 
         /// <summary>
         /// The check block reorganization.

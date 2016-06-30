@@ -49,22 +49,22 @@ namespace Nako.Sync
 
         #region Public Methods and Operators
 
-        public Task<SyncBlockOperation> FindBlock(SyncConnection connection, SyncingBlocks container)
+        public SyncBlockOperation FindBlock(SyncConnection connection, SyncingBlocks container)
         {
             return this.FindBlockInternal(connection, container);
         }
 
-        public Task<SyncPoolTransactions> FindPoolTransactions(SyncConnection connection, SyncingBlocks container)
+        public SyncPoolTransactions FindPoolTransactions(SyncConnection connection, SyncingBlocks container)
         {
             return this.FindPoolInternal(connection, container);
         }
 
-        public Task<SyncBlockTransactionsOperation> SyncPool(SyncConnection connection, SyncPoolTransactions poolTransactions)
+        public SyncBlockTransactionsOperation SyncPool(SyncConnection connection, SyncPoolTransactions poolTransactions)
         {
             return this.SyncPoolInternal(connection, poolTransactions);
         }
 
-        public Task<SyncBlockTransactionsOperation> SyncBlock(SyncConnection connection, BlockInfo block)
+        public SyncBlockTransactionsOperation SyncBlock(SyncConnection connection, BlockInfo block)
         {
             return this.SyncBlockInternal(connection, block);
         }
@@ -97,7 +97,7 @@ namespace Nako.Sync
 
         #region Methods
 
-        private Task<SyncBlockOperation> GetNextBlockToSync(BitcoinClient client, SyncConnection connection, long lastCryptoBlockIndex, SyncingBlocks syncingBlocks)
+        private SyncBlockOperation GetNextBlockToSync(BitcoinClient client, SyncConnection connection, long lastCryptoBlockIndex, SyncingBlocks syncingBlocks)
         {
             if (syncingBlocks.LastBlock == null)
             {
@@ -108,9 +108,9 @@ namespace Nako.Sync
 
                 if (incompleteToSync != null)
                 {
-                    var incompleteBlock = client.GetBlock(incompleteToSync.BlockHash).Result;
+                    var incompleteBlock = client.GetBlock(incompleteToSync.BlockHash);
 
-                    return Task.FromResult(new SyncBlockOperation { BlockInfo = incompleteBlock, IncompleteBlock = true, LastCryptoBlockIndex = lastCryptoBlockIndex });
+                    return new SyncBlockOperation { BlockInfo = incompleteBlock, IncompleteBlock = true, LastCryptoBlockIndex = lastCryptoBlockIndex };
                 }
 
                 string blockHashsToSync;
@@ -124,52 +124,52 @@ namespace Nako.Sync
                     if (lastBlockIndex == lastCryptoBlockIndex)
                     {
                         // No new blocks.
-                        return Task.FromResult(default(SyncBlockOperation));
+                        return default(SyncBlockOperation);
                     }
 
-                    blockHashsToSync = client.GetblockHash(lastBlockIndex + 1).Result;
+                    blockHashsToSync = client.GetblockHash(lastBlockIndex + 1);
                 }
                 else
                 {
                     // No blocks in store start from zero configured block index.
-                    blockHashsToSync = client.GetblockHash(connection.StartBlockIndex).Result;
+                    blockHashsToSync = client.GetblockHash(connection.StartBlockIndex);
                 }
 
-                var nextNewBlock = client.GetBlock(blockHashsToSync).Result;
+                var nextNewBlock = client.GetBlock(blockHashsToSync);
 
                 syncingBlocks.LastBlock = nextNewBlock;
 
-                return Task.FromResult(new SyncBlockOperation { BlockInfo = nextNewBlock, LastCryptoBlockIndex = lastCryptoBlockIndex });
+                return new SyncBlockOperation { BlockInfo = nextNewBlock, LastCryptoBlockIndex = lastCryptoBlockIndex };
             }
 
             if (syncingBlocks.LastBlock.Height == lastCryptoBlockIndex)
             {
                 // No new blocks.
-                return Task.FromResult(default(SyncBlockOperation));
+                return default(SyncBlockOperation);
             }
 
-            var nextHash = client.GetblockHash(syncingBlocks.LastBlock.Height + 1).Result;
+            var nextHash = client.GetblockHash(syncingBlocks.LastBlock.Height + 1);
 
-            var nextBlock = client.GetBlock(nextHash).Result;
+            var nextBlock = client.GetBlock(nextHash);
 
             syncingBlocks.LastBlock = nextBlock;
 
-            return Task.FromResult(new SyncBlockOperation { BlockInfo = nextBlock, LastCryptoBlockIndex = lastCryptoBlockIndex });
+            return new SyncBlockOperation { BlockInfo = nextBlock, LastCryptoBlockIndex = lastCryptoBlockIndex };
         }
 
-        private Task<SyncBlockOperation> FindBlockInternal(SyncConnection connection, SyncingBlocks syncingBlocks)
+        private SyncBlockOperation FindBlockInternal(SyncConnection connection, SyncingBlocks syncingBlocks)
         {
             var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
 
-            var lastCryptoBlockIndex = client.GetBlockCount().Result;
+            var lastCryptoBlockIndex = client.GetBlockCount();
 
             var blockToSync = this.GetNextBlockToSync(client, connection, lastCryptoBlockIndex, syncingBlocks);
 
-            if (blockToSync != null && blockToSync.Result.BlockInfo != null)
+            if (blockToSync != null && blockToSync.BlockInfo != null)
             {
-                syncingBlocks.CurrentSyncing.TryAdd(blockToSync.Result.BlockInfo.Hash, blockToSync.Result.BlockInfo);
+                syncingBlocks.CurrentSyncing.TryAdd(blockToSync.BlockInfo.Hash, blockToSync.BlockInfo);
             }
            
             stoper.Stop();
@@ -177,12 +177,12 @@ namespace Nako.Sync
             return blockToSync;
         }
 
-        private Task<SyncPoolTransactions> FindPoolInternal(SyncConnection connection, SyncingBlocks syncingBlocks)
+        private SyncPoolTransactions FindPoolInternal(SyncConnection connection, SyncingBlocks syncingBlocks)
         {
             var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
-            var memPool = client.GetRawMemPool().Result;
+            var memPool = client.GetRawMemPool();
 
             var currentMemoryPool = new HashSet<string>(memPool);
             var currentTable = new HashSet<string>(syncingBlocks.CurrentPoolSyncing);
@@ -199,58 +199,91 @@ namespace Nako.Sync
 
             this.tracer.DetailedTrace("SyncPool", string.Format("Seconds = {0} - New Transactions = {1}", stoper.Elapsed.TotalSeconds, newTransactions.Count()));
 
-            return Task.FromResult(new SyncPoolTransactions { Transactions = newTransactionsLimited });
+            return new SyncPoolTransactions { Transactions = newTransactionsLimited };
         }
 
-        private Task<SyncBlockTransactionsOperation> SyncBlockTransactions(BitcoinClient client, SyncConnection connection, IEnumerable<string> transactionsToSync, bool throwIfNotFound)
+        private class tcalc
         {
-            var transactions = new List<DecodedRawTransaction>();
-
-            var batchListItems = transactionsToSync.Batch(this.configuration.ParallelRequestsToTransactionRpc);
-
-            foreach (var batch in batchListItems)
-            {
-                var itemList = batch.ToList();
-
-                var stoper = new System.Diagnostics.Stopwatch();
-                stoper.Start();
-
-                var waits = itemList.Select(item =>
-                    {
-                        try
-                        {
-                            var transaction = client.GetRawTransaction(item, 1);
-
-                            return transaction;
-                        }
-                        catch (BitcoinClientException bce)
-                        {
-                            if (!throwIfNotFound && bce.IsTransactionNotFound())
-                            {
-                                //// the transaction was not found in the client, 
-                                //// if this is a pool sync we assume the transaction was initially found in the pool and became invalid.
-                                return null;
-                            }
-
-                            throw;
-                        }
-                    });
-
-                var waitList = Task.WhenAll(waits).Result; //await Task.WhenAll(waits);
-
-                var enumerateAwaits = waitList.ToList();
-
-                transactions.AddRange(enumerateAwaits.Where(t => t != null).ToList());
-
-                stoper.Stop();
-
-                this.tracer.DetailedTrace("SyncBlockTransactions", string.Format("Seconds = {0} - Transactions {1} - Inputs {2} - Outputs {3} ", stoper.Elapsed.TotalSeconds, itemList.Count(), transactions.SelectMany(s => s.VIn).Count(), transactions.SelectMany(s => s.VOut).Count()));
-            }
-
-            return Task.FromResult(new SyncBlockTransactionsOperation { Transactions = transactions });
+            public string item;
+            public DecodedRawTransaction result;
         }
 
-        private Task<SyncBlockTransactionsOperation> SyncPoolInternal(SyncConnection connection, SyncPoolTransactions poolTransactions)
+        private SyncBlockTransactionsOperation SyncBlockTransactions(BitcoinClient client, SyncConnection connection, IEnumerable<string> transactionsToSync, bool throwIfNotFound)
+        {
+            var stoper = new System.Diagnostics.Stopwatch();
+            stoper.Start();
+
+            var itemList = transactionsToSync.Select(t => new tcalc { item = t }).ToList();
+
+            var options = new ParallelOptions { MaxDegreeOfParallelism = this.configuration.ParallelRequestsToTransactionRpc };
+            Parallel.ForEach(itemList, options, (item) =>
+            {
+                try
+                {
+                    item.result = client.GetRawTransaction(item.item, 1);
+                }
+                catch (BitcoinClientException bce)
+                {
+                    if (!throwIfNotFound && bce.IsTransactionNotFound())
+                    {
+                        //// the transaction was not found in the client, 
+                        //// if this is a pool sync we assume the transaction was initially found in the pool and became invalid.
+                        return;
+                    }
+
+                    throw;
+                }
+            });
+
+            var transactions = itemList.Select(s => s.result).ToList();
+
+            ////var transactions = new List<DecodedRawTransaction>();
+
+            ////var batchListItems = transactionsToSync.Batch(this.configuration.ParallelRequestsToTransactionRpc);
+
+            ////foreach (var batch in batchListItems)
+            ////{
+            ////    var itemList = batch.ToList();
+
+            ////    var stoper = new System.Diagnostics.Stopwatch();
+            ////    stoper.Start();
+
+            ////    var waits = itemList.Select(item =>
+            ////    {
+            ////        try
+            ////        {
+            ////            var transaction = client.GetRawTransaction(item, 1);
+
+            ////            return transaction;
+            ////        }
+            ////        catch (BitcoinClientException bce)
+            ////        {
+            ////            if (!throwIfNotFound && bce.IsTransactionNotFound())
+            ////            {
+            ////                //// the transaction was not found in the client, 
+            ////                //// if this is a pool sync we assume the transaction was initially found in the pool and became invalid.
+            ////                return null;
+            ////            }
+
+            ////            throw;
+            ////        }
+            ////    });
+
+            ////    var waitList = Task.WhenAll(waits).Result; //await Task.WhenAll(waits);
+
+            ////    var enumerateAwaits = waitList.ToList();
+
+            ////    transactions.AddRange(enumerateAwaits.Where(t => t != null).ToList());
+
+            ////    stoper.Stop();
+
+            ////    this.tracer.DetailedTrace("SyncBlockTransactions", string.Format("Seconds = {0} - Transactions {1} - Inputs {2} - Outputs {3} ", stoper.Elapsed.TotalSeconds, itemList.Count(), transactions.SelectMany(s => s.VIn).Count(), transactions.SelectMany(s => s.VOut).Count()));
+            ////}
+
+            return new SyncBlockTransactionsOperation { Transactions = transactions };
+        }
+
+        private SyncBlockTransactionsOperation SyncPoolInternal(SyncConnection connection, SyncPoolTransactions poolTransactions)
         {
             var stoper = Stopwatch.Start();
 
@@ -260,12 +293,12 @@ namespace Nako.Sync
 
             stoper.Stop();
 
-            this.tracer.DetailedTrace("SyncPool", string.Format("Seconds = {0} - Transactions = {1}", stoper.Elapsed.TotalSeconds, returnBlock.Result.Transactions.Count()));
+            this.tracer.DetailedTrace("SyncPool", string.Format("Seconds = {0} - Transactions = {1}", stoper.Elapsed.TotalSeconds, returnBlock.Transactions.Count()));
 
             return returnBlock;
         }
 
-        private Task<SyncBlockTransactionsOperation> SyncBlockInternal(SyncConnection connection, BlockInfo block)
+        private SyncBlockTransactionsOperation SyncBlockInternal(SyncConnection connection, BlockInfo block)
         {
             var stoper = Stopwatch.Start();
 
@@ -273,11 +306,11 @@ namespace Nako.Sync
 
             var returnBlock = this.SyncBlockTransactions(client, connection, block.Transactions, true);
 
-            returnBlock.Result.BlockInfo = block;
+            returnBlock.BlockInfo = block;
 
             stoper.Stop();
 
-            this.tracer.DetailedTrace("SyncBlock", string.Format("Seconds = {0} - Transactions = {1} - BlockIndex = {2}", stoper.Elapsed.TotalSeconds, returnBlock.Result.Transactions.Count(), returnBlock.Result.BlockInfo.Height));
+            this.tracer.DetailedTrace("SyncBlock", string.Format("Seconds = {0} - Transactions = {1} - BlockIndex = {2}", stoper.Elapsed.TotalSeconds, returnBlock.Transactions.Count(), returnBlock.BlockInfo.Height));
 
             return returnBlock;
         }

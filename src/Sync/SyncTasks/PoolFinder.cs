@@ -68,7 +68,7 @@ namespace Nako.Sync.SyncTasks
 
             var stoper = Stopwatch.Start();
 
-            var pool = this.syncOperations.FindPoolTransactions(this.syncConnection, syncingBlocks).Result;
+            var pool = this.syncOperations.FindPoolTransactions(this.syncConnection, syncingBlocks);
 
             if (!pool.Transactions.Any())
             {

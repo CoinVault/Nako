@@ -71,7 +71,7 @@ namespace Nako.Sync.SyncTasks
 
             var stoper = Stopwatch.Start();
 
-            var block = this.syncOperations.FindBlock(this.syncConnection, syncingBlocks).Result;
+            var block = this.syncOperations.FindBlock(this.syncConnection, syncingBlocks);
 
             if (block == null || block.BlockInfo == null)
             {
