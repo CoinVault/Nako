@@ -2,7 +2,7 @@ FROM coinvault/client-base:latest
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-ENV COIN_URL https://download.litecoin.org/litecoin-0.10.4.0/linux/litecoin-0.10.4.0-linux64.tar.gz
+ENV COIN_URL https://github.com/reddcoin-project/reddcoin/releases/download/v1.4.1.0/reddcoin-1.4.1.0-linux.tar.gz
 
 RUN set -ex \
 
@@ -14,14 +14,14 @@ RUN set -ex \
 	# remove build dependencies
 	&& apt-get purge -y --auto-remove wget
 
-RUN  mkdir /root/.litecoin/
+RUN  mkdir /root/.reddcoin/
 
-COPY litecoin.conf /root/.litecoin/
+COPY reddcoin.conf /root/.reddcoin/
 
-VOLUME /root/.litecoin
+VOLUME /root/.reddcoin
 
-WORKDIR /usr/local/bin
+WORKDIR /usr/local/bin/64
 
 EXPOSE 5000
 
-CMD ["litecoind"]
+CMD ["./reddcoind"]

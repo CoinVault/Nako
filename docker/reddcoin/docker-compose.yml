@@ -1,0 +1,26 @@
+version: '2'
+services:
+  client:
+    container_name: rdd-client
+    networks: 
+        - rdd
+    image: coinvault/reddcoin
+  nako:
+    container_name: rdd-nako
+    networks: 
+        - rdd
+    image: coinvault/nako
+    command: rdd
+    ports: 
+        - 9014:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: rdd-mongo
+    networks: 
+        - rdd
+    image: mongo:3.2
+networks:
+    rdd:
+      driver: bridge
