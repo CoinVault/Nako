@@ -10,7 +10,7 @@ services:
     networks: 
         - rdd
     image: coinvault/nako
-    command: rdd
+    command: RDD
     ports: 
         - 9014:9000
     depends_on:
