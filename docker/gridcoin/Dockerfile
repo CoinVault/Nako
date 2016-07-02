@@ -2,26 +2,26 @@ FROM coinvault/client-base:latest
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-ENV COIN_URL https://github.com/reddcoin-project/reddcoin/releases/download/v1.4.1.0/reddcoin-1.4.1.0-linux.tar.gz
-
+# dependencies required to run the daemon
 RUN set -ex \
+	&& apt-get update \
+	&& apt-get install -y libssl-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev \
+	&& apt-get install -y qt-sdk qt4-default \
+	&& apt-get install -y libcurl3-dev \
+	&& apt-get install -y libzip-dev
 
-	# get the binaries extract and delete the download file
-	&& wget -O downloadfile.tar.gz $COIN_URL \
-	&& tar -xzvf downloadfile.tar.gz -C /usr/local --strip-components=1 --exclude=*-qt \
-	&& rm downloadfile.tar.gz \
 
-	# remove build dependencies
-	&& apt-get purge -y --auto-remove wget
+# require a comppiled version of gridcoinresearchd in place 
+COPY gridcoinresearchd /usr/local/bin
 
-RUN  mkdir /root/.gridcoin/
+RUN  mkdir /root/.GridcoinResearch/
 
-COPY gridcoin.conf /root/.gridcoin/
+COPY gridcoinresearch.conf /root/.GridcoinResearch/
 
-VOLUME /root/.gridcoin
+VOLUME /root/.GridcoinResearch
 
 WORKDIR /usr/local/bin
 
 EXPOSE 5000
 
-CMD ["gridcoind"]
+CMD ["./gridcoinresearchd"]
