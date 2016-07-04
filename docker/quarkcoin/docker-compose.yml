@@ -1,0 +1,26 @@
+version: '2'
+services:
+  client:
+    container_name: qrk-client
+    networks: 
+        - qrk
+    image: coinvault/quarkcoin
+  nako:
+    container_name: qrk-nako
+    networks: 
+        - qrk
+    image: coinvault/nako
+    command: QRK
+    ports: 
+        - 9012:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: qrk-mongo
+    networks: 
+        - qrk
+    image: mongo:3.2
+networks:
+    qrk:
+      driver: bridge
