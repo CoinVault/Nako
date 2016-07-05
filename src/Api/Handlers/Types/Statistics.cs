@@ -26,6 +26,11 @@ namespace Nako.Api.Handlers.Types
         public string CoinTag { get; set; }
 
         /// <summary>
+        /// Gets or sets the sync progress.
+        /// </summary>
+        public string Progress { get; set; }
+
+        /// <summary>
         /// Gets or sets the number of transactions in pool.
         /// </summary>
         public int TransactionsInPool { get; set; }
