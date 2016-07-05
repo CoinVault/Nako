@@ -31,6 +31,7 @@ namespace Nako.Api
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterType<QueryHandler>().SingleInstance();
             builder.RegisterType<StatsHandler>().SingleInstance();
+            builder.RegisterType<CommandHandler>().SingleInstance();
         }
     }
 }

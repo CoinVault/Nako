@@ -112,9 +112,11 @@
   <ItemGroup>
     <Compile Include="Api\ApiModule.cs" />
     <Compile Include="Api\Extension.cs" />
+    <Compile Include="Api\Handlers\CommandController.cs" />
     <Compile Include="Api\Handlers\StatsController.cs" />
     <Compile Include="Api\Handlers\QueryController.cs" />
     <Compile Include="Api\ApiServer.cs" />
+    <Compile Include="Api\Handlers\CommandHandler.cs" />
     <Compile Include="Api\Handlers\Types\Statistics.cs" />
     <Compile Include="Api\Handlers\Types\StatsConnection.cs" />
     <Compile Include="Client\Types\PeerInfo.cs" />
