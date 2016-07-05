@@ -28,7 +28,7 @@ namespace Nako.Client.Types
 
         public string Proxy { get; set; }
 
-        public double Difficulty { get; set; }
+        //public double Difficulty { get; set; }
 
         public bool Testnet { get; set; }
 

@@ -28,8 +28,8 @@ namespace Nako.Client.Types
         [JsonProperty("confirmations")]
         public long Confirmations { get; set; }
 
-        [JsonProperty("difficulty")]
-        public string Difficulty { get; set; }
+        //[JsonProperty("difficulty")]
+        //public string Difficulty { get; set; }
 
         [JsonProperty("hash")]
         public string Hash { get; set; }
