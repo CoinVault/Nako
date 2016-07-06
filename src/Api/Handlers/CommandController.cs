@@ -10,6 +10,7 @@
 
 namespace Nako.Api.Handlers
 {
+    using Binding.Api;
     #region Using Directives
 
     using System.Net;
@@ -40,7 +41,7 @@ namespace Nako.Api.Handlers
 
         [Route("send")]
         [HttpPost]
-        public async Task<HttpResponseMessage> PostSend([FromBody] string trx)
+        public async Task<HttpResponseMessage> PostSend([NakedBody] string trx)
         {
             var ret = await this.commandHandler.SendTransaction(trx);
             var response = this.Request.CreateResponse(HttpStatusCode.OK, ret, new JsonMediaTypeFormatter { Indent = true });

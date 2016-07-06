@@ -111,6 +111,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\ApiModule.cs" />
+    <Compile Include="Api\Binding\NakedBodyAttribute.cs" />
+    <Compile Include="Api\Binding\NakedBodyParameterBinding.cs" />
     <Compile Include="Api\Extension.cs" />
     <Compile Include="Api\Handlers\CommandController.cs" />
     <Compile Include="Api\Handlers\StatsController.cs" />
