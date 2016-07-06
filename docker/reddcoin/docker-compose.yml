@@ -5,6 +5,8 @@ services:
     networks: 
         - rdd
     image: coinvault/reddcoin
+    ports: 
+        - 5014:5000
   nako:
     container_name: rdd-nako
     networks: 

@@ -5,6 +5,8 @@ services:
     networks: 
         - grc
     image: coinvault/gridcoin
+    ports: 
+        - 5008:5000
   nako:
     container_name: grc-nako
     networks: 

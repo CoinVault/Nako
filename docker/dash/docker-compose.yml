@@ -5,6 +5,8 @@ services:
     networks: 
         - dash
     image: coinvault/dash
+    ports: 
+        - 5010:5000
   nako:
     container_name: dash-nako
     networks: 

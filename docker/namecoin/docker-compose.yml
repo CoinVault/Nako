@@ -5,6 +5,8 @@ services:
     networks: 
         - nmc
     image: coinvault/namecoin
+    ports: 
+        - 5006:5000
   nako:
     container_name: nmc-nako
     networks: 

@@ -5,6 +5,8 @@ services:
     networks: 
         - qrk
     image: coinvault/quarkcoin
+    ports: 
+        - 5012:5000
   nako:
     container_name: qrk-nako
     networks: 
