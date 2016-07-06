@@ -7,6 +7,7 @@ services:
     image: coinvault/mastertrader
     ports: 
         - 5016:5000
+        - 14475:14475
   nako:
     container_name: mtr-nako
     networks: 
