@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: xpm-client
+    networks: 
+        - xpm
+    image: coinvault/primecoin
+    ports: 
+        - 5018:5000
+        - 9911:9911
+  nako:
+    container_name: xpm-nako
+    networks: 
+        - xpm
+    image: coinvault/nako
+    command: xpm
+    ports: 
+        - 9018:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: xpm-mongo
+    networks: 
+        - xpm
+    image: mongo:3.2
+networks:
+    xpm:
+      driver: bridge
