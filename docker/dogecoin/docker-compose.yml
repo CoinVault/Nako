@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: doge-client
+    networks: 
+        - doge
+    image: coinvault/dogecoin
+    ports: 
+        - 5007:5000
+        - 22556:22556
+  nako:
+    container_name: doge-nako
+    networks: 
+        - doge
+    image: coinvault/nako
+    command: DOGE
+    ports: 
+        - 9007:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: doge-mongo
+    networks: 
+        - doge
+    image: mongo:3.2
+networks:
+    doge:
+      driver: bridge
