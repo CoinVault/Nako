@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: ppc-client
+    networks: 
+        - ppc
+    image: coinvault/peercoin
+    ports: 
+        - 5002:5000
+        - 9901:9901
+  nako:
+    container_name: ppc-nako
+    networks: 
+        - ppc
+    image: coinvault/nako
+    command: ppc
+    ports: 
+        - 9002:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: ppc-mongo
+    networks: 
+        - ppc
+    image: mongo:3.2
+networks:
+    ppc:
+      driver: bridge
