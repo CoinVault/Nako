@@ -13,7 +13,7 @@ services:
     networks: 
         - xpm
     image: coinvault/nako
-    command: xpm
+    command: XPM
     ports: 
         - 9018:9000
     depends_on:
