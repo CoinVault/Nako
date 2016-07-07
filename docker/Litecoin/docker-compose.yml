@@ -7,6 +7,7 @@ services:
     image: coinvault/litecoin
     ports: 
         - 5004:5000
+        - 9333:9333
   nako:
     container_name: ltc-nako
     networks: 
