@@ -13,7 +13,7 @@ services:
     networks: 
         - ppc
     image: coinvault/nako
-    command: ppc
+    command: PPC
     ports: 
         - 9002:9000
     depends_on:
