@@ -111,7 +111,7 @@ namespace Nako.Storage.Mongo
                 var queue = new Queue<DecodedRawTransaction>(item.Transactions);
                 do
                 {
-                    var items = this.GetTransactionBatch(1000, queue).ToList();
+                    var items = this.GetTransactionBatch(this.configuration.MongoBatchSize, queue).ToList();
 
                     try
                     {

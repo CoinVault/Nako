@@ -71,9 +71,10 @@ namespace Nako.Config
                 NotifyUrl = ConfigurationManager.AppSettings.Get("NotifyUrl"),
                 NotifyBatchCount = Convert.ToInt16(ConfigurationManager.AppSettings.Get("NotifyBatchCount")),
 
+                DetailedTrace = Convert.ToInt32(ConfigurationManager.AppSettings.Get("DetailedTrace")),
                 SyncInterval = Convert.ToInt16(ConfigurationManager.AppSettings.Get("SyncInterval")),
                 MaxItemsInQueue = Convert.ToInt16(ConfigurationManager.AppSettings.Get("MaxItemsInQueue")),
-                DetailedTrace = Convert.ToInt32(ConfigurationManager.AppSettings.Get("DetailedTrace")),
+                MongoBatchSize = Convert.ToInt16(ConfigurationManager.AppSettings.Get("MongoBatchSize")),
                 ParallelRequestsToTransactionRpc = Convert.ToInt16(ConfigurationManager.AppSettings.Get("ParallelRequestsToTransactionRpc")),
             };
 

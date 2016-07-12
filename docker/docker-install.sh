@@ -10,13 +10,14 @@ apt-get -y install linux-image-extra-$(uname -r)
 
 # install
 apt-get -y install docker-engine
-service docker start
+#service docker start
 
 # create group
 #groupadd docker
 usermod -aG docker $(whoami)
 
-#docker compose
-curl -L https://github.com/docker/compose/releases/download/1.8.0-rc2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+# docker compose (we use 1.8.0-rc1)
+apt-get -y install curl
+curl -L https://github.com/docker/compose/releases/download/1.8.0-rc1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 

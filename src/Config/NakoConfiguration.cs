@@ -47,6 +47,8 @@ namespace Nako.Config
 
         public int NotifyBatchCount { get; set; }
 
+        public int MongoBatchSize { get; set; }
+
         #endregion
     }
 }
