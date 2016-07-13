@@ -1,5 +1,5 @@
 # a cointainer cointaining the build (follow instruction from the github quarckcoin project)
-FROM mtr-build  
+FROM mastertrader-build  
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 

@@ -1,0 +1,32 @@
+FROM coinvault/client-base:latest
+
+MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
+
+# dependencies required to run the daemon
+RUN apt-get update \
+	&& apt-get install -y git \
+	&& apt-get install -y libssl-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev \
+	&& apt-get install -y qt-sdk qt4-default \
+	&& apt-get install -y libcurl3-dev \
+	&& apt-get install -y libzip-dev
+
+# get (use my forked repo as the rwp raw trx is configured to return the trx hex)
+RUN apt-get update \
+    && cd ~ \
+	&& git clone https://github.com/dangershony/MTR-Update.git  
+
+# build
+RUN	cd ~/MTR-Update/src \
+	&& mkdir obj \
+	&& chmod +x leveldb/build_detect_platform \
+	&& mkdir -p obj/zerocoin \
+	&& make -f makefile.unix USE_UPNP=- 
+       
+# install
+RUN cd ~/MTR-Update/src \
+    && strip MasterTraderd \
+	&& install -m 755 MasterTraderd /usr/bin/MasterTraderd 
+
+# clean
+RUN apt-get purge -y --auto-remove git \
+  && rm -r ~/MTR-Update
