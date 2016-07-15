@@ -14,4 +14,4 @@ WORKDIR /usr/local/bin
 
 EXPOSE 5000
 
-CMD ["MasterTraderd"]
+CMD ["mastertraderd"]

@@ -13,20 +13,17 @@ RUN apt-get update \
 # get (use my forked repo as the rwp raw trx is configured to return the trx hex)
 RUN apt-get update \
     && cd ~ \
-	&& git clone https://github.com/dangershony/MTR-Update.git  
+	&& git clone https://github.com/dangershony/mastertrader  
 
 # build
-RUN	cd ~/MTR-Update/src \
-	&& mkdir obj \
-	&& chmod +x leveldb/build_detect_platform \
-	&& mkdir -p obj/zerocoin \
+RUN	cd ~/mastertrader/src \
 	&& make -f makefile.unix USE_UPNP=- 
        
 # install
-RUN cd ~/MTR-Update/src \
-    && strip MasterTraderd \
-	&& install -m 755 MasterTraderd /usr/bin/MasterTraderd 
+RUN cd ~/mastertrader/src \
+    && strip mastertraderd \
+	&& install -m 755 mastertraderd /usr/local/bin 
 
 # clean
 RUN apt-get purge -y --auto-remove git \
-  && rm -r ~/MTR-Update
+  && rm -r ~/mastertrader

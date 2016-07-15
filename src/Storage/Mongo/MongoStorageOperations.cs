@@ -107,21 +107,19 @@ namespace Nako.Storage.Mongo
                         this.data.MemoryTransactions.TryRemove(t.TxId, out outer);
                     });
 
-                // break the work in to batches of 1000 transactions per batch
+                // break the work in to batches transactions
                 var queue = new Queue<DecodedRawTransaction>(item.Transactions);
                 do
                 {
-                    var items = this.GetTransactionBatch(this.configuration.MongoBatchSize, queue).ToList();
+                    var items = this.GetBatch(this.configuration.MongoBatchSize, queue).ToList();
 
                     try
                     {
                         if (item.BlockInfo != null)
                         {
                             var inserts = items.Select(s => new MapTransactionBlock { BlockIndex = item.BlockInfo.Height, TransactionId = s.TxId }).ToList();
-
-                            this.data.MapTransactionBlock.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
-
                             stats.Transactions += inserts.Count();
+                            this.data.MapTransactionBlock.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
                         }
                     }
                     catch (MongoBulkWriteException mbwex)
@@ -132,26 +130,32 @@ namespace Nako.Storage.Mongo
                         }
                     }
 
-                    try
+                    // insert inputs and add to the list for later to use on the notification task.
+                    var inputs = this.CreateInputs(item.BlockInfo.Height, items).ToList();
+                    var queueInner = new Queue<MapTransactionAddress>(inputs);
+                    do
                     {
-                        var inputs = this.CreateInputs(item.BlockInfo.Height, items).ToList();
-                        this.data.MapTransactionAddress.InsertMany(inputs, new InsertManyOptions { IsOrdered = false });
-                        stats.Inputs += inputs.Count();
-
-                        // add to the list for later to use on the notification task.
-                        stats.Items.AddRange(inputs);
-                    }
-                    catch (MongoBulkWriteException mbwex)
-                    {
-                        if (!mbwex.Message.Contains("E11000 duplicate key error collection"))
+                        try
                         {
-                            throw;
+                            var itemsInner = this.GetBatch(this.configuration.MongoBatchSize, queueInner).ToList();
+                            stats.Inputs += itemsInner.Count();
+                            stats.Items.AddRange(itemsInner);
+                            this.data.MapTransactionAddress.InsertMany(itemsInner, new InsertManyOptions { IsOrdered = false });
+                        }
+                        catch (MongoBulkWriteException mbwex)
+                        {
+                            if (!mbwex.Message.Contains("E11000 duplicate key error collection"))
+                            {
+                                throw;
+                            }
                         }
                     }
+                    while (queueInner.Any());
 
+                    // insert outputs
                     var outputs = this.CreateOutputs(items).ToList();
-                    outputs.ForEach(outp => this.data.MarkOutput(outp.InputTransactionId, outp.InputIndex, outp.TransactionId));
                     stats.Outputs += outputs.Count();
+                    outputs.ForEach(outp => this.data.MarkOutput(outp.InputTransactionId, outp.InputIndex, outp.TransactionId));
                 }
                 while (queue.Any());
 
@@ -204,20 +208,24 @@ namespace Nako.Storage.Mongo
             this.data.InsertBlock(blockInfo);
         }
 
-        private IEnumerable<DecodedRawTransaction> GetTransactionBatch(int maxItems, Queue<DecodedRawTransaction> queue)
+        private IEnumerable<T> GetBatch<T>(int maxItems, Queue<T> queue)
         {
-            var total = 0;
-            var items = new List<DecodedRawTransaction>();
+            //var total = 0;
+            var items = new List<T>();
 
-            do
-            {
-                var aggregate = Extensions.TakeAndRemove(queue, 100).ToList();
+            // todo: optimize this
+            var aggregate = Extensions.TakeAndRemove(queue, maxItems).ToList();
+            items.AddRange(aggregate);
 
-                items.AddRange(aggregate);
+            //do
+            //{
+            //    var aggregate = Extensions.TakeAndRemove(queue, 100).ToList();
 
-                total = items.SelectMany(s => s.VIn).Cast<object>().Concat(items.SelectMany(s => s.VOut).Cast<object>()).Count();
-            }
-            while (total < maxItems && queue.Any());
+            //    items.AddRange(aggregate);
+
+            //    total = items.SelectMany(s => s.VIn).Cast<object>().Concat(items.SelectMany(s => s.VOut).Cast<object>()).Count();
+            //}
+            //while (total < maxItems && queue.Any());
 
             return items;
         }
