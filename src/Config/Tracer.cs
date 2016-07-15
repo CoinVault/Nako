@@ -66,7 +66,7 @@ namespace Nako.Config
         private class Throttler
         {
             private int hits;
-            private int skiped;
+            private int skipped;
 
             private DateTime minute = DateTime.Now;
 
@@ -81,19 +81,19 @@ namespace Nako.Config
                 {
                     if (DateTime.Now > minute.AddSeconds(1))
                     {
-                        if (skiped > 0)
+                        if (skipped > 0)
                         {
                             // a temporary trace to get stats on how many traces where skipped
-                            Console.WriteLine("=========== hits {0} ========== skpied {1} ======================================", hits, skiped);
+                            Console.WriteLine("=========== hits {0} ========== skipped {1} ======================================", hits, skipped);
                         }
                         minute = DateTime.Now;
                         hits = 1;
-                        skiped = 0;
+                        skipped = 0;
                         return true;
                     }
                     else
                     {
-                        Interlocked.Increment(ref skiped);
+                        Interlocked.Increment(ref skipped);
                         return false;
                     }
                 }
