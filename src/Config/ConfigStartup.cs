@@ -51,6 +51,8 @@ namespace Nako.Config
                 throw new ApplicationException("Please provide a CoinTag in config or as argument");
             }
 
+            coinTag = coinTag.ToUpper();
+
             var nakoConfig = new NakoConfiguration
             {
                 CoinTag = coinTag,

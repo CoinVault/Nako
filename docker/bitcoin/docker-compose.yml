@@ -5,6 +5,9 @@ services:
     networks: 
         - btc
     image: coinvault/bitcoin
+    ports: 
+        - 5000:5000
+        - 8333:8333
   nako:
     container_name: btc-nako
     networks: 
