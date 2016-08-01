@@ -138,9 +138,12 @@ namespace Nako.Storage.Mongo
                         try
                         {
                             var itemsInner = this.GetBatch(this.configuration.MongoBatchSize, queueInner).ToList();
-                            stats.Inputs += itemsInner.Count();
-                            stats.Items.AddRange(itemsInner);
-                            this.data.MapTransactionAddress.InsertMany(itemsInner, new InsertManyOptions { IsOrdered = false });
+                            if (itemsInner.Any())
+                            {
+                                stats.Inputs += itemsInner.Count();
+                                stats.Items.AddRange(itemsInner);
+                                this.data.MapTransactionAddress.InsertMany(itemsInner, new InsertManyOptions { IsOrdered = false });
+                            }
                         }
                         catch (MongoBulkWriteException mbwex)
                         {
