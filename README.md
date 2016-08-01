@@ -13,7 +13,7 @@ CoinVault uses Nako as a block Explorer, Nako is lightweight and uses mongodb to
 - Running a MongoDB instance as indexing storage
 - OWIN selfhost REST api easily documented using swagger
 
-We run coin nodes and Nako on [docker](https://www.docker.com/) (with docker-compose)
+We user [docker](https://www.docker.com/) (with docker-compose)
 
 #### Api
 Swagger http://[server-url]:[port]/swagger/
