@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: clam-client
+    networks: 
+        - clam
+    image: coinvault/clams
+    ports: 
+        - 5022:5000
+        - 31174:31174
+  nako:
+    container_name: clam-nako
+    networks: 
+        - clam
+    image: coinvault/nako
+    command: CLAM
+    ports: 
+        - 9022:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: clam-mongo
+    networks: 
+        - clam
+    image: mongo:3.2
+networks:
+    clam:
+      driver: bridge
