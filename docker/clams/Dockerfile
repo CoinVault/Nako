@@ -11,17 +11,20 @@ RUN set -ex \
 	&& tar -xzvf downloadfile.tar.gz -C /usr/local --strip-components=1 --exclude=*-qt \
 	&& rm downloadfile.tar.gz \
 
+    # clam hack
+	&&  mv /usr/local/clam-1.4.17/* /usr/local/ \
+	
 	# remove build dependencies
 	&& apt-get purge -y --auto-remove wget
 
 RUN  mkdir /root/.clam/
 
-COPY clams.conf /root/.clams/
+COPY clam.conf /root/.clam/
 
-VOLUME /root/.clams
+VOLUME /root/.clam
 
 WORKDIR /usr/local/bin
 
 EXPOSE 5000
 
-CMD ["clamsd"]
+CMD ["./clamd"]
