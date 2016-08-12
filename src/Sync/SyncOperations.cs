@@ -190,16 +190,16 @@ namespace Nako.Sync
             var newTransactions = currentMemoryPool.Except(currentTable).ToList();
             var deleteTransaction = currentTable.Except(currentMemoryPool).ToList();
 
-            var newTransactionsLimited = newTransactions.Count() < 1000 ? newTransactions : newTransactions.Take(1000).ToList();
+            //var newTransactionsLimited = newTransactions.Count() < 1000 ? newTransactions : newTransactions.Take(1000).ToList();
 
-            syncingBlocks.CurrentPoolSyncing.AddRange(newTransactionsLimited);
+            syncingBlocks.CurrentPoolSyncing.AddRange(newTransactions);
             deleteTransaction.ForEach(t => syncingBlocks.CurrentPoolSyncing.Remove(t));
 
             stoper.Stop();
 
             this.tracer.DetailedTrace("SyncPool", string.Format("Seconds = {0} - New Transactions = {1}", stoper.Elapsed.TotalSeconds, newTransactions.Count()));
 
-            return new SyncPoolTransactions { Transactions = newTransactionsLimited };
+            return new SyncPoolTransactions { Transactions = newTransactions };
         }
 
         private class tcalc
