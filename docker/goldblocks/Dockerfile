@@ -1,4 +1,4 @@
-FROM gridcoin-build
+FROM goldblocks-build
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
