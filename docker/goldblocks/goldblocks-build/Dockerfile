@@ -17,10 +17,10 @@ RUN apt-get update \
 
 # build
 RUN	cd ~/goldblocks/src \
-	&& mkdir obj \
+	&& mkdir -p obj \
 	&& chmod 755 leveldb/build_detect_platform \
 	&& make -f makefile.unix USE_UPNP=- 
-	
+
 # install
 RUN cd ~/goldblocks/src \
     && strip goldblocksd \
