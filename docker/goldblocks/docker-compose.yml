@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: gb-client
+    networks: 
+        - gb
+    image: coinvault/goldblocks
+    ports: 
+        - 5022:5000
+        - 27920:27920
+  nako:
+    container_name: gb-nako
+    networks: 
+        - gb
+    image: coinvault/nako
+    command: gb
+    ports: 
+        - 9022:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: gb-mongo
+    networks: 
+        - gb
+    image: mongo:3.2
+networks:
+    gb:
+      driver: bridge
