@@ -13,7 +13,7 @@ services:
     networks: 
         - gb
     image: coinvault/nako
-    command: gb
+    command: GB
     ports: 
         - 9022:9000
     depends_on:
