@@ -28,4 +28,4 @@ RUN cd ~/goldblocks/src \
 
 # clean
 RUN apt-get purge -y --auto-remove git \
-  && rm -r ~/goldblocksh
+  && rm -r ~/goldblocks
