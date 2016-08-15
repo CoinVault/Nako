@@ -2,11 +2,11 @@ FROM goldblocks-build
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-RUN  mkdir /root/.goldblocks/
+RUN  mkdir /root/.GoldBlocks/
 
-COPY goldblocks.conf /root/.goldblocks/
+COPY goldblocks.conf /root/.GoldBlocks/
 
-VOLUME /root/.goldblocks
+VOLUME /root/.GoldBlocks
 
 WORKDIR /usr/local/bin
 
