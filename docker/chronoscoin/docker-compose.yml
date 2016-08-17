@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: crx-client
+    networks: 
+        - crx
+    image: coinvault/chronos
+    ports: 
+        - 5026:5000
+        - 7633:7633
+  nako:
+    container_name: crx-nako
+    networks: 
+        - crx
+    image: coinvault/nako
+    command: CRX
+    ports: 
+        - 9026:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: crx-mongo
+    networks: 
+        - crx
+    image: mongo:3.2
+networks:
+    crx:
+      driver: bridge
