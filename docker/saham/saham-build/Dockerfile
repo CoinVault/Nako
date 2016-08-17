@@ -13,19 +13,19 @@ RUN apt-get update \
 # get
 RUN apt-get update \
     && cd ~ \
-	&& git clone https://github.com/gridcoin/Gridcoin-Research  
+	&& git clone https://github.com/dangershony/SahamDev.git  
 
 # build
-RUN	cd ~/Gridcoin-Research/src \
-	&& mkdir obj \
+RUN	cd ~/SahamDev/src \
+	&& mkdir -p obj \
 	&& chmod 755 leveldb/build_detect_platform \
 	&& make -f makefile.unix USE_UPNP=- 
 
 # install
-RUN cd ~/Gridcoin-Research/src \
-    && strip gridcoinresearchd \
-	&& install -m 755 gridcoinresearchd /usr/local/bin 
+RUN cd ~/SahamDev/src \
+    && strip sahamd \
+	&& install -m 755 sahamd /usr/local/bin  
 
 # clean
 RUN apt-get purge -y --auto-remove git \
-  && rm -r ~/Gridcoin-Research
+  && rm -r ~/SahamDev

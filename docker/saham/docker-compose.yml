@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: shm-client
+    networks: 
+        - shm
+    image: coinvault/saham
+    ports: 
+        - 5024:5000
+        - 7897:7897
+  nako:
+    container_name: shm-nako
+    networks: 
+        - shm
+    image: coinvault/nako
+    command: SHM
+    ports: 
+        - 9024:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: shm-mongo
+    networks: 
+        - shm
+    image: mongo:3.2
+networks:
+    shm:
+      driver: bridge
