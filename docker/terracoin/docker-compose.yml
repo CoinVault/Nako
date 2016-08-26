@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: trc-client
+    networks: 
+        - trc
+    image: coinvault/terrcoin
+    ports: 
+        - 5028:5000
+        - 13333:13333
+  nako:
+    container_name: trc-nako
+    networks: 
+        - trc
+    image: coinvault/nako
+    command: trc
+    ports: 
+        - 9028:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: trc-mongo
+    networks: 
+        - trc
+    image: mongo:3.2
+networks:
+    trc:
+      driver: bridge
