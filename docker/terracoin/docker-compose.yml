@@ -4,7 +4,7 @@ services:
     container_name: trc-client
     networks: 
         - trc
-    image: coinvault/terrcoin
+    image: coinvault/terracoin
     ports: 
         - 5028:5000
         - 13333:13333
