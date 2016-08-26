@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: ubiq-client
+    networks: 
+        - ubiq
+    image: coinvault/ubiquoin
+    ports: 
+        - 5030:5000
+        - 55116:55116
+  nako:
+    container_name: ubiq-nako
+    networks: 
+        - ubiq
+    image: coinvault/nako
+    command: UBIQ
+    ports: 
+        - 9030:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: ubiq-mongo
+    networks: 
+        - ubiq
+    image: mongo:3.2
+networks:
+    ubiq:
+      driver: bridge
