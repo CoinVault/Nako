@@ -72,31 +72,32 @@ namespace Nako.Config
 
             public bool CanWrite()
             {
-                if (hits < 10)
-                {
-                    Interlocked.Increment(ref hits);
-                    return true;
-                }
-                else
-                {
-                    if (DateTime.Now > minute.AddSeconds(1))
-                    {
-                        if (skipped > 0)
-                        {
-                            // a temporary trace to get stats on how many traces where skipped
-                            Console.WriteLine("=========== hits {0} ========== skipped {1} ======================================", hits, skipped);
-                        }
-                        minute = DateTime.Now;
-                        hits = 1;
-                        skipped = 0;
-                        return true;
-                    }
-                    else
-                    {
-                        Interlocked.Increment(ref skipped);
-                        return false;
-                    }
-                }
+                return true;
+                //if (hits < 10)
+                //{
+                //    Interlocked.Increment(ref hits);
+                //    return true;
+                //}
+                //else
+                //{
+                //    if (DateTime.Now > minute.AddSeconds(1))
+                //    {
+                //        if (skipped > 0)
+                //        {
+                //            // a temporary trace to get stats on how many traces where skipped
+                //            Console.WriteLine("=========== hits {0} ========== skipped {1} ======================================", hits, skipped);
+                //        }
+                //        minute = DateTime.Now;
+                //        hits = 1;
+                //        skipped = 0;
+                //        return true;
+                //    }
+                //    else
+                //    {
+                //        Interlocked.Increment(ref skipped);
+                //        return false;
+                //    }
+                //}
             }
         }
     }

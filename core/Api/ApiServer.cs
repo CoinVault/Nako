@@ -56,86 +56,91 @@ namespace Nako.Api
             this.application = nakoApplication;
         }
 
-        public void StartApi(IContainer container)
+        // ugly hack
+        public static IContainer Cointainer;
+
+        public Task StartApi(IContainer container)
         {
             this.application.CreateApiToken();
+            Cointainer = container;
 
-            var url = string.Format("http://+:{0}", this.configuration.SyncApiPort);
+            return Task.Run(
+                () =>
+                {
+                    try
+                    {
+                        var url = string.Format("http://+:{0}", this.configuration.SyncApiPort);
 
-            var host = new WebHostBuilder()
-              .UseContentRoot(Directory.GetCurrentDirectory())
-              .UseUrls(url)
-              .UseKestrel()
-              .UseStartup<ApiServer>()
-              .Build();
+                        var hostbuilder = new WebHostBuilder()
+                          .UseKestrel()
+                          .UseContentRoot(Directory.GetCurrentDirectory())
+                          .UseUrls(url)
+                          .UseStartup<Startup>();
+                          
+                        var host = hostbuilder.Build();
+                        
+                        host.Start();
 
-            host.Run();
-
-            //return Task.Run(
-            //    () =>
-            //    {
-            //        try
-            //        {
-            //            var url = string.Format("http://+:{0}", this.configuration.SyncApiPort);
-            //            var options = new StartOptions(url);
-
-            //            using (WebApp.Start(options, appBuilder => this.Configuration(appBuilder, container)))
-            //            {
-            //                this.tracer.Trace("API", string.Format("Self host server running at {0}", url));
-
-            //                Task.Delay(Timeout.Infinite, this.application.ApiToken).Wait(this.application.ApiToken);
-            //            }
-            //        }
-            //        catch (OperationCanceledException)
-            //        {
-            //            // do nothing the task was cancel.
-            //            throw;
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            this.tracer.TraceError("API", ex.ToString());
-            //            //Console.ReadLine();
-            //            throw;
-            //        }
-            //    }, 
-            //    this.application.ApiToken);
+                        Task.Delay(Timeout.Infinite, this.application.ApiToken).Wait(this.application.ApiToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        // do nothing the task was cancel.
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        this.tracer.TraceError("API", ex.ToString());
+                        //Console.ReadLine();
+                        throw;
+                    }
+                },
+                this.application.ApiToken);
         }
 
-        // ConfigureServices is where you register dependencies. This gets
-        // called by the runtime before the Configure method, below.
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public class Startup
         {
-            // Add services to the collection.
-            services.AddMvc();
+            // ConfigureServices is where you register dependencies. This gets
+            // called by the runtime before the Configure method, below.
+            public IServiceProvider ConfigureServices(IServiceCollection services)
+            {
+                // Add services to the collection.
+                services.AddMvc();
+                services.AddRouting();
 
-            // Create the container builder.
-            var builder = new ContainerBuilder();
+                // Create the container builder.
+                var builder = new ContainerBuilder();
+                builder.RegisterInstance(ApiServer.Cointainer.Resolve<NakoConfiguration>()).As<NakoConfiguration>();
+                builder.RegisterAssemblyModules(System.Reflection.Assembly.GetEntryAssembly());
 
-            // Register dependencies, populate the services from
-            // the collection, and build the container. If you want
-            // to dispose of the container at the end of the app,
-            // be sure to keep a reference to it as a property or field.
-            // builder.RegisterType<MyType>().As<IMyType>();
-            //builder.Populate(services);
-            //this.ApplicationContainer = builder.Build();
-            var cointainer = builder.Build();
+                // Register dependencies, populate the services from
+                // the collection, and build the container. If you want
+                // to dispose of the container at the end of the app,
+                // be sure to keep a reference to it as a property or field.
+                // builder.RegisterType<MyType>().As<IMyType>();
+                builder.Populate(services);
+                //this.ApplicationContainer = builder.Build();
+                var cointainer = builder.Build();
 
-            // Create the IServiceProvider based on the container.
-            return new AutofacServiceProvider(cointainer);
-        }
+                // Create the IServiceProvider based on the container.
+                return new AutofacServiceProvider(cointainer);
+            }
 
-        // Configure is where you add middleware. This is called after
-        // ConfigureServices. You can use IApplicationBuilder.ApplicationServices
-        // here if you need to resolve things from the container.
-        public void Configure(
-          IApplicationBuilder app,
-          IApplicationLifetime appLifetime)
-        {
-            app.UseMvc();
-            
-            // If you want to dispose of resources that have been resolved in the
-            // application container, register for the "ApplicationStopped" event.
-            //appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+            // Configure is where you add middleware. This is called after
+            // ConfigureServices. You can use IApplicationBuilder.ApplicationServices
+            // here if you need to resolve things from the container.
+            public void Configure(
+              IApplicationBuilder app,
+              IApplicationLifetime appLifetime)
+            {
+                app.UseMvc();
+                app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
+                
+                // If you want to dispose of resources that have been resolved in the
+                // application container, register for the "ApplicationStopped" event.
+                //appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+            }
         }
     }
 

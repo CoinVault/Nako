@@ -1,20 +1,27 @@
-﻿{
-  "version": "1.0.0-*",
+﻿  {
   "buildOptions": {
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "copyToOutput": { "includeFiles": [ "nakosettings.json" ] }
   },
+
+  
 
   "dependencies": {
     "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.0",
     "Microsoft.AspNetCore.Owin": "1.0.0",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel.Https": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.0"
     },
-    "MongoDB.Driver": "2.3.0-rc1"
+    "MongoDB.Driver": "2.3.0-rc1",
+    "Newtonsoft.Json": "9.0.1"
   },
 
   "frameworks": {

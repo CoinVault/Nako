@@ -47,7 +47,7 @@ namespace Nako.Sync.SyncTasks
             this.configuration = config;
             this.tracer = tracer;
             this.storage = storage;
-            this.client = new Lazy<HttpClient>(() => new HttpClient(new WebRequestHandler { ServerCertificateValidationCallback = (sender, certificate, chain, errors) => errors == SslPolicyErrors.None || errors == SslPolicyErrors.RemoteCertificateNameMismatch }));
+            this.client = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => errors == SslPolicyErrors.None || errors == SslPolicyErrors.RemoteCertificateNameMismatch }));
         }
 
         /// <inheritdoc />

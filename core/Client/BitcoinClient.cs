@@ -32,16 +32,16 @@ namespace Nako.Client
     {
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes static members of the <see cref="BitcoinClient"/> class.
-        /// </summary>
-        static BitcoinClient()
-        {
-            // The certificate is self signed and for some reason the name does not match the local certificate.
-            // This needs some further investigation on how in create the certificate correctly and install it in the local store.
-            // For now we allow requests with certificates that have a name mismatch.
-            ServicePointManager.ServerCertificateValidationCallback = CertificateHandler.ValidateCertificate;
-        }
+        ///// <summary>
+        ///// Initializes static members of the <see cref="BitcoinClient"/> class.
+        ///// </summary>
+        //static BitcoinClient()
+        //{
+        //    // The certificate is self signed and for some reason the name does not match the local certificate.
+        //    // This needs some further investigation on how in create the certificate correctly and install it in the local store.
+        //    // For now we allow requests with certificates that have a name mismatch.
+        //    ServicePointManager.ServerCertificateValidationCallback = CertificateHandler.ValidateCertificate;
+        //}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BitcoinClient"/> class.
@@ -57,7 +57,8 @@ namespace Nako.Client
         public BitcoinClient(string uri)
         {
             this.Url = new Uri(uri);
-            this.Client = new HttpClient();
+            var handler = new HttpClientHandler { ServerCertificateCustomValidationCallback = CertificateHandler.ValidateCertificate };
+            this.Client = new HttpClient(handler);
         }
 
         /// <summary>
@@ -67,7 +68,8 @@ namespace Nako.Client
         {
             this.Url = new Uri(uri);
             this.Credentials = credentials;
-            this.Client = new HttpClient();
+            var handler = new HttpClientHandler { ServerCertificateCustomValidationCallback = CertificateHandler.ValidateCertificate };
+            this.Client = new HttpClient(handler);
 
             // Set basic authentication.
             var token = Encoding.ASCII.GetBytes(string.Format("{0}:{1}", this.Credentials.UserName, this.Credentials.Password));

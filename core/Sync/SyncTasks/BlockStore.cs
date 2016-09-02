@@ -61,7 +61,7 @@ namespace Nako.Sync.SyncTasks
                     BlockInfo blockInfo;
                     if (!this.Runner.SyncingBlocks.CurrentSyncing.TryRemove(item.BlockInfo.Hash, out blockInfo))
                     {
-                        throw new ApplicationException(string.Format("Failed to remove block hash {0} from collection", item.BlockInfo.Hash));
+                        throw new Exception(string.Format("Failed to remove block hash {0} from collection", item.BlockInfo.Hash));
                     }
                 }
 

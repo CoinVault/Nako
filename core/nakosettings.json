@@ -1,0 +1,25 @@
+﻿{
+  "CoinTag": "LTC",
+
+  "ConnectionString": "mongodb://localhost",
+
+  "RpcAccessPort": 5004,
+  "RpcSecure": false,
+  "RpcDomain": "crypzo-legolas.website",
+  "RpcUser": "rpcuser",
+  "RpcPassword": "rpcpassword",
+
+  "SyncApiPort": 9000,
+  "SyncBlockchain": true,
+  "SyncMemoryPool": true,
+  "StartBlockIndex": 1,
+
+  "NotifyUrl": "https://apiurl",
+  "NotifyBatchCount": 0,
+
+  "MongoBatchSize": 100,
+  "ParallelRequestsToTransactionRpc": 1,
+  "DetailedTrace": 0,
+  "MaxItemsInQueue": 200,
+  "SyncInterval": 5
+}

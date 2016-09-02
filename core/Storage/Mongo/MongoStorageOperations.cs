@@ -67,7 +67,7 @@ namespace Nako.Storage.Mongo
                     {
                         if (lastBlock.SyncComplete)
                         {
-                            throw new ApplicationException("This should never happen.");
+                            throw new InvalidOperationException("This should never happen.");
                         }
                     }
                     else

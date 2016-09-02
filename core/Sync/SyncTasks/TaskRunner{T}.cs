@@ -64,7 +64,7 @@ namespace Nako.Sync.SyncTasks
 
             if (this.Queue.Any())
             {
-                throw new ApplicationException("Failed to empty queue.");
+                throw new Exception("Failed to empty queue.");
             }
         }
     }

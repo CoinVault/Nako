@@ -39,23 +39,24 @@ namespace Nako.Client
 
         private static bool IsValidCryptoCertificate(X509Certificate certificate)
         {
-            var certin = certificate as X509Certificate2;
-            if (certin != null)
-            {
-                X509Certificate2 certOut = null;
-                if (CertUtil.TryResolveCertificate(StoreName.CertificateAuthority, StoreLocation.LocalMachine, X509FindType.FindByThumbprint, certin.Thumbprint, out certOut))
-                {
-                    return true;
-                }
+            return true;
+            //var certin = certificate as X509Certificate2;
+            //if (certin != null)
+            //{
+            //    X509Certificate2 certOut = null;
+            //    if (CertUtil.TryResolveCertificate(StoreName.CertificateAuthority, StoreLocation.LocalMachine, X509FindType.FindByThumbprint, certin.Thumbprint, out certOut))
+            //    {
+            //        return true;
+            //    }
 
-                // TODO: this is a temporary fix to allow fiddler certificates to pass validation.
-                if (CertUtil.TryResolveCertificate(StoreName.My, StoreLocation.CurrentUser, X509FindType.FindByThumbprint, certin.Thumbprint, out certOut))
-                {
-                    return true;
-                }
-            }
+            //    // TODO: this is a temporary fix to allow fiddler certificates to pass validation.
+            //    if (CertUtil.TryResolveCertificate(StoreName.My, StoreLocation.CurrentUser, X509FindType.FindByThumbprint, certin.Thumbprint, out certOut))
+            //    {
+            //        return true;
+            //    }
+            //}
 
-            return false;
+            //return false;
         }
 
         private static bool IsValidCryptoRequest(object sender)

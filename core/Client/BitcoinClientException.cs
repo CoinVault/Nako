@@ -20,7 +20,7 @@ namespace Nako.Client
     /// <summary>
     /// The bit net client exception.
     /// </summary>
-    public class BitcoinClientException : ApplicationException
+    public class BitcoinClientException : Exception
     {
         #region Constructors and Destructors
 

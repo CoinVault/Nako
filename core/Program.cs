@@ -48,7 +48,7 @@ namespace Nako
             builder.RegisterInstance(ConfigStartup.LoadConfiguration(args)).As<NakoConfiguration>();
             builder.RegisterAssemblyModules(Assembly.GetEntryAssembly());
             var container = builder.Build();
-
+           
             container.Resolve<ApiServer>().StartApi(container);
             container.Resolve<SyncServer>().StartSync(container);
             container.Resolve<Terminator>().Start();

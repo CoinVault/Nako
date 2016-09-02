@@ -24,7 +24,7 @@ namespace Nako.Api.Handlers
     /// <summary>
     /// Controller to get some information about a coin.
     /// </summary>
-    [Route("api/stats")]
+    [Route("api/[controller]")]
     public class StatsController : Controller
     {
         private readonly StatsHandler statsHandler;
@@ -39,16 +39,16 @@ namespace Nako.Api.Handlers
 
         #region Public Methods and Operators
 
-        [Route("heartbeat")]
-        public IActionResult GetHeartbeat()
+        [Route("[action]")]
+        public IActionResult Heartbeat()
         {
             var response = this.CreateOkResponse("Heartbeat");
 
             return response;
         }
 
-        [Route("connections")]
-        public async Task<IActionResult> GetConnections()
+        [Route("[action]")]
+        public async Task<IActionResult> Connections()
         {
             var ret = await this.statsHandler.StatsConnection();
 
@@ -57,7 +57,7 @@ namespace Nako.Api.Handlers
             return response;
         }
 
-        [Route("")]
+        [HttpGet()]
         public async Task<IActionResult> Get()
         {
             var ret = await this.statsHandler.Statistics();
@@ -67,8 +67,8 @@ namespace Nako.Api.Handlers
             return response;
         }
 
-        [Route("peers")]
-        public async Task<IActionResult> GetPeers()
+        [Route("[action]")]
+        public async Task<IActionResult> Peers()
         {
             var ret = await this.statsHandler.Peers();
 

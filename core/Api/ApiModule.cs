@@ -15,7 +15,7 @@ namespace Nako.Api
     using System.Reflection;
 
     using Autofac;
-    using Autofac.Integration.WebApi;
+    //using Autofac.Integration.WebApi;
 
     using Nako.Api.Handlers;
 
