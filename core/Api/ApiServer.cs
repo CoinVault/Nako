@@ -12,30 +12,17 @@ namespace Nako.Api
 {
     #region Using Directives
 
+    using Autofac;
+    using Autofac.Extensions.DependencyInjection;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Nako.Config;
     using System;
-    using System.Linq;
+    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Web.Http;
-
-    using Autofac;
-    //using Autofac.Integration.WebApi;
-
-    //using Microsoft.Owin.Hosting;
-
-    using Nako.Config;
-
-    //  using Owin;
-
-    //using Swashbuckle.Application;
-    using Microsoft.AspNetCore.Hosting;
-    using System.IO;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.AspNetCore.Builder;
-    using Autofac.Extensions.DependencyInjection;
-    using Swashbuckle.Swagger.Model;
-    using Microsoft.AspNetCore.Mvc.Formatters;
-    using Microsoft.Extensions.Configuration;
 
     #endregion
 
@@ -120,18 +107,6 @@ namespace Nako.Api
                 {
                     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
                 });
-
-                services.AddSwaggerGen();
-                services.ConfigureSwaggerGen(options =>
-                {
-                    options.SingleApiVersion(new Info
-                    {
-                        Version = "v1",
-                        Title = "Nako API",
-                    });
-                    options.DescribeAllEnumsAsStrings();
-                });
-               
                    
                 // Create the container builder.
                 // asp.net core autofac builds its container at this stage, 
@@ -153,7 +128,7 @@ namespace Nako.Api
             {
                 app.UseMvc();
 
-                app.UseSwagger();
+                //app.UseSwagger();
                 app.UseSwaggerUi();
             }
         }

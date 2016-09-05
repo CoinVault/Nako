@@ -41,15 +41,8 @@ namespace Nako.Api.Handlers
         #region Public Methods and Operators
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Send()
+        public async Task<IActionResult> Send([FromBody] string data)
         {
-            string data = null;
-            
-            using (StreamReader reader = new StreamReader(this.Request.Body,Encoding.UTF8))
-            {
-                data = reader.ReadToEnd();
-            }
-
             var trx = data;
 
             var ret = await this.commandHandler.SendTransaction(trx);
