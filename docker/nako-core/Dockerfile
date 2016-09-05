@@ -6,19 +6,15 @@ MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 RUN apt-get update && apt-get install -y nano git \
     && echo -e "\nexport TERM=xterm" >> ~/.bashrc
 
-RUN mkdir -p /dotnetapp /usr/src/app/source
+RUN mkdir -p /nako
 
 # clone the repository and build  
-RUN git clone https://github.com/CoinVault/Nako.git /usr/src/app/source 
-WORKDIR /usr/src/app/source
-
-COPY ./core /dotnetapp
+RUN git clone https://github.com/CoinVault/Nako.git /nako
 
 # remove git and the sourc
-RUN apt-get purge -y --auto-remove git \
-  && rm -r /usr/src/app/source
+RUN apt-get purge -y --auto-remove git 
 
-WORKDIR /dotnetapp
+WORKDIR /nako/core
 RUN dotnet restore
 
 EXPOSE 9000
