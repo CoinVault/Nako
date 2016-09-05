@@ -25,9 +25,6 @@ namespace Nako.Api
         public static IActionResult CreateOkResponse<T>(this Controller controller, T value)
         {
             return new OkObjectResult(value);
-
-            // the indentation is to format the json response so its human readable.
-            //return (request as HttpRequestMessage).CreateResponse(HttpStatusCode.OK, value, new JsonMediaTypeFormatter { Indent = true });
         }
     }
 }

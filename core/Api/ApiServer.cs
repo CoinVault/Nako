@@ -25,14 +25,17 @@ namespace Nako.Api
 
     using Nako.Config;
 
-  //  using Owin;
+    //  using Owin;
 
-//using Swashbuckle.Application;
+    //using Swashbuckle.Application;
     using Microsoft.AspNetCore.Hosting;
     using System.IO;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.AspNetCore.Builder;
     using Autofac.Extensions.DependencyInjection;
+    using Swashbuckle.Swagger.Model;
+    using Microsoft.AspNetCore.Mvc.Formatters;
+    using Microsoft.Extensions.Configuration;
 
     #endregion
 
@@ -56,13 +59,9 @@ namespace Nako.Api
             this.application = nakoApplication;
         }
 
-        // ugly hack
-        public static IContainer Cointainer;
-
         public Task StartApi(IContainer container)
         {
             this.application.CreateApiToken();
-            Cointainer = container;
 
             return Task.Run(
                 () =>
@@ -75,10 +74,13 @@ namespace Nako.Api
                           .UseKestrel()
                           .UseContentRoot(Directory.GetCurrentDirectory())
                           .UseUrls(url)
+                          .ConfigureServices(serv =>
+                          {
+                              serv.Add(new ServiceDescriptor(typeof(NakoConfiguration), container.Resolve<NakoConfiguration>()));
+                          })
                           .UseStartup<Startup>();
                           
                         var host = hostbuilder.Build();
-                        
                         host.Start();
 
                         Task.Delay(Timeout.Infinite, this.application.ApiToken).Wait(this.application.ApiToken);
@@ -100,67 +102,60 @@ namespace Nako.Api
 
         public class Startup
         {
+            public Startup(IHostingEnvironment env)
+            {
+                var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath);
+                Configuration = builder.Build();
+            }
+
+            public IConfigurationRoot Configuration { get; }
+
             // ConfigureServices is where you register dependencies. This gets
             // called by the runtime before the Configure method, below.
             public IServiceProvider ConfigureServices(IServiceCollection services)
             {
-                // Add services to the collection.
-                services.AddMvc();
-                services.AddRouting();
+                services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                });
 
+                services.AddSwaggerGen();
+                services.ConfigureSwaggerGen(options =>
+                {
+                    options.SingleApiVersion(new Info
+                    {
+                        Version = "v1",
+                        Title = "Nako API",
+                    });
+                    options.DescribeAllEnumsAsStrings();
+                });
+               
+                   
                 // Create the container builder.
+                // asp.net core autofac builds its container at this stage, 
+                // because the Nako server depends on the container being built already, 
+                // we'll build a new service provider for the api calls.  
+                // this means to register all the modules again in the api container (ugly hack but works for now)
                 var builder = new ContainerBuilder();
-                builder.RegisterInstance(ApiServer.Cointainer.Resolve<NakoConfiguration>()).As<NakoConfiguration>();
                 builder.RegisterAssemblyModules(System.Reflection.Assembly.GetEntryAssembly());
-
-                // Register dependencies, populate the services from
-                // the collection, and build the container. If you want
-                // to dispose of the container at the end of the app,
-                // be sure to keep a reference to it as a property or field.
-                // builder.RegisterType<MyType>().As<IMyType>();
                 builder.Populate(services);
-                //this.ApplicationContainer = builder.Build();
                 var cointainer = builder.Build();
 
                 // Create the IServiceProvider based on the container.
                 return new AutofacServiceProvider(cointainer);
             }
 
-            // Configure is where you add middleware. This is called after
-            // ConfigureServices. You can use IApplicationBuilder.ApplicationServices
-            // here if you need to resolve things from the container.
             public void Configure(
               IApplicationBuilder app,
               IApplicationLifetime appLifetime)
             {
                 app.UseMvc();
-                app.UseDeveloperExceptionPage();
-                app.UseStatusCodePages();
-                
-                // If you want to dispose of resources that have been resolved in the
-                // application container, register for the "ApplicationStopped" event.
-                //appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+
+                app.UseSwagger();
+                app.UseSwaggerUi();
             }
         }
     }
-
-    ///// <summary>
-    ///// Configuration of the OWIN api, setup swagger and autofac(DI).
-    ///// </summary>
-    //public void Configuration(IAppBuilder appBuilder, IContainer container)
-    //    {
-    //        // Configure Web API for self-host. 
-    //        var config = new HttpConfiguration();
-    //        config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
-
-    //        config.MapHttpAttributeRoutes();
-    //        config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
-
-    //        config.EnableSwagger(c => c.SingleApiVersion("v1", "The Nako API")).EnableSwaggerUi();    
-
-    //        appBuilder.UseAutofacMiddleware(container);
-    //        appBuilder.UseAutofacWebApi(config);
-    //        appBuilder.UseWebApi(config);
-    //    }
-    //} 
 }

@@ -22,7 +22,7 @@ namespace Nako.Api.Handlers
     /// <summary>
     /// Controller to expose an api that queries the blockchain.
     /// </summary>
-    [Route("api/query")]
+    [Route("api/[controller]")]
     public class QueryController : Controller
     {
         private readonly QueryHandler handler;

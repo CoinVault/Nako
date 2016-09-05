@@ -31,16 +31,6 @@ namespace Nako.Config
         /// </summary>
         public static NakoConfiguration LoadConfiguration(string[] args)
         {
-            ////var location = GetConfigPath(args);
-
-            ////if (!string.IsNullOrEmpty(location))
-            ////{
-            ////    Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            ////    config.AppSettings.File = location;
-            ////    config.Save(ConfigurationSaveMode.Modified);
-            ////    ConfigurationManager.RefreshSection("appSettings");
-            ////}
-
             var path = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "nakosettings.json");
             if (!File.Exists(path))
             {
@@ -65,36 +55,7 @@ namespace Nako.Config
             nakoConfig.CoinTag = coinTag;
             nakoConfig.ConnectionString = nakoConfig.ConnectionString.Replace("{CoinTag}", coinTag.ToLower());
             nakoConfig.RpcDomain = nakoConfig.RpcDomain.Replace("{CoinTag}", coinTag.ToLower());
-
-
-            ////var nakoConfig = new NakoConfiguration
-            ////{
-            ////    CoinTag = coinTag,
-
-            ////    Configuration.GetSection("MySettings")
-            ////    ConnectionString = ConfigurationManager.AppSettings.Get("ConnectionString").Replace("{CoinTag}", coinTag.ToLower()),
-
-            ////    RpcDomain = ConfigurationManager.AppSettings.Get("RpcDomain").Replace("{CoinTag}", coinTag.ToLower()),
-            ////    RpcPassword = ConfigurationManager.AppSettings.Get("RpcPassword"),
-            ////    RpcAccessPort = Convert.ToInt16(ConfigurationManager.AppSettings.Get("RpcAccessPort")),
-            ////    RpcUser = ConfigurationManager.AppSettings.Get("RpcUser"),
-            ////    RpcSecure = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("RpcSecure")),
-
-            ////    SyncApiPort = Convert.ToInt32(ConfigurationManager.AppSettings.Get("SyncApiPort")),
-            ////    SyncBlockchain = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("SyncBlockchain")),
-            ////    SyncMemoryPool = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("SyncMemoryPool")),
-            ////    StartBlockIndex = Convert.ToInt64(ConfigurationManager.AppSettings.Get("StartBlockIndex")),
-
-            ////    NotifyUrl = ConfigurationManager.AppSettings.Get("NotifyUrl"),
-            ////    NotifyBatchCount = Convert.ToInt16(ConfigurationManager.AppSettings.Get("NotifyBatchCount")),
-
-            ////    DetailedTrace = Convert.ToInt32(ConfigurationManager.AppSettings.Get("DetailedTrace")),
-            ////    SyncInterval = Convert.ToInt16(ConfigurationManager.AppSettings.Get("SyncInterval")),
-            ////    MaxItemsInQueue = Convert.ToInt16(ConfigurationManager.AppSettings.Get("MaxItemsInQueue")),
-            ////    MongoBatchSize = Convert.ToInt16(ConfigurationManager.AppSettings.Get("MongoBatchSize")),
-            ////    ParallelRequestsToTransactionRpc = Convert.ToInt16(ConfigurationManager.AppSettings.Get("ParallelRequestsToTransactionRpc")),
-            ////};
-
+            
             return nakoConfig;
         }
 

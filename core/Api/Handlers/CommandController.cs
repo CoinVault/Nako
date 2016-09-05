@@ -13,21 +13,19 @@ namespace Nako.Api.Handlers
 
     #region Using Directives
 
-    using Binding.Api;
-    using System.Net;
-    using System.Net.Http;
-    //using System.Net.Http.Formatting;
+    using Nako.Api;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Routing;
-    //using System.Web.Http;
+    using System.IO;
+    using System.Text;
 
     #endregion
 
     /// <summary>
     /// Controller to get some information about a coin.
     /// </summary>
-    [Route("api/command")]
+    [Route("api/[controller]")]
     public class CommandController : Controller
     {
         private readonly CommandHandler commandHandler;
@@ -42,12 +40,20 @@ namespace Nako.Api.Handlers
 
         #region Public Methods and Operators
 
-        [Route("send")]
-        [HttpPost]
-        public async Task<IActionResult> PostSend(string trx)//[NakedBody] string trx)
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Send()
         {
+            string data = null;
+            
+            using (StreamReader reader = new StreamReader(this.Request.Body,Encoding.UTF8))
+            {
+                data = reader.ReadToEnd();
+            }
+
+            var trx = data;
+
             var ret = await this.commandHandler.SendTransaction(trx);
-            var response = this.CreateOkResponse(ret);
+            var response = new OkObjectResult(ret);
 
             return response;
         }
