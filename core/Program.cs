@@ -37,7 +37,7 @@ namespace Nako
         /// </summary>
         internal static void Main(string[] args)
         {
-            if (!IsRunningOnMono())
+            if (!IsRunningOnLinux())
             {
                 Console.BufferHeight = 1000;
                 Console.WindowHeight = 25;
@@ -60,9 +60,9 @@ namespace Nako
             //Console.Read();
         }
 
-        public static bool IsRunningOnMono()
+        public static bool IsRunningOnLinux()
         {
-            return Type.GetType("Mono.Runtime") != null;
+            return System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux);
         }
 
         #endregion
