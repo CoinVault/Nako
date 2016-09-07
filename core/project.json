@@ -1,9 +1,10 @@
   {
-  "buildOptions": {
-    "emitEntryPoint": true,
-    "copyToOutput": { "includeFiles": [ "nakosettings.json" ] },
-    "xmlDoc": false
-  },
+    "buildOptions": {
+    
+      "emitEntryPoint": true,
+      "copyToOutput": { "includeFiles": [ "nakosettings.json" ] },
+      "xmlDoc": false
+    },
 
 
 

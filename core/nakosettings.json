@@ -1,11 +1,11 @@
 ﻿{
-  "CoinTag": "LTC",
+  "CoinTag": "==CoinTag==",
 
-  "ConnectionString": "mongodb://localhost",
+  "ConnectionString": "mongodb://{CoinTag}-mongo",
 
-  "RpcAccessPort": 5004,
+  "RpcAccessPort": 5000,
   "RpcSecure": false,
-  "RpcDomain": "crypzo-legolas.website",
+  "RpcDomain": "{CoinTag}-client",
   "RpcUser": "rpcuser",
   "RpcPassword": "rpcpassword",
 

@@ -16,6 +16,7 @@ RUN apt-get purge -y --auto-remove git
 
 WORKDIR /nako/core
 RUN dotnet restore
+RUN dotnet build
 
 EXPOSE 9000
 
