@@ -66,7 +66,9 @@ namespace Nako.Api
                               serv.Add(new ServiceDescriptor(typeof(NakoConfiguration), container.Resolve<NakoConfiguration>()));
                           })
                           .UseStartup<Startup>();
-                          
+
+                        this.tracer.Trace("API", string.Format("Self host server running at {0}", url));
+
                         var host = hostbuilder.Build();
                         host.Start();
 
