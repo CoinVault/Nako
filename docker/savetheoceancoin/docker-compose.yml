@@ -1,29 +1,29 @@
 version: '2'
 services:
   client:
-    container_name: crx-client
+    container_name: sto-client
     networks: 
-        - crx
-    image: coinvault/chronos
+        - sto
+    image: coinvault/savetheocean
     ports: 
-        - 5026:5000
-        - 7633:7633
+        - 5032:5000
+        - 4555:4555
   nako:
-    container_name: crx-nako
+    container_name: sto-nako
     networks: 
-        - crx
-    image: coinvault/nako
-    command: CRX
+        - sto
+    image: coinvault/nako:core
+    command: sto
     ports: 
-        - 9026:9000
+        - 9032:9000
     depends_on:
         - mongo
         - client
   mongo:
-    container_name: crx-mongo
+    container_name: sto-mongo
     networks: 
-        - crx
+        - sto
     image: mongo:3.2
 networks:
-    crx:
+    sto:
       driver: bridge

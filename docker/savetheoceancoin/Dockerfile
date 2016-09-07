@@ -1,15 +1,15 @@
-FROM chronos-build
+FROM savetheoceancoin-build
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-RUN  mkdir /root/.chronos/
+RUN  mkdir /root/.SaveTheOcean/
 
-COPY chronos.conf /root/.chronos/
+COPY SaveTheOcean.conf /root/.SaveTheOcean/
 
-VOLUME /root/.chronos
+VOLUME /root/.SaveTheOcean
 
 WORKDIR /usr/local/bin
 
 EXPOSE 5000
 
-CMD ["chronosd"]
+CMD ["SaveTheOceand"]

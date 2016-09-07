@@ -17,8 +17,8 @@
   "NotifyUrl": "https://apiurl",
   "NotifyBatchCount": 0,
 
-  "MongoBatchSize": 100,
-  "ParallelRequestsToTransactionRpc": 1,
+  "MongoBatchSize": 500,
+  "ParallelRequestsToTransactionRpc": 50,
   "DetailedTrace": 0,
   "MaxItemsInQueue": 200,
   "SyncInterval": 5

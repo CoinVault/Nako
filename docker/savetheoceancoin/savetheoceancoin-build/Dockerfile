@@ -23,8 +23,8 @@ RUN	cd ~/SaveTheOceanCoin/src \
 
 # install
 RUN cd ~/SaveTheOceanCoin/src \
-    && strip savetheoceancoind \
-	&& install -m 755 savetheoceancoind /usr/local/bin  
+    && strip SaveTheOceand \
+	&& install -m 755 SaveTheOceand /usr/local/bin  
 
 # clean
 RUN apt-get purge -y --auto-remove git \
