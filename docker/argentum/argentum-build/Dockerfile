@@ -16,10 +16,10 @@ RUN apt-get update \
 	&& git clone https://github.com/argentumproject/argentum.git
 
 # build
-RUN	cd ~/argentum/src \
-	&& mkdir -p obj \
-	&& chmod 755 leveldb/build_detect_platform \
-	&& make -f makefile.unix USE_UPNP=- 
+RUN	cd ~/argentum \
+	&& ./autogen.sh \
+	&& ./configure --disable-wallet --without-gui --without-miniupnpc \
+	&& make
 
 # install
 RUN cd ~/argentum/src \
