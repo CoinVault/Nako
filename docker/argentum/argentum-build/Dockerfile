@@ -5,10 +5,11 @@ MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 # dependencies required to run the daemon
 RUN apt-get update \
 	&& apt-get install -y git \
-	&& apt-get install -y libssl-dev libdb-dev libdb++-dev libboost-all-dev libqrencode-dev \
-	&& apt-get install -y qt-sdk qt4-default \
-	&& apt-get install -y libcurl3-dev \
-	&& apt-get install -y libzip-dev
+	&& apt-get install -y build-essential libtool autotools-dev automake \ 
+	&& apt-get install -y pkg-config libssl-dev libevent-dev bsdmainutils \
+	&& apt-get install -y libboost-all-dev 
+	#&& apt-get install -y libcurl3-dev \
+	#&& apt-get install -y libzip-dev
 
 # get
 RUN apt-get update \

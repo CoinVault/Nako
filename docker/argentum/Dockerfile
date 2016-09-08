@@ -1,4 +1,4 @@
-FROM dollarcoin-build
+FROM argentum-build
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
