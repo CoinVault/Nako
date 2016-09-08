@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: dlc-client
+    networks: 
+        - dlc
+    image: coinvault/dollarcoin
+    ports: 
+        - 5034:5000
+        - 8145:8145
+  nako:
+    container_name: dlc-nako
+    networks: 
+        - dlc
+    image: coinvault/nako:core
+    command: dlc
+    ports: 
+        - 9034:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: dlc-mongo
+    networks: 
+        - dlc
+    image: mongo:3.2
+networks:
+    dlc:
+      driver: bridge

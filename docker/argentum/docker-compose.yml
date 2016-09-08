@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: arg-client
+    networks: 
+        - arg
+    image: coinvault/argentum
+    ports: 
+        - 5036:5000
+        - 13580:13580
+  nako:
+    container_name: arg-nako
+    networks: 
+        - arg
+    image: coinvault/nako:core
+    command: arg
+    ports: 
+        - 9036:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: arg-mongo
+    networks: 
+        - arg
+    image: mongo:3.2
+networks:
+    arg:
+      driver: bridge
