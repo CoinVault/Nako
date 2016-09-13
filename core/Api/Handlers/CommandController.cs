@@ -13,12 +13,10 @@ namespace Nako.Api.Handlers
 
     #region Using Directives
 
-    using Nako.Api;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Routing;
-    using System.IO;
-    using System.Text;
+
+    using nako.core.Api.Binding;
 
     #endregion
 
@@ -41,8 +39,14 @@ namespace Nako.Api.Handlers
         #region Public Methods and Operators
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Send([FromBody] string data)
+        public async Task<IActionResult> Send([ModelBinder(BinderType = typeof(RawStringModelBinder))] string data)
         {
+            if (string.IsNullOrEmpty(data))
+            {
+                // http://stackoverflow.com/questions/9454811/which-http-status-code-to-use-for-required-parameters-not-provided
+                return new StatusCodeResult(422);
+            }
+
             var trx = data;
 
             var ret = await this.commandHandler.SendTransaction(trx);
