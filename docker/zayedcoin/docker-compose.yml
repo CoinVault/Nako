@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: zyd-client
+    networks: 
+        - zyd
+    image: coinvault/zayedcoin
+    ports: 
+        - 5034:5000
+        - 8371:8371
+  nako:
+    container_name: zyd-nako
+    networks: 
+        - zyd
+    image: coinvault/nako:core
+    command: zyd
+    ports: 
+        - 9034:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: zyd-mongo
+    networks: 
+        - zyd
+    image: mongo:3.2
+networks:
+    zyd:
+      driver: bridge
