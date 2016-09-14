@@ -6,7 +6,7 @@ services:
         - zyd
     image: coinvault/zayedcoin
     ports: 
-        - 5034:5000
+        - 5032:5000
         - 8371:8371
   nako:
     container_name: zyd-nako
@@ -15,7 +15,7 @@ services:
     image: coinvault/nako:core
     command: zyd
     ports: 
-        - 9034:9000
+        - 9032:9000
     depends_on:
         - mongo
         - client
