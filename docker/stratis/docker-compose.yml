@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: strat-client
+    networks: 
+        - strat
+    image: coinvault/stratis
+    ports: 
+        - 5040:5000
+        - 16178:16178
+  nako:
+    container_name: strat-nako
+    networks: 
+        - strat
+    image: coinvault/nako:core
+    command: strat
+    ports: 
+        - 9040:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: strat-mongo
+    networks: 
+        - strat
+    image: mongo:3.2
+networks:
+    strat:
+      driver: bridge

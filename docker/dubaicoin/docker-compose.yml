@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: dbic-client
+    networks: 
+        - dbic
+    image: coinvault/dubaicoin
+    ports: 
+        - 5038:5000
+        - 22330:22330
+  nako:
+    container_name: dbic-nako
+    networks: 
+        - dbic
+    image: coinvault/nako:core
+    command: dbic
+    ports: 
+        - 9038:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: dbic-mongo
+    networks: 
+        - dbic
+    image: mongo:3.2
+networks:
+    dbic:
+      driver: bridge
