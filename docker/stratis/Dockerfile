@@ -2,11 +2,11 @@ FROM stratis-build
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-RUN  mkdir /root/.Stratis/
+RUN  mkdir /root/.stratis/
 
-COPY Stratis.conf /root/.Stratis/
+COPY stratis.conf /root/.stratis/
 
-VOLUME /root/.Stratis
+VOLUME /root/.stratis
 
 WORKDIR /usr/local/bin
 

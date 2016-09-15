@@ -16,6 +16,7 @@ RUN apt-get update \
 RUN	cd ~/stratisX/src \
 	&& chmod 755 leveldb/build_detect_platform \
 	&& mkdir -p obj \
+	&& mkdir -p obj/x13hash \
 	&& make -f makefile.unix USE_UPNP=-
 
 # install
