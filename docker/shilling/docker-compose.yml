@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: sh-client
+    networks: 
+        - sh
+    image: coinvault/shilling
+    ports: 
+        - 5042:5000
+        - 34621:34621
+  nako:
+    container_name: sh-nako
+    networks: 
+        - sh
+    image: coinvault/nako:core
+    command: sh
+    ports: 
+        - 9042:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: sh-mongo
+    networks: 
+        - sh
+    image: mongo:3.2
+networks:
+    sh:
+      driver: bridge
