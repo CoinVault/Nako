@@ -12,9 +12,16 @@ RUN apt-get update \
     && cd ~ \
 	&& git clone https://github.com/yavwa/Shilling.git  
 
+# shilling is missing the make file in leveldb
+COPY Makefile ~/Shilling/src/leveldb 
+
 # build
 RUN	cd ~/Shilling/src \
-	&& chmod 755 leveldb/build_detect_platform \
+	&& cd leveldb \
+	&& chmod 755 Makefile \
+	&& chmod 755 build_detect_platform \
+	&& ./Makefile \
+	&& cd ..
 	&& mkdir -p obj \
 	&& make -f makefile.unix USE_UPNP=-
 
