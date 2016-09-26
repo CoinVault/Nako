@@ -1,4 +1,4 @@
-# Nako block exploere
+# Nako block explorer
 A server application to index Blockchain transactions by addresses for Bitcoin and Altcoins.  
 Nako exposes a REST api to query the blockchain data.
 
