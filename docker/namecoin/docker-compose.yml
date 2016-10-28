@@ -12,7 +12,7 @@ services:
     container_name: nmc-nako
     networks: 
         - nmc
-    image: coinvault/nako
+    image: coinvault/nako:core
     command: NMC
     ports: 
         - 9006:9000
