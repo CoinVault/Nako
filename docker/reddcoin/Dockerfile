@@ -2,7 +2,7 @@ FROM coinvault/client-base:latest
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-ENV COIN_URL https://github.com/reddcoin-project/reddcoin/releases/download/v1.4.1.0/reddcoin-1.4.1.0-linux.tar.gz
+ENV COIN_URL https://github.com/reddcoin-project/reddcoin/releases/download/v2.0.0.0/reddcoin-2.0.0.0-linux.tar.gz
 
 RUN set -ex \
 
