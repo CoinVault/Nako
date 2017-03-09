@@ -14,15 +14,15 @@ RUN set -ex \
 	# remove build dependencies
 	&& apt-get purge -y --auto-remove wget
 
-RUN  mkdir /root/.dash/
+RUN  mkdir /root/.dashcore/
 
-COPY dash.conf /root/.dash/
+COPY dash.conf /root/.dashcore/
 
-VOLUME /root/.dash
+VOLUME /root/.dashcore
 
 WORKDIR /usr/local/bin
 
 EXPOSE 5000
 
 # dash changed thier default fodler (why?)
-CMD ["dashd", "-datadir=/root/.dash/"]
+CMD ["dashd"]
