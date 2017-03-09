@@ -2,7 +2,7 @@ FROM coinvault/client-base:latest
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-ENV COIN_URL https://download.litecoin.org/litecoin-0.10.4.0/linux/litecoin-0.10.4.0-linux64.tar.gz
+ENV COIN_URL https://download.litecoin.org/litecoin-0.13.2/linux/litecoin-0.13.2-x86_64-linux-gnu.tar.gz
 
 RUN set -ex \
 
