@@ -24,4 +24,5 @@ WORKDIR /usr/local/bin
 
 EXPOSE 5000
 
-CMD ["dashd"]
+# dash changed thier default fodler (why?)
+CMD ["dashd", "-datadir=/root/.dash/"]
