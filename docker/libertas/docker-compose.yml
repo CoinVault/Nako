@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: lbrts-client
+    networks: 
+        - lbrts
+    image: coinvault/libertas
+    ports: 
+        - 5044:5000
+        - 11083:11083
+  nako:
+    container_name: lbrts-nako
+    networks: 
+        - lbrts
+    image: coinvault/nako:core
+    command: lbrts
+    ports: 
+        - 9044:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: lbrts-mongo
+    networks: 
+        - lbrts
+    image: mongo:3.2
+networks:
+    arg:
+      driver: bridge
