@@ -1,8 +1,6 @@
-FROM coinvault/client-base:latest
+FROM libertas-build
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
-
-COPY libertasd /usr/local/
 
 RUN  mkdir /root/.libertas/
 
