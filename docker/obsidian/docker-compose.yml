@@ -1,0 +1,29 @@
+version: '2'
+services:
+  client:
+    container_name: odn-client
+    networks: 
+        - odn
+    image: coinvault/odn
+    ports: 
+        - 5046:5000
+        - 26178:16178
+  nako:
+    container_name: odn-nako
+    networks: 
+        - odn
+    image: coinvault/nako:core
+    command: odn
+    ports: 
+        - 9046:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: odn-mongo
+    networks: 
+        - odn
+    image: mongo:3.2
+networks:
+    odn:
+      driver: bridge
