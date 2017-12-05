@@ -25,5 +25,5 @@ services:
         - lbrts
     image: mongo:3.2
 networks:
-    arg:
+    lbrts:
       driver: bridge

@@ -2,15 +2,32 @@ FROM coinvault/client-base:latest
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
-RUN set -ex \
-	&& echo 'deb http://download.opensuse.org/repositories/home:/p_conrad:/coins/Debian_8.0/ /' >> /etc/apt/sources.list.d/namecoin.list \ 
-	&& apt-get update \
-	&& apt-get install -y --force-yes namecoin \
-	&& apt-get purge -y --auto-remove wget
+# dependencies required to run the daemon
+RUN apt-get update \
+	&& apt-get install -y git \
+	&& apt-get install -y build-essential libtool autotools-dev automake \ 
+	&& apt-get install -y pkg-config libssl-dev libevent-dev bsdmainutils \
+	&& apt-get install -y libboost-all-dev 
+
+# get
+RUN    apt-get update \
+       && cd ~ \
+       && git clone https://github.com/namecoin/namecoin-core.git namecoin
+
+# build
+RUN	cd ~/namecoin \
+	&& ./autogen.sh \
+	&& ./configure --disable-wallet --without-gui --without-miniupnpc \
+	&& make
+
+# install
+RUN cd ~/namecoin/src \
+    && strip namecoind \
+    && install -m 755 namecoind /usr/local/bin  
 
 RUN  mkdir /root/.namecoin/
 
-COPY namecoin.conf /root/.namecoin/
+COPY  namecoin.conf /root/.namecoin/
 
 VOLUME /root/.namecoin
 
