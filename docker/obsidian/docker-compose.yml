@@ -7,7 +7,7 @@ services:
     image: coinvault/obsidian
     ports: 
         - 5046:5000
-        - 26178:26178
+        - 56660:56660
   nako:
     container_name: odn-nako
     networks: 
