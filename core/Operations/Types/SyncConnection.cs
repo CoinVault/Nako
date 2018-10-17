@@ -18,7 +18,7 @@ namespace Nako.Operations.Types
 
     #endregion
 
-    [Serializable]
+   
     public class SyncConnection
     {
         /// <summary>
