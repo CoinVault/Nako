@@ -40,7 +40,7 @@ namespace nako.core.Api.Binding
                 {
                     var resut = rdr.ReadToEnd();
                     bindingContext.Result = ModelBindingResult.Success(resut);
-                    return TaskCache.CompletedTask;
+                    return Task.CompletedTask;
                 }
             }
         }
