@@ -1,0 +1,32 @@
+version: '2'
+services:
+  client:
+    container_name: sphere-client
+    networks: 
+        - sphere
+    image: coinvault/sphere
+   #environment:
+        #- ASPNETCORE_URLS=http://+:5000
+    ports: 
+        - 5050:5000
+        - 16179:16178
+        - 39221:39221
+  nako:
+    container_name: sphere-nako
+    networks: 
+        - sphere
+    image: coinvault/nako:core
+    command: sphere
+    ports: 
+        - 9040:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: sphere-mongo
+    networks: 
+        - sphere
+    image: mongo:3.2
+networks:
+    sphere:
+      driver: bridge
