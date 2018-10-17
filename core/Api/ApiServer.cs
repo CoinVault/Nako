@@ -85,10 +85,24 @@ namespace Nako.Api
                           {
                               // this is a really ugly hack
                               // todo: look in to injecting the container builder in to the api
+                              serv.AddCors(options =>
+                              {
+                                  options.AddPolicy("AllowAll",
+                                      b =>
+                                      {
+                                          b
+                                              .WithOrigins("http://localhost:3000")
+                                              .AllowAnyMethod()
+                                              .WithHeaders("authorization", "accept", "content-type", "origin")
+                                              .AllowCredentials();
+                                      });
+                              });
+
                               serv.Add(new ServiceDescriptor(typeof(NakoConfiguration), container.Resolve<NakoConfiguration>()));
                               serv.Add(new ServiceDescriptor(typeof(IStorage), container.Resolve<IStorage>()));
 
                           })
+                          
                           .UseStartup<Startup>();
 
                         this.tracer.Trace("API", string.Format("Self host server running at {0}", url));
@@ -128,11 +142,17 @@ namespace Nako.Api
             // called by the runtime before the Configure method, below.
             public IServiceProvider ConfigureServices(IServiceCollection services)
             {
+                
+
                 services.AddMvc()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
                 });
+                
+
+
+
 
                 // Create the container builder.
                 // asp.net core autofac builds its container at this stage, 
@@ -152,8 +172,13 @@ namespace Nako.Api
               IApplicationBuilder app,
               IApplicationLifetime appLifetime)
             {
+                app.UseCors("AllowAll");
                 app.UseMvc();
+                // Shows UseCors with CorsPolicyBuilder.
+                
 
+                //app.UseStaticFiles();
+                //app.UseDefaultFiles();
                 //app.UseSwagger();
                 app.UseSwaggerUi();
             }
