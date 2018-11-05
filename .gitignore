@@ -163,3 +163,8 @@ Source/Assemblies/
 Source/Cloud/
 Source/Databases/
 /Source/Rosetta.Cloud/Configuration
+
+# =========================
+# Visual studio debugging files
+# =========================
+.vs/
