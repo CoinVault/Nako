@@ -5,8 +5,6 @@ services:
     networks: 
         - sphere
     image: coinvault/sphere
-   #environment:
-        #- ASPNETCORE_URLS=http://+:5000
     ports: 
         - 5050:5000
         - 16179:16178
@@ -22,6 +20,15 @@ services:
     depends_on:
         - mongo
         - client
+  nakoexplorer:
+    container_name: sphere-nako-explorer
+    networks: 
+        - sphere
+    image: majikandy/nakoexplorer
+    ports: 
+        - 3000:80
+    depends_on:
+        - nako
   mongo:
     container_name: sphere-mongo
     networks: 

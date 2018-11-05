@@ -8,6 +8,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Microsoft.AspNetCore.Cors;
+
 namespace Nako.Api.Handlers
 {
     using Microsoft.AspNetCore.Mvc;

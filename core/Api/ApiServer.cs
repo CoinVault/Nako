@@ -8,6 +8,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.FileProviders;
+
 namespace Nako.Api
 {
     #region Using Directives
@@ -85,19 +87,6 @@ namespace Nako.Api
                           {
                               // this is a really ugly hack
                               // todo: look in to injecting the container builder in to the api
-                              serv.AddCors(options =>
-                              {
-                                  options.AddPolicy("AllowAll",
-                                      b =>
-                                      {
-                                          b
-                                              .WithOrigins("http://localhost:3000")
-                                              .AllowAnyMethod()
-                                              .WithHeaders("authorization", "accept", "content-type", "origin")
-                                              .AllowCredentials();
-                                      });
-                              });
-
                               serv.Add(new ServiceDescriptor(typeof(NakoConfiguration), container.Resolve<NakoConfiguration>()));
                               serv.Add(new ServiceDescriptor(typeof(IStorage), container.Resolve<IStorage>()));
 
@@ -172,15 +161,18 @@ namespace Nako.Api
               IApplicationBuilder app,
               IApplicationLifetime appLifetime)
             {
-                app.UseCors("AllowAll");
                 app.UseMvc();
                 // Shows UseCors with CorsPolicyBuilder.
-                
 
-                //app.UseStaticFiles();
-                //app.UseDefaultFiles();
-                //app.UseSwagger();
                 app.UseSwaggerUi();
+                app.UseDefaultFiles();
+                app.UseStaticFiles(new StaticFileOptions()
+                {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\build"))
+                });
+                //app.UseSwagger();
+
             }
         }
     }
