@@ -166,11 +166,7 @@ namespace Nako.Api
 
                 app.UseSwaggerUi();
                 app.UseDefaultFiles();
-                app.UseStaticFiles(new StaticFileOptions()
-                {
-                    FileProvider = new PhysicalFileProvider(
-                        Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\build"))
-                });
+                app.UseStaticFiles();
                 //app.UseSwagger();
 
             }
