@@ -5,7 +5,7 @@
 
   "RpcAccessPort": 5000,
   "RpcSecure": false,
-  "RpcDomain": "{CoinTag}-mongo",
+  "RpcDomain": "{CoinTag}-client",
   "RpcUser": "rpcuser",
   "RpcPassword": "rpcpassword",
 
