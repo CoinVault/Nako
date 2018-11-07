@@ -167,6 +167,8 @@ namespace Nako.Api
                 app.UseSwaggerUi();
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
+                app.UseSpa(builder => builder.Options.DefaultPage = "/index.html");
+
                 //app.UseSwagger();
 
             }
