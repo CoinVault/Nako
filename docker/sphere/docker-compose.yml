@@ -4,7 +4,7 @@ services:
     container_name: sphere-client
     networks: 
         - sphere
-    image: coinvault/sphere
+    image: majikandy/sphere
     ports: 
         - 5050:5000
         - 16179:16178
@@ -13,22 +13,13 @@ services:
     container_name: sphere-nako
     networks: 
         - sphere
-    image: coinvault/nako:core
+    image: majikandy/nako:core
     command: sphere
     ports: 
-        - 9040:9000
+        - 9000:9000
     depends_on:
         - mongo
         - client
-  nakoexplorer:
-    container_name: sphere-nako-explorer
-    networks: 
-        - sphere
-    image: majikandy/nakoexplorer
-    ports: 
-        - 3000:80
-    depends_on:
-        - nako
   mongo:
     container_name: sphere-mongo
     networks: 
