@@ -91,7 +91,7 @@ namespace Nako.Api
                               serv.Add(new ServiceDescriptor(typeof(IStorage), container.Resolve<IStorage>()));
 
                           })
-                          
+
                           .UseStartup<Startup>();
 
                         this.tracer.Trace("API", string.Format("Self host server running at {0}", url));
@@ -131,16 +131,24 @@ namespace Nako.Api
             // called by the runtime before the Configure method, below.
             public IServiceProvider ConfigureServices(IServiceCollection services)
             {
-                
+
 
                 services.AddMvc()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
                 });
-                
-
-
+                services.AddCors(options =>
+                                            {
+                                                options.AddPolicy("AllowAll",
+                                                        b =>
+                                                         {
+                                                             b.AllowAnyOrigin()
+                                                              .AllowAnyMethod()
+                                                              .WithHeaders("authorization", "accept", "content-type", "origin")
+                                                              .AllowCredentials();
+                                                         });
+                                            });
 
 
                 // Create the container builder.
@@ -162,6 +170,7 @@ namespace Nako.Api
               IApplicationLifetime appLifetime)
             {
                 app.UseMvc();
+                app.UseCors("allowall")
                 // Shows UseCors with CorsPolicyBuilder.
 
                 app.UseSwaggerUi();
