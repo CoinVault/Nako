@@ -15,7 +15,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        fetch(`http://localhost:9000/api/query/block/latest`,{mode: 'cors'})
+        fetch(`/api/query/block/latest`,{mode: 'cors'})
             .then(result=>result.json())
             .then(latestBlock=>this.setState({latestBlock}))
             .then(_ => {
@@ -25,7 +25,7 @@ class Home extends Component {
                         //stupid 1ms delay to help enforce order
                     }
                     let blockNum = this.state.latestBlock.blockIndex - index;
-                    let url = `http://localhost:9000/api/query/block/Index/${blockNum}/transactions`;
+                    let url = `/api/query/block/Index/${blockNum}/transactions`;
                     fetch(url ,{mode: 'cors'})
                     .then(result=>result.json())
                     .then(block=>this.setState({blocks: this.state.blocks.concat(block)}));

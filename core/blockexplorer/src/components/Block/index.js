@@ -26,13 +26,13 @@ class Block extends Component {
    
     
 
-    fetch(`http://localhost:9000/api/query/block/Index/${blockIndex}/transactions`,{mode: 'cors'})
+    fetch(`/api/query/block/Index/${blockIndex}/transactions`,{mode: 'cors'})
             .then(result=>result.json())
             .then(block=>this.setState({block}))
             .then(_ => {
                           for (let i = 0; i < this.state.block.transactions.length; i++) {
                             const transactionId = this.state.block.transactions[i];
-                            fetch(`http://localhost:9000/api/query/transaction/${transactionId}`,{mode: 'cors'})
+                            fetch(`/api/query/transaction/${transactionId}`,{mode: 'cors'})
                             .then(result=>result.json())
                             .then(transaction=>{
                                 this.setState({transactions: this.state.transactions.concat(transaction)})
@@ -45,7 +45,7 @@ class Block extends Component {
     let nextIndex = parseInt(blockIndex) + 1;
 
     console.log(nextIndex);
-    fetch(`http://localhost:9000/api/query/block/Index/${nextIndex}`,{mode: 'cors'})
+    fetch(`/api/query/block/Index/${nextIndex}`,{mode: 'cors'})
             .then(result=>result.json())
             .then(nextBlock=>{this.setState({nextBlock})});
   }

@@ -16,7 +16,7 @@ class Transaction extends Component {
   componentDidMount() {
     let transactionId = this.props.match.params.transactionId;
    
-    fetch(`http://localhost:9000/api/query/transaction/${transactionId}`,{mode: 'cors'})
+    fetch(`/api/query/transaction/${transactionId}`,{mode: 'cors'})
             .then(result=>result.json())
             .then(transaction=> this.setState({transaction}));
   }
