@@ -52,14 +52,14 @@ class Home extends Component {
                                     <i class="fa fa-comments fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">26</div>
-                                    <div>New Comments!</div>
+                                    <div class="huge">{this.state.latestBlock.blockIndex}</div>
+                                    <div>Block Height</div>
                                 </div>
                             </div>
                         </div>
                         <a href="#">
                             <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
+                                <span class="pull-left"><Link to={"/block/" +  this.state.latestBlock.blockIndex }> View latest </Link></span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
@@ -74,8 +74,8 @@ class Home extends Component {
                                     <i class="fa fa-tasks fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">12</div>
-                                    <div>New Tasks!</div>
+                                    <div class="huge">$156.31m</div>
+                                    <div>Market Cap</div>
                                 </div>
                             </div>
                         </div>
@@ -96,8 +96,8 @@ class Home extends Component {
                                     <i class="fa fa-shopping-cart fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">124</div>
-                                    <div>New Orders!</div>
+                                    <div class="huge">15</div>
+                                    <div>Known Peers</div>
                                 </div>
                             </div>
                         </div>
@@ -118,8 +118,8 @@ class Home extends Component {
                                     <i class="fa fa-support fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">13</div>
-                                    <div>Support Tickets!</div>
+                                    <div class="huge"><span style={{fontSize:30 + 'px'}}>{parseInt(this.state.latestBlock.blockIndex) + 100000000 }</span></div>
+                                    <div>Outstanding {this.state.latestBlock.coinTag}</div>
                                 </div>
                             </div>
                         </div>

@@ -122,9 +122,8 @@ class Block extends Component {
           <table className="table table-striped">
             <thead>
               <tr>
-                <th>Transactions</th>
+                <th>Transaction Id</th>
                 <th></th> 
-                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -133,19 +132,7 @@ class Block extends Component {
               .map(function(object, i){
                   return <tr key={i}>
                       <td>{object.transactionId }</td>
-                      <td></td>
-                      <td>
-                        {object.inputs.map(function(input, j){
-                          return <span key={j}>{input.inputIndex }x {input.inputAddress}y  {input.coinBase} z {input.inputTransactionId}</span>
-                          
-                      }) }
-                      </td>
-                      <td>
-                        {object.outputs.map(function(output, j){
-                          return <span>Index[{output.outputIndex }] address{output.outputAddress}y  {output.coinBase} z {output.outputTransactionId}</span>
-                          
-                      }) }
-                      </td>
+                      <td><pre>{JSON.stringify(object, null, 2) }</pre></td>
                   </tr>
                 } )}
           </tbody>
