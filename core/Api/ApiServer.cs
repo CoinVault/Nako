@@ -170,7 +170,7 @@ namespace Nako.Api
               IApplicationLifetime appLifetime)
             {
                 app.UseMvc();
-                app.UseCors("allowall")
+                app.UseCors("allowall");
                 // Shows UseCors with CorsPolicyBuilder.
 
                 app.UseSwaggerUi();
