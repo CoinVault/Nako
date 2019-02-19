@@ -8,16 +8,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace nako.core.Api.Binding
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace Nako.Api.Binding
 {
     #region Using Directives
-
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
-
-    using Microsoft.AspNetCore.Mvc.Internal;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     #endregion
 
@@ -40,7 +38,7 @@ namespace nako.core.Api.Binding
                 {
                     var resut = rdr.ReadToEnd();
                     bindingContext.Result = ModelBindingResult.Success(resut);
-                    return TaskCache.CompletedTask;
+                    return Task.CompletedTask;
                 }
             }
         }
