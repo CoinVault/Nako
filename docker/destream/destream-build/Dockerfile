@@ -15,7 +15,7 @@ RUN apt-get update \
 # get
 RUN apt-get update \
 	&& cd ~ \
-	&& git clone https://github.com/DeStream-dev/destream-blockchain.git
+	&& git clone https://git.poka.website/destream-public/destream-blockchain.git
 	
 # install
 RUN cd ~/destream-blockchain/Sources/DeStream.DeStreamD \
