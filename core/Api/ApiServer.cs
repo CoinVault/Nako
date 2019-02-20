@@ -162,7 +162,10 @@ namespace Nako.Api
                 app.UseMvc();
 
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nako API V1");
+                });
             }
         }
     }
