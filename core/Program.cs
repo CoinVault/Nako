@@ -39,9 +39,16 @@ namespace Nako
         {
             if (!IsRunningOnLinux())
             {
-                Console.BufferHeight = 1000;
-                Console.WindowHeight = 25;
-                Console.WindowWidth = 150;
+                try
+                {
+                    Console.BufferHeight = 1000;
+                    Console.WindowHeight = 25;
+                    Console.WindowWidth = 150;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
 
             var builder = new ContainerBuilder();
