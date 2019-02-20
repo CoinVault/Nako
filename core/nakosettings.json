@@ -1,11 +1,11 @@
 ﻿{
-  "CoinTag": "==CoinTag==",
+  "CoinTag": "DeStream",
 
-  "ConnectionString": "mongodb://{CoinTag}-mongo",
+  "ConnectionString": "mongodb://localhost",
 
   "RpcAccessPort": 5000,
   "RpcSecure": false,
-  "RpcDomain": "{CoinTag}-client",
+  "RpcDomain": "127.0.0.1",
   "RpcUser": "rpcuser",
   "RpcPassword": "rpcpassword",
 
