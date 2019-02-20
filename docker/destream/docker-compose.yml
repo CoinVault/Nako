@@ -3,8 +3,8 @@ services:
   client:
     container_name: destream-client
     networks: 
-        - destream/coinvault
-    image: destream
+        - destream
+    image: destream/coinvault
     ports: 
         - 5057:5000
   nako:
