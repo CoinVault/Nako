@@ -8,8 +8,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Nako.Api.Binding;
-
 namespace Nako.Api.Handlers
 {
 
@@ -17,6 +15,8 @@ namespace Nako.Api.Handlers
 
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
+
+    using Nako.Api.Binding;
 
     #endregion
 
