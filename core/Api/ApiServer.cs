@@ -158,14 +158,18 @@ namespace Nako.Api
               IApplicationBuilder app,
               IApplicationLifetime appLifetime)
             {
-                //app.UseDeveloperExceptionPage();
                 app.UseMvc();
 
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
+               
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nako API V1");
                 });
+
+                app.UseSpa(builder => builder.Options.DefaultPage = "/index.html");
             }
         }
     }
