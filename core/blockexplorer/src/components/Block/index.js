@@ -59,10 +59,14 @@ class Block extends Component {
     return (
       <Grid>
         <div className="Block">
-          <div className="jumbotron">
-            <h1>{this.state.block.coinTag} Block explorer</h1> 
-            <Link to="/">Home</Link>
+          <div className="">
+              <img src='/nako_logo.png' width="60" />
           </div>
+          <div className="well">
+              <h1>{this.state.block.coinTag} Block explorer</h1>
+              <Link to="/">Home</Link>
+          </div>
+               
           
 
           <h2>Block Info: {this.state.block.blockIndex}</h2>

@@ -19,12 +19,13 @@ class Home extends Component {
             .then(result=>result.json())
             .then(latestBlock=>this.setState({latestBlock}))
             .then(_ => {
-                for (let index = 0; index < 50; index++) {
+                for (let index = 0; index < 15; index++) {
                     var currentTime = new Date().getTime();
-                    while (currentTime + 1 >= new Date().getTime()) {
-                        //stupid 1ms delay to help enforce order
+                    while (currentTime + 10 >= new Date().getTime()) {
+                        //stupid 10ms delay to help enforce order
                     }
                     let blockNum = this.state.latestBlock.blockIndex - index;
+                    console.log(this.state.latestBlock);
                     let url = `/api/query/block/Index/${blockNum}/transactions`;
                     fetch(url ,{mode: 'cors'})
                     .then(result=>result.json())
@@ -39,11 +40,16 @@ class Home extends Component {
             <Grid>
                 <div className="Home">
                     
-                        <div className="jumbotron">
-                            <h1>{this.state.latestBlock.coinTag} Block explorer</h1>
-                        </div>
+                
+                    <div className="">
+                        <img src='/nako_logo.png' width="60" />
+                    </div>
+                    <div className="well">
+                        <h1>{this.state.latestBlock.coinTag} Block explorer</h1>
+                    </div>
+               
                     
-                        <div class="row">
+                <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -66,7 +72,7 @@ class Home extends Component {
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                {/* <div class="col-lg-3 col-md-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -131,7 +137,7 @@ class Home extends Component {
                             </div>
                         </a>
                     </div>
-                </div>
+                </div> */}
             </div>
                         <div>
                             Current height: <Link to={"/block/" +  this.state.latestBlock.blockIndex }> {this.state.latestBlock.blockIndex}</Link>
@@ -145,6 +151,8 @@ class Home extends Component {
                                 <td>Height</td>
                                 <td>Age</td>
                                 <td>Hash</td>
+                                <td>Tx Count</td>
+                                <td>Size</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -155,6 +163,8 @@ class Home extends Component {
                                     {/* <td>{object.transactionCount}</td> */}
                                     <td><Moment fromNow ago unix>{object.blockTime}</Moment></td>
                                     <td>{object.blockHash}</td>
+                                    <td>{object.trnsactionCount}</td>
+                                    <td>{object.blockSize} bytes</td>
                                 </tr>
                              } )}
                         </tbody>

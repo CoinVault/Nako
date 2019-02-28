@@ -25,10 +25,15 @@ class Transaction extends Component {
     return (
       <Grid>
         <div className="Block">
-          <div className="jumbotron">
+        <div className="row">
+          <div className="col-2">
+            <img src='/nako_logo.png' width="60" />
+          </div>
+          <div className="well col-10">
             <h1>{this.state.transaction.coinTag} Block explorer</h1>
           </div>
-          <h2>Transaction Id: {this.state.transaction.transactionId}</h2>
+        </div>
+          <h3>Transaction Id: {this.state.transaction.transactionId}</h3>
          
           <Table>
             <thead>
