@@ -16,7 +16,7 @@ namespace Nako.Api.Handlers
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
 
-    using nako.core.Api.Binding;
+    using Nako.Api.Binding;
 
     #endregion
 
