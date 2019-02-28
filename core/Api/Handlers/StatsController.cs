@@ -39,6 +39,7 @@ namespace Nako.Api.Handlers
 
         #region Public Methods and Operators
 
+        [HttpGet]
         [Route("[action]")]
         public IActionResult Heartbeat()
         {
@@ -47,6 +48,7 @@ namespace Nako.Api.Handlers
             return response;
         }
 
+        [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> Connections()
         {
@@ -67,6 +69,7 @@ namespace Nako.Api.Handlers
             return response;
         }
 
+        [HttpGet]
         [Route("[action]")]
         public async Task<IActionResult> Peers()
         {
