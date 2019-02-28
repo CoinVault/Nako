@@ -163,3 +163,6 @@ Source/Assemblies/
 Source/Cloud/
 Source/Databases/
 /Source/Rosetta.Cloud/Configuration
+/.vs/ProjectSettings.json
+/.vs/slnx.sqlite
+/.vs/config/applicationhost.config
