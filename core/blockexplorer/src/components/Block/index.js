@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import Moment from 'react-moment';
 import { Grid } from 'react-bootstrap';
 //import { Grid, Table, Row, Col } from 'react-bootstrap';
+import Transaction from './../Transaction/index';
 
 
 class Block extends Component {
@@ -44,7 +45,6 @@ class Block extends Component {
             });
     let nextIndex = parseInt(blockIndex) + 1;
 
-    console.log(nextIndex);
     fetch(`/api/query/block/Index/${nextIndex}`,{mode: 'cors'})
             .then(result=>result.json())
             .then(nextBlock=>{this.setState({nextBlock})});
@@ -110,24 +110,31 @@ class Block extends Component {
     <td>{this.state.nextBlock.blockHash  && <a href={"/block/" +  (this.state.block.blockIndex+1) }>{this.state.nextBlock.blockHash}</a>}</td>
                 {/* <Link to={"/block/" +  (this.state.block.blockIndex+1) }>nextBlockHashWithLink</Link> */}
               </tr>
-              <tr>
-                <td>Transactions</td>
-                <td><ul>{this.state.block.transactions.map((transactionHash, index) => <li key={index}>
-                  <Link to={"/transaction/" +  transactionHash }>{transactionHash}</Link>}
-                  </li>)}</ul></td>
-                {/* <td><Link to={"/block/" +  (this.state.block.blockIndex-1) }>{this.state.block.nextBlockHash}</Link></td> */}
-              </tr>
             </tbody>
           
           </table>
 
           <br/>
 
+          {/*<ul className="nav nav-tabs">
+            <li className="nav-item">
+              <a className="nav-link active" href="#">Transactions</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#">Raw</a>
+            </li>
+           
+          </ul>*/}
+          
+          <br/>
+          <h3>Transactions</h3>
           <table className="table table-striped">
             <thead>
               <tr>
                 <th>Transaction Id</th>
-                <th></th> 
+                <th>Value out</th> 
+                <th>From</th> 
+                <th>To</th> 
               </tr>
             </thead>
             <tbody>
@@ -135,8 +142,21 @@ class Block extends Component {
             {this.state.transactions
               .map(function(object, i){
                   return <tr key={i}>
-                      <td>{object.transactionId }</td>
-                      <td><pre>{JSON.stringify(object, null, 2) }</pre></td>
+                      <td className="truncate"><Link to={"/transaction/" +  object.transactionId }><span className="truncate">{object.transactionId }</span></Link> </td>
+                      {/* <td><pre>{JSON.stringify(object, null, 2) }</pre></td> */}
+                      <td>{object.outputs.length > 1 ? object.outputs.reduce(function(a,b){ return {totalBalance: a.balance + b.balance}}).totalBalance : (object.outputs[0] ? object.outputs[0].balance : '')}</td>
+                      <td>
+                        {object.inputs
+                          .map(function(input, j){
+                            return <div>[{input.inputIndex}] {input.inputAddress === ''?'Unknown address':input.inputAddress} <i className="pull-right">{input.balance}</i></div>
+                          })}
+                      </td>
+                      <td>
+                        {object.outputs
+                          .map(function(output, k){
+                            return <div>[{output.index}] <Link to={"/address/" +  (output.address) }>{output.address}</Link> <i className="pull-right">{output.balance}</i></div>
+                          })}
+                      </td>
                   </tr>
                 } )}
           </tbody>
