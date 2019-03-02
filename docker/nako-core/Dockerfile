@@ -8,7 +8,7 @@ RUN git clone https://github.com/CoinVault/Nako.git /nako
 WORKDIR /nako/core/blockexplorer
 
 # Build the blockexplorer first using build.bat which outputs javascript into wwwroot
-RUN build.bat
+RUN build.sh
 
 
 FROM microsoft/dotnet:latest
