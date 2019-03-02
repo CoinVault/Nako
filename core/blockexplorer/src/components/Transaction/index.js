@@ -59,19 +59,41 @@ class Transaction extends Component {
                 <td>Confirmations</td>
                 <td>{this.state.transaction.confirmations}</td>
               </tr>
-              <tr>
-                <td>Inputs</td>
-                <td><ul>{this.state.transaction.inputs.map((input, index) => <li>Address:[{input.inputAddress}] Coinbase:[{input.coinBase}] Input Transaction Id:[{input.inputTransactionId}] Input Index:[{input.inputIndex}]</li>)}</ul></td>
               
-              </tr>
-              <tr>
-                <td>Outputs</td>
-                <td><ul>{this.state.transaction.outputs.map((output, index) => <li>Address:[{output.address}] amount:[{output.balance}] Output Index:[{output.index}] Output Type:[{output.outputType}]</li>)}</ul></td>
-              
-              </tr>
             </tbody>
-          
           </Table>
+
+          <br/><br/>
+
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Transaction Id</th>
+                <th>Value out</th> 
+                <th>From</th> 
+                <th>To</th> 
+              </tr>
+            </thead>
+            <tbody>
+                
+              <tr>
+                        <td className="truncate">{this.state.transaction.transactionId }</td>
+                        <td>{this.state.transaction.outputs.length > 1 ? this.state.transaction.outputs.reduce(function(a,b){ return {totalBalance: a.balance + b.balance}}).totalBalance : (this.state.transaction.outputs[0] ? this.state.transaction.outputs[0].balance : '')}</td>
+                        <td>
+                          {this.state.transaction.inputs
+                            .map(function(input, j){
+                              return <div>[{input.inputIndex}] {input.inputAddress === ''?'Unknown address':input.inputAddress} <i className="pull-right">{input.balance}</i></div>
+                            })}
+                        </td>
+                        <td>
+                          {this.state.transaction.outputs
+                            .map(function(output, k){
+                              return <div>[{output.index}] <Link to={"/address/" +  (output.address) }>{output.address}</Link> <i className="pull-right">{output.balance}</i></div>
+                            })}
+                        </td>
+                    </tr>
+            </tbody>
+          </table>
         </div>
       </Grid>
     );

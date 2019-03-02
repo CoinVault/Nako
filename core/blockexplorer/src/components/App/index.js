@@ -4,6 +4,7 @@ import './style.css';
 import Block from './../Block';
 import Home from './../Home';
 import Transaction from './../Transaction';
+import Address from './../Address';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 
 class App extends Component {
@@ -25,6 +26,7 @@ class App extends Component {
             )}/> */}
             <Route path="/block/:blockIndex" component={Block}/>
             <Route path="/transaction/:transactionId" component={Transaction}/>
+            <Route path="/address/:address" component={Address}/>
            
             </div>
 		      
