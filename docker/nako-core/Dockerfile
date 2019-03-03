@@ -7,9 +7,10 @@ RUN apt-get update && apt-get install -y git \
 RUN git clone https://github.com/CoinVault/Nako.git /nako
 WORKDIR /nako/core/blockexplorer
 
-# Build the blockexplorer first using build.bat which outputs javascript into wwwroot
-RUN build.sh
-
+# Build the blockexplorer first using build.sh which outputs javascript into wwwroot
+RUN mkdir -p ../wwwroot
+RUN chmod u+x ./build.sh
+RUN ./build.sh
 
 FROM microsoft/dotnet:latest
 
