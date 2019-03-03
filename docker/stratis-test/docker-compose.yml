@@ -21,7 +21,7 @@ services:
             ipv4_address: 172.16.10.101
     image: stratisplatform/fullnode:StratisTestNet
     command: ["dotnet", "run", "-testnet", 
-              "-server=1", "-maxblkmem=2", "-txindex=1"
+              "-server=1", "-maxblkmem=2", "-txindex=1",
               "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword"]
     ports: 
         - 5040:5000
