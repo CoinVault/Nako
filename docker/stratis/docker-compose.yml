@@ -19,8 +19,10 @@ services:
     networks: 
         nakonet:
             ipv4_address: 172.16.10.101
-    image: stratisplatform/fullnode:StratisMain-1158586
-    command: ["-server=1", "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword", "-txindex=1"]
+    image: stratisplatform/fullnode:StratisMain
+    command: ["dotnet", "run", 
+              "-server=1", "-maxblkmem=2", "-txindex=1",
+              "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword"]
     ports: 
         - 5040:5000
         - 16178:16178
