@@ -8,7 +8,7 @@ import { Grid } from 'react-bootstrap'
 import Moment from 'react-moment';
 
 class Home extends Component {
-    apiBaseUrl = 'http://localhost:9000';
+    apiBaseUrl = '';
 
     constructor() {
         super();
