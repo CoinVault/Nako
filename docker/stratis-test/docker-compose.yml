@@ -2,12 +2,12 @@ version: '2'
 services:
 
   nako:
-    container_name: strat-nako
+    container_name: tstrat-nako
     networks: 
         nakonet:
             ipv4_address: 172.16.10.100
     image: coinvault/nako:latest
-    command: strat
+    command: tstrat
     ports: 
         - 9040:9000
     depends_on:
@@ -15,20 +15,20 @@ services:
         - client
 
   client:
-    container_name: strat-client
+    container_name: tstrat-client
     networks: 
         nakonet:
             ipv4_address: 172.16.10.101
-    image: stratisplatform/fullnode:StratisMain
-    command: ["dotnet", "run", 
+    image: stratisplatform/fullnode:StratisTestNet
+    command: ["dotnet", "run", "-testnet", 
               "-server=1", "-maxblkmem=2", "-txindex=1",
               "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword"]
     ports: 
         - 5040:5000
-        - 16178:16178
+        - 26178:26178
 
   mongo:
-    container_name: strat-mongo
+    container_name: tstrat-mongo
     networks: 
         nakonet:
             ipv4_address: 172.16.10.102

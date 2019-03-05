@@ -1,0 +1,28 @@
+version: '2'
+services:
+  client:
+    container_name: destream-client
+    networks: 
+        - destream
+    image: destream/coinvault
+    ports: 
+        - 5057:5000
+  nako:
+    container_name: destream-nako
+    networks: 
+        - destream
+    image: coinvault/nako
+    command: destream
+    ports: 
+        - 9057:9000
+    depends_on:
+        - mongo
+        - client
+  mongo:
+    container_name: destream-mongo
+    networks: 
+        - destream
+    image: mongo:3.2
+networks:
+    destream:
+      driver: bridge
