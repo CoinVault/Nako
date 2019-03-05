@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './style.css';
 import '../../sbadmin2.css';
 import Block from './../Block';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route, Link } from 'react-router-dom'
 import { Grid } from 'react-bootstrap'
 //import { Grid, Row, Col, Table } from 'react-bootstrap'
 import Moment from 'react-moment';
@@ -13,6 +13,7 @@ class Home extends Component {
     constructor() {
         super();
         this.state={latestBlock:{}, blocks:[]};
+        this.state.redirectUrl = null;
     }
 
     componentDidMount() {
@@ -30,7 +31,7 @@ class Home extends Component {
                         //stupid 10ms delay to help enforce order
                     }
                     let blockNum = this.state.latestBlock.blockIndex - i;
-                    //console.log(this.state.latestBlock);
+
                     let url = `${this.apiBaseUrl}/api/query/block/Index/${blockNum}`;
                     await fetch(url, { mode: 'cors' })
                         .then(result => result.json())
@@ -39,14 +40,32 @@ class Home extends Component {
             });
     }
 
+    searchKeyPress = e => {
+        console.log(e);
+        if(e.keyCode == 13){
+            var searchTerm = e.target.value;
+
+            const isBlockNumber = parseInt(searchTerm) <= this.state.latestBlock.blockIndex;
+
+            if (isBlockNumber) {
+                this.setState({redirectUrl:'/block/' + searchTerm});
+            }
+        }
+    }
+
     render() {
+        if (this.state.redirectUrl) {
+            return <Redirect to={this.state.redirectUrl}/>
+        }
+        
         return (
             <Grid>
                 <div className="Home">
                     
                 
-                    <div className="">
-                        <img src='/nako_logo.png' width="60" />
+                    <div className="row">
+                        <div class="col-md-1 logo"><img src='/nako_logo.png' width="60" /></div>
+                        <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" placeholder="Search for block number"></input></div>
                     </div>
                     <div className="well">
                         <h1>{this.state.latestBlock.coinTag} Block explorer</h1>
