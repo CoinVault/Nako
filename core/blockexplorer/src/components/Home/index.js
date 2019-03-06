@@ -56,7 +56,14 @@ class Home extends Component {
                 this.setState({redirectUrl:'/address/' + searchTerm});
             }
             else {
-                alert(searchTerm + ' is not a valid blocknumber or transaction hash');
+
+                var blockNumber = await this.getBlockNumberOfBlockHash(searchTerm);
+                if (blockNumber > 0) {
+                    this.setState({redirectUrl:'/block/' + blockNumber});
+                }
+                else {
+                    alert(searchTerm + ' is not a valid block number, block hash, transaction hash, or address.');
+                }
             }
         }
     }
@@ -99,6 +106,17 @@ class Home extends Component {
         }
     }
 
+    async getBlockNumberOfBlockHash(searchTerm) {
+        try {
+            var response = await fetch(`/api/query/block/${searchTerm}`,{mode: 'cors'});
+            var block = await response.json();
+            return block.blockIndex;
+        } catch {
+            return 0;
+        }
+    }
+
+
     render() {
         if (this.state.redirectUrl) {
             return <Redirect to={this.state.redirectUrl}/>
@@ -107,12 +125,10 @@ class Home extends Component {
         return (
             <Grid>
                 <div className="Home">
-                    
-                
                     <div className="row">
                         <div class="col-md-1 logo"><img src='/nako_logo.png' width="60" /></div>
                         <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" 
-                            placeholder="Search for block number, transaction hash or address."></input></div>
+                            placeholder="Search for block number, block hash, transaction hash or address."></input></div>
                     </div>
                     <div className="well">
                         <h1>{this.state.latestBlock.coinTag} Block explorer</h1>
