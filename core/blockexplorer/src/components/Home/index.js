@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './style.css';
 import '../../sbadmin2.css';
 import Block from './../Block';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Redirect, Route, Link } from 'react-router-dom'
 import { Grid } from 'react-bootstrap'
 //import { Grid, Row, Col, Table } from 'react-bootstrap'
 import Moment from 'react-moment';
@@ -13,6 +13,7 @@ class Home extends Component {
     constructor() {
         super();
         this.state={latestBlock:{}, blocks:[]};
+        this.state.redirectUrl = null;
     }
 
     componentDidMount() {
@@ -30,7 +31,7 @@ class Home extends Component {
                         //stupid 10ms delay to help enforce order
                     }
                     let blockNum = this.state.latestBlock.blockIndex - i;
-                    //console.log(this.state.latestBlock);
+
                     let url = `${this.apiBaseUrl}/api/query/block/Index/${blockNum}`;
                     await fetch(url, { mode: 'cors' })
                         .then(result => result.json())
@@ -39,14 +40,95 @@ class Home extends Component {
             });
     }
 
+    searchKeyPress = async e => {
+        if(e.keyCode == 13){
+            var searchTerm = e.target.value.trim();
+            
+            if (searchTerm == '') {
+                return;
+            }
+
+            if (this.isBlockNumber(searchTerm)) {
+                this.setState({redirectUrl:'/block/' + searchTerm});
+            } else if (await this.isTransactionHash(searchTerm)) {
+                this.setState({redirectUrl:'/transaction/' + searchTerm});
+            } else if (await this.isAddress(searchTerm)) {
+                this.setState({redirectUrl:'/address/' + searchTerm});
+            }
+            else {
+
+                var blockNumber = await this.getBlockNumberOfBlockHash(searchTerm);
+                if (blockNumber > 0) {
+                    this.setState({redirectUrl:'/block/' + blockNumber});
+                }
+                else {
+                    alert(searchTerm + ' is not a valid block number, block hash, transaction hash, or address.');
+                }
+            }
+        }
+    }
+
+    isBlockNumber(searchTerm) {
+        if (searchTerm.length > 16) {
+            return false;
+        }
+        const blockNumber = parseInt(searchTerm);
+        console.log('blockNumber', blockNumber);
+        return blockNumber!==0 && blockNumber <= this.state.latestBlock.blockIndex;
+    }
+
+    async isAddress(searchTerm) {
+        try {
+            var response = await fetch(`/api/query/address/${searchTerm}`,{mode: 'cors'});
+            var addressInfo = await response.json();
+
+            if (addressInfo.totalReceived > 0 || addressInfo.totalSent > 0) {
+                return true;
+            }
+
+            // at this point still not sure so do deeper check
+            response = await fetch(`/api/query/transaction/${searchTerm}/transactions`,{mode: 'cors'});
+            addressInfo = await response.json();
+
+            return addressInfo.transactions.length > 0;
+        } catch {
+            return false;
+        }
+    }
+
+    async isTransactionHash(searchTerm) {
+        try {
+            var response = await fetch(`/api/query/transaction/${searchTerm}`,{mode: 'cors'});
+            var transaction = await response.json();
+            return transaction.blockHash !== null;
+        } catch {
+            return false;
+        }
+    }
+
+    async getBlockNumberOfBlockHash(searchTerm) {
+        try {
+            var response = await fetch(`/api/query/block/${searchTerm}`,{mode: 'cors'});
+            var block = await response.json();
+            return block.blockIndex;
+        } catch {
+            return 0;
+        }
+    }
+
+
     render() {
+        if (this.state.redirectUrl) {
+            return <Redirect to={this.state.redirectUrl}/>
+        }
+        
         return (
             <Grid>
                 <div className="Home">
-                    
-                
-                    <div className="">
-                        <img src='/nako_logo.png' width="60" />
+                    <div className="row">
+                        <div class="col-md-1 logo"><img src='/nako_logo.png' width="60" /></div>
+                        <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" 
+                            placeholder="Search for block number, block hash, transaction hash or address."></input></div>
                     </div>
                     <div className="well">
                         <h1>{this.state.latestBlock.coinTag} Block explorer</h1>

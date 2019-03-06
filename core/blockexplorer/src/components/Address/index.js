@@ -47,7 +47,7 @@ class Address extends Component {
                
           
 
-          <h2>{this.state.address.address}</h2>
+          <h2>Address: {this.state.address.address}</h2>
           <table className="table table-striped">
             <thead>
               <tr>
