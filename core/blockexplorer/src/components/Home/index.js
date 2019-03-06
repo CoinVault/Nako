@@ -40,17 +40,35 @@ class Home extends Component {
             });
     }
 
-    searchKeyPress = e => {
-        console.log(e);
+    searchKeyPress = async e => {
         if(e.keyCode == 13){
             var searchTerm = e.target.value;
-
-            const isBlockNumber = parseInt(searchTerm) <= this.state.latestBlock.blockIndex;
-
-            if (isBlockNumber) {
+            
+            if (this.isBlockNumber(searchTerm)) {
                 this.setState({redirectUrl:'/block/' + searchTerm});
+            } else if (await this.isTransactionHash(searchTerm)) {
+                this.setState({redirectUrl:'/transaction/' + searchTerm});
+            }
+            else {
+                alert(searchTerm + ' is not a valid blocknumber or transaction hash');
             }
         }
+    }
+
+    isBlockNumber(searchTerm) {
+        if (searchTerm.length > 16) {
+            return false;
+        }
+        const blockNumber = parseInt(searchTerm);
+        console.log('blockNumber', blockNumber);
+        return blockNumber!==0 && blockNumber <= this.state.latestBlock.blockIndex;
+    }
+
+    async isTransactionHash(transactionId) {
+        var transactionResponse = await fetch(`/api/query/transaction/${transactionId}`,{mode: 'cors'});
+        var transaction = await transactionResponse.json();
+        console.log(transaction.blockHash);
+        return transaction.blockHash !== null;
     }
 
     render() {
@@ -65,7 +83,7 @@ class Home extends Component {
                 
                     <div className="row">
                         <div class="col-md-1 logo"><img src='/nako_logo.png' width="60" /></div>
-                        <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" placeholder="Search for block number"></input></div>
+                        <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" placeholder="Search for block number or transaction hash"></input></div>
                     </div>
                     <div className="well">
                         <h1>{this.state.latestBlock.coinTag} Block explorer</h1>
