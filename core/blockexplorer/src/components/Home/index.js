@@ -42,12 +42,18 @@ class Home extends Component {
 
     searchKeyPress = async e => {
         if(e.keyCode == 13){
-            var searchTerm = e.target.value;
+            var searchTerm = e.target.value.trim();
             
+            if (searchTerm == '') {
+                return;
+            }
+
             if (this.isBlockNumber(searchTerm)) {
                 this.setState({redirectUrl:'/block/' + searchTerm});
             } else if (await this.isTransactionHash(searchTerm)) {
                 this.setState({redirectUrl:'/transaction/' + searchTerm});
+            } else if (await this.isAddress(searchTerm)) {
+                this.setState({redirectUrl:'/address/' + searchTerm});
             }
             else {
                 alert(searchTerm + ' is not a valid blocknumber or transaction hash');
@@ -64,11 +70,33 @@ class Home extends Component {
         return blockNumber!==0 && blockNumber <= this.state.latestBlock.blockIndex;
     }
 
-    async isTransactionHash(transactionId) {
-        var transactionResponse = await fetch(`/api/query/transaction/${transactionId}`,{mode: 'cors'});
-        var transaction = await transactionResponse.json();
-        console.log(transaction.blockHash);
-        return transaction.blockHash !== null;
+    async isAddress(searchTerm) {
+        try {
+            var response = await fetch(`/api/query/address/${searchTerm}`,{mode: 'cors'});
+            var addressInfo = await response.json();
+
+            if (addressInfo.totalReceived > 0 || addressInfo.totalSent > 0) {
+                return true;
+            }
+
+            // at this point still not sure so do deeper check
+            response = await fetch(`/api/query/transaction/${searchTerm}/transactions`,{mode: 'cors'});
+            addressInfo = await response.json();
+
+            return addressInfo.transactions.length > 0;
+        } catch {
+            return false;
+        }
+    }
+
+    async isTransactionHash(searchTerm) {
+        try {
+            var response = await fetch(`/api/query/transaction/${searchTerm}`,{mode: 'cors'});
+            var transaction = await response.json();
+            return transaction.blockHash !== null;
+        } catch {
+            return false;
+        }
     }
 
     render() {
@@ -83,7 +111,8 @@ class Home extends Component {
                 
                     <div className="row">
                         <div class="col-md-1 logo"><img src='/nako_logo.png' width="60" /></div>
-                        <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" placeholder="Search for block number or transaction hash"></input></div>
+                        <div className="col-md-11"><input class="pull-right search form-control form-control-lg" onKeyDown={this.searchKeyPress} type="text" 
+                            placeholder="Search for block number, transaction hash or address."></input></div>
                     </div>
                     <div className="well">
                         <h1>{this.state.latestBlock.coinTag} Block explorer</h1>
