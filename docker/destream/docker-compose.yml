@@ -12,7 +12,7 @@ services:
     networks: 
         - destream
     image: coinvault/nako
-    command: destream
+    command: DST
     ports: 
         - 9057:9000
     depends_on:
