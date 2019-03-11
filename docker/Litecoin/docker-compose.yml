@@ -1,29 +1,43 @@
 version: '2'
 services:
-  client:
-    container_name: ltc-client
-    networks: 
-        - ltc
-    image: coinvault/litecoin
-    ports: 
-        - 5004:5000
-        - 9333:9333
+
   nako:
     container_name: ltc-nako
     networks: 
-        - ltc
-    image: coinvault/nako
+        nakonet:
+            ipv4_address: 172.16.10.100
+    image: coinvault/nako:latest
     command: LTC
     ports: 
         - 9004:9000
     depends_on:
         - mongo
         - client
+
+  client:
+    container_name: ltc-client
+    networks: 
+        nakonet:
+            ipv4_address: 172.16.10.101
+    image: nicolasdorier/docker-litecoin:0.16.3
+    command: ["litecoind", 
+              "-server=1", "-txindex=1",
+              "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword"]
+    ports: 
+        - 5004:5000
+        - 9333:9333
+
   mongo:
     container_name: ltc-mongo
     networks: 
-        - ltc
+        nakonet:
+            ipv4_address: 172.16.10.102
     image: mongo:3.2
+
 networks:
-    ltc:
-      driver: bridge
+  nakonet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.10.0/24
