@@ -10,26 +10,23 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
     using Nako.Config;
 
-    #endregion
 
     public abstract class TaskStarter
     {
-        private readonly Tracer tracer;
+        private readonly ILogger log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskStarter"/> class.
         /// </summary>
-        protected TaskStarter(Tracer tracer)
+        protected TaskStarter(ILogger logger)
         {
-            this.tracer = tracer;
+            this.log = logger;
         }
 
         public abstract int Priority { get; }
@@ -60,7 +57,7 @@ namespace Nako.Sync.SyncTasks
                     }
                     catch (Exception ex)
                     {
-                        this.tracer.Trace("TaskStarter-" + this.GetType().Name, string.Format("Error = {0}", ex), ConsoleColor.Red);
+                        this.log.LogError(ex, "TaskStarter-" + this.GetType().Name);
 
                         tokenSource.Cancel();
 

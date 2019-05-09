@@ -10,13 +10,10 @@
 
 namespace Nako.Operations.Types
 {
-    #region Using Directives
-
     using System;
-
+    using Microsoft.Extensions.Options;
     using Nako.Config;
 
-    #endregion
 
     [Serializable]
     public class SyncConnection
@@ -24,8 +21,10 @@ namespace Nako.Operations.Types
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncConnection"/> class.
         /// </summary>
-        public SyncConnection(NakoConfiguration configuration)
+        public SyncConnection(IOptions<NakoConfiguration> config)
         {
+            NakoConfiguration configuration = config.Value;
+
             this.CoinTag = configuration.CoinTag;
             this.Password = configuration.RpcPassword;
             this.RpcAccessPort = configuration.RpcAccessPort;
@@ -35,7 +34,6 @@ namespace Nako.Operations.Types
             this.StartBlockIndex = configuration.StartBlockIndex;
         }
 
-        #region Public Properties
 
         public string CoinTag { get; set; }
 
@@ -55,6 +53,5 @@ namespace Nako.Operations.Types
 
         public long StartBlockIndex { get; set; }
 
-        #endregion
     }
 }

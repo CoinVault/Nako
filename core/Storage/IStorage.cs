@@ -10,14 +10,9 @@
 
 namespace Nako.Storage
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
     using Nako.Client.Types;
     using Nako.Storage.Types;
-
-    #endregion
 
     public interface IStorage
     {

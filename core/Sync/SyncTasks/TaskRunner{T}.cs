@@ -10,23 +10,20 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Concurrent;
     using System.Linq;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Config;
-
-    #endregion
 
     public abstract class TaskRunner<T> : TaskRunner, IBlockableItem
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskRunner{T}"/> class.
         /// </summary>
-        protected TaskRunner(NakoApplication application, NakoConfiguration config, Tracer tracer)
-            : base(application, config, tracer)
+        protected TaskRunner(IOptions<NakoConfiguration> configuration, ILogger logger)
+            : base(configuration, logger)
         {
             this.Queue = new ConcurrentQueue<T>();
         }

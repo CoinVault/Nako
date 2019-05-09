@@ -10,8 +10,8 @@
 
 namespace Nako.Client
 {
-    #region Using Directives
-
+    using Nako.Client.Types;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -22,16 +22,8 @@ namespace Nako.Client
     using System.Text;
     using System.Threading.Tasks;
 
-    using Nako.Client.Types;
-
-    using Newtonsoft.Json;
-
-    #endregion
-
     public class BitcoinClient : IDisposable
     {
-        #region Constructors and Destructors
-
         ///// <summary>
         ///// Initializes static members of the <see cref="BitcoinClient"/> class.
         ///// </summary>
@@ -79,10 +71,6 @@ namespace Nako.Client
             this.Client.DefaultRequestHeaders.Connection.Add("keep-alive");
         }
 
-        #endregion
-
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the credentials.
         /// </summary>
@@ -93,18 +81,10 @@ namespace Nako.Client
         /// </summary>
         public Uri Url { get; set; }
 
-        #endregion
-
-        #region Properties
-
         /// <summary>
         /// Gets or sets the client.
         /// </summary>
         private HttpClient Client { get; set; }
-
-        #endregion
-
-        #region Public Methods and Operators
 
         /// <summary>
         /// A static method to create a client.
@@ -459,10 +439,6 @@ namespace Nako.Client
             await this.CallAsync("walletpassphrasechange", passphrase, newPassphrase);
         }
 
-        #endregion
-
-        #region Methods
-
         /// <summary>
         /// Create a crypto client exception.
         /// </summary>
@@ -488,7 +464,7 @@ namespace Nako.Client
             }
             catch (Exception ex)
             {
-                throw new BitcoinCommunicationException(string.Format("Bitcoin Failed Url = '{0}'", url), ex);
+                throw new BitcoinCommunicationException(string.Format("Daemon Failed Url = '{0}'", url), ex);
             }
         }
 
@@ -503,7 +479,7 @@ namespace Nako.Client
             }
             catch (Exception ex)
             {
-                throw new BitcoinCommunicationException(string.Format("Bitcoin Failed Url = '{0}'", url), ex);
+                throw new BitcoinCommunicationException(string.Format("Daemon Failed Url = '{0}'", url), ex);
             }
         }
 
@@ -620,7 +596,8 @@ namespace Nako.Client
                 {
                     using (var jsonStreamReader = new StreamReader(jsonStream))
                     {
-                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(jsonStreamReader.ReadToEndAsync().Result);
+                        var responseText = jsonStreamReader.ReadToEndAsync().Result;
+                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(responseText);
 
                         if (response.StatusCode != HttpStatusCode.OK)
                         {
@@ -643,7 +620,5 @@ namespace Nako.Client
                 throw new BitcoinClientException(string.Format("Failed parsing the result, StatusCode={0}, row message={1}", response.StatusCode, response.Content.ReadAsStringAsync().Result), ex);
             }
         }
-
-        #endregion
     }
 }

@@ -10,11 +10,7 @@
 
 namespace Nako.Sync
 {
-    #region Using Directives
-
     using System;
-
-    #endregion
 
     public class SyncRestartException : Exception
     {

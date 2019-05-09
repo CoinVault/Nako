@@ -19,16 +19,16 @@ namespace Nako.Api.Handlers
     /// Controller to expose an api that queries the blockchain.
     /// </summary>
     [ApiController]
+    [ApiVersion("2.0")]
     [Route("api/[controller]")]
-    [ApiVersion("1.0")]
-    public class QueryController : Controller
+    public class QueryControllerV2 : Controller
     {
         private readonly QueryHandler handler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryController"/> class.
         /// </summary>
-        public QueryController(QueryHandler queryHandler)
+        public QueryControllerV2(QueryHandler queryHandler)
         {
             this.handler = queryHandler;
         }
@@ -51,7 +51,7 @@ namespace Nako.Api.Handlers
             var ret = this.handler.GetAddress(address, confirmations);
 
             var response = this.CreateOkResponse(ret);
-           
+
             return response;
         }
 
@@ -62,7 +62,7 @@ namespace Nako.Api.Handlers
             var ret = this.handler.GetAddressUtxoTransactions(address, confirmations);
 
             var response = this.CreateOkResponse(ret);
-           
+
             return response;
         }
 
@@ -95,7 +95,7 @@ namespace Nako.Api.Handlers
             var ret = this.handler.GetAddressUtxoUnconfirmedTransactions(address, confirmations);
 
             var response = this.CreateOkResponse(ret);
-          
+
             return response;
         }
 
@@ -106,7 +106,7 @@ namespace Nako.Api.Handlers
             var ret = this.handler.GetAddressUtxo(address, 0);
 
             var response = this.CreateOkResponse(ret);
-            
+
             return response;
         }
 
@@ -117,7 +117,7 @@ namespace Nako.Api.Handlers
             var ret = this.handler.GetAddress(address, 0);
 
             var response = this.CreateOkResponse(ret);
-           
+
             return response;
         }
 
@@ -155,7 +155,7 @@ namespace Nako.Api.Handlers
             }
 
             var response = this.CreateOkResponse(ret);
-           
+
             return response;
         }
 
@@ -171,7 +171,7 @@ namespace Nako.Api.Handlers
             }
 
             var response = this.CreateOkResponse(ret);
-            
+
             return response;
         }
 

@@ -10,147 +10,132 @@
 
 namespace Nako.Sync
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Autofac;
-
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Config;
     using Nako.Sync.SyncTasks;
-
-    #endregion
 
     /// <summary>
     /// The processes responsible of triggering sync tasks.
     /// </summary>
-    public class SyncServer
+    public class SyncServer : IHostedService, IDisposable
     {
-        #region Fields
-
         private readonly NakoConfiguration configuration;
-
-        private readonly NakoApplication application;
-
-        private readonly Tracer tracer;
-
-        #endregion
-
-        #region Constructors and Destructors
+        private readonly ILogger<SyncServer> log;
+        private readonly IServiceScopeFactory scopeFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SyncServer"/> class.
         /// </summary>
-        public SyncServer(NakoConfiguration nakoConfiguration, NakoApplication nakoApplication, Tracer tracer)
+        public SyncServer(ILogger<SyncServer> logger, IOptions<NakoConfiguration> configuration, IServiceScopeFactory scopeFactory)
         {
-            this.tracer = tracer;
-            this.application = nakoApplication;
-            this.configuration = nakoConfiguration;
+            this.log = logger;
+            this.configuration = configuration.Value;
+            this.scopeFactory = scopeFactory;
         }
 
-        #endregion
-
-        #region Public Methods and Operators
-
-        /// <summary>
-        /// Start the sync server.
-        /// </summary>
-        public Task StartSync(IContainer container)
+        public void Dispose()
         {
-            this.tracer.Trace("Sync", string.Format("Start sync for {0} ", this.configuration.CoinTag));
+            
+        }
 
-            return Task.Run(
-                () =>
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            this.log.LogInformation($"Start sync for {configuration.CoinTag}");
+            log.LogInformation("Starting the Sync Service...");
+
+            Task.Run(async () =>
+            {
+                try
                 {
-                    try
+                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        while (!this.application.ExitApplication && !this.application.SyncToken.IsCancellationRequested)
+                        var tokenSource = new CancellationTokenSource();
+                        cancellationToken.Register(() => { tokenSource.Cancel(); });
+
+                        try
                         {
-                            var tokenSource = new CancellationTokenSource();
-                            this.application.SyncToken.Register(() => { tokenSource.Cancel(); });
-
-                            try
+                            using (var scope = scopeFactory.CreateScope())
                             {
-                                using (var scope = container.BeginLifetimeScope())
+                                var runner = scope.ServiceProvider.GetService<Runner>();
+                                var runningTasks = runner.RunAll(tokenSource);
+
+                                Task.WaitAll(runningTasks.ToArray(), cancellationToken);
+
+                                if (cancellationToken.IsCancellationRequested)
                                 {
-                                    var runner = scope.Resolve<Runner>();
-                                    var runningTasks = runner.RunAll(tokenSource);
-
-                                    Task.WaitAll(runningTasks.ToArray(), this.application.SyncToken);
-
-                                    if (this.application.SyncToken.IsCancellationRequested)
-                                    {
-                                        tokenSource.Cancel();
-                                    }
-                                }
-
-                                break;
-                            }
-                            catch (OperationCanceledException)
-                            {
-                                // do nothing the task was cancel.
-                                throw;
-                            }
-                            catch (AggregateException ae)
-                            {
-                                if (ae.Flatten().InnerExceptions.OfType<SyncRestartException>().Any())
-                                {
-                                    this.tracer.Trace("Sync", "### - Restart requested - ###");
-
-                                    this.tracer.Trace("Sync", "Signalling token cancelation");
                                     tokenSource.Cancel();
-
-                                    continue;
                                 }
+                            }
 
-                                foreach (var innerException in ae.Flatten().InnerExceptions)
-                                {
-                                    this.tracer.TraceError("Sync", innerException.ToString());
-                                }
-
-                                //this.tracer.TraceError("Sync", "Signalling token cancelation");
-
+                            break;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // do nothing the task was cancel.
+                            throw;
+                        }
+                        catch (AggregateException ae)
+                        {
+                            if (ae.Flatten().InnerExceptions.OfType<SyncRestartException>().Any())
+                            {
+                                this.log.LogInformation("Sync: ### - Restart requested - ###");
+                                this.log.LogTrace("Sync: Signalling token cancelation");
                                 tokenSource.Cancel();
-
-                                var retryInterval = 10;
-
-                                this.tracer.TraceError("Sync", string.Format("Unexpected error retry in {0} seconds", retryInterval), ConsoleColor.Gray);
-                                //this.tracer.ReadLine();
-
-                                // Nako is designed to be idempotent, we want to continue running even if errors are found.
-                                // so if an unepxected error happened we log it wait and start again
-
-                                Task.Delay(TimeSpan.FromSeconds(retryInterval), this.application.SyncToken).Wait(this.application.SyncToken);
 
                                 continue;
                             }
-                            catch (Exception ex)
+
+                            foreach (var innerException in ae.Flatten().InnerExceptions)
                             {
-                                this.tracer.TraceError("Sync", ex.ToString());
-                                this.tracer.TraceError("Sync", "Press any key to exist");
-                                this.tracer.ReadLine();
-                                break;
+                                this.log.LogError(innerException, "Sync");
                             }
+
+                            tokenSource.Cancel();
+
+                            var retryInterval = 10;
+
+                            this.log.LogWarning($"Unexpected error retry in {retryInterval} seconds");
+                            //this.tracer.ReadLine();
+
+                            // Nako is designed to be idempotent, we want to continue running even if errors are found.
+                            // so if an unepxected error happened we log it wait and start again
+
+                            Task.Delay(TimeSpan.FromSeconds(retryInterval), cancellationToken).Wait(cancellationToken);
+
+                            continue;
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log.LogError(ex, "Sync");
+                            break;
                         }
                     }
-                    catch (OperationCanceledException)
-                    {
-                        // do nothing the task was cancel.
-                        throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        this.tracer.Trace("Sync", ex.ToString());
-                        this.tracer.ReadLine();
-                        throw;
-                    }
-                }, 
-                this.application.CreateSyncToken());
+                }
+                catch (OperationCanceledException)
+                {
+                    // do nothing the task was cancel.
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    this.log.LogError(ex, "Sync");
+                    throw;
+                }
+
+            }, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        #endregion
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

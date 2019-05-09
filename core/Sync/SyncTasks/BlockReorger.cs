@@ -13,7 +13,7 @@ namespace Nako.Sync.SyncTasks
     #region Using Directives
 
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
     using Nako.Config;
     using Nako.Operations;
     using Nako.Operations.Types;
@@ -25,7 +25,7 @@ namespace Nako.Sync.SyncTasks
     /// </summary>
     public class BlockReorger : TaskStarter
     {
-        private readonly Tracer tracer;
+        private readonly ILogger<BlockReorger> log;
 
         private readonly ISyncOperations operations;
 
@@ -34,12 +34,12 @@ namespace Nako.Sync.SyncTasks
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockReorger"/> class.
         /// </summary>
-        public BlockReorger(Tracer tracer, ISyncOperations syncOperations, SyncConnection syncConnection)
-            : base(tracer)
+        public BlockReorger(ILogger<BlockReorger> logger, ISyncOperations syncOperations, SyncConnection syncConnection)
+            : base(logger)
         {
             this.connection = syncConnection;
             this.operations = syncOperations;
-            this.tracer = tracer;
+            this.log = logger;
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nako.Sync.SyncTasks
 
         public override Task OnExecute()
         {
-            this.tracer.Trace("BlockReorger", "Checking if re-org is required");
+            this.log.LogDebug("Checking if re-org is required");
 
             return this.operations.CheckBlockReorganization(this.connection);
         }

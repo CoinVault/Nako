@@ -10,68 +10,34 @@
 
 namespace Nako
 {
-    #region Using Directives
-
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-
-    using Autofac;
-
-    using Nako.Api;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Nako.Config;
-    using Nako.Sync;
-
-    #endregion
+    using System.IO;
 
     /// <summary>
     /// The application program.
     /// </summary>
-    internal class Program
+    public class Program
     {
-        #region Methods
-
-        /// <summary>
-        /// The main entry point.
-        /// </summary>
-        internal static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            if (!IsRunningOnLinux())
-            {
-                try
-                {
-                    Console.BufferHeight = 1000;
-                    Console.WindowHeight = 25;
-                    Console.WindowWidth = 150;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
+            var config = new ConfigurationBuilder()
+              .SetBasePath(Directory.GetCurrentDirectory())
+              .AddJsonFile("hosting.json", optional: true)
+              .AddJsonFile("nakosettings.json", optional: false, reloadOnChange: false)
+              .AddCommandLine(args)
+              .AddEnvironmentVariables()
+              .Build();
 
-            var builder = new ContainerBuilder();
-            builder.RegisterInstance(ConfigStartup.LoadConfiguration(args)).As<NakoConfiguration>();
-            builder.RegisterAssemblyModules(Assembly.GetEntryAssembly());
-            var container = builder.Build();
-           
-            container.Resolve<ApiServer>().StartApi(container);
-            container.Resolve<SyncServer>().StartSync(container);
-            container.Resolve<Terminator>().Start();
+            var configuration = config.Get<NakoConfiguration>();
+            configuration.Initialize();
 
-            container.Resolve<NakoApplication>().SyncToken.WaitHandle.WaitOne();
-            container.Resolve<NakoApplication>().ApiTokenSource.Cancel();
-            container.Resolve<NakoApplication>().ApiToken.WaitHandle.WaitOne();
-
-            //Console.Read();
+            WebHost.CreateDefaultBuilder(args)
+               .UseConfiguration(config)
+               .UseStartup<Startup>()
+               .Build().Run();
         }
-
-        public static bool IsRunningOnLinux()
-        {
-            return System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux);
-        }
-
-        #endregion
     }
 }

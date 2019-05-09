@@ -24,7 +24,9 @@ namespace Nako.Api.Handlers
     /// <summary>
     /// Controller to get some information about a coin.
     /// </summary>
+    [ApiController]
     [Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class StatsController : Controller
     {
         private readonly StatsHandler statsHandler;

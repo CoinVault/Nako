@@ -10,15 +10,9 @@
 
 namespace Nako.Storage.Mongo
 {
-    #region Using Directives
-
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using MongoDB.Driver;
-
     using Nako.Client;
     using Nako.Client.Types;
     using Nako.Config;
@@ -26,12 +20,14 @@ namespace Nako.Storage.Mongo
     using Nako.Operations.Types;
     using Nako.Storage.Mongo.Types;
     using Nako.Storage.Types;
-
-    #endregion
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class MongoData : IStorage
     {
-        private readonly Tracer tracer;
+        private readonly ILogger<MongoStorageOperations> log;
 
         private readonly MongoClient mongoClient;
 
@@ -41,12 +37,12 @@ namespace Nako.Storage.Mongo
 
         private readonly NakoConfiguration configuration;
 
-        public MongoData(Tracer tracer, SyncConnection connection, NakoConfiguration nakoConfiguration)
+        public MongoData(ILogger<MongoStorageOperations> logger, SyncConnection connection, IOptions<NakoConfiguration> nakoConfiguration)
         {
             this.syncConnection = connection;
-            this.tracer = tracer;
-            this.configuration = nakoConfiguration;
-            this.mongoClient = new MongoClient(nakoConfiguration.ConnectionString);
+            this.log = logger;
+            this.configuration = nakoConfiguration.Value;
+            this.mongoClient = new MongoClient(this.configuration.ConnectionString);
             this.mongoDatabase = this.mongoClient.GetDatabase("Blockchain");
             this.MemoryTransactions = new ConcurrentDictionary<string, DecodedRawTransaction>();
         }
@@ -331,7 +327,7 @@ namespace Nako.Storage.Mongo
 
             stoper1.Stop();
 
-            this.tracer.Trace("Select", string.Format("Seconds = {0} - UnspentOnly = {1} - Addr = {2} - Items = {3}", stoper1.Elapsed.TotalSeconds, availableOnly, address, addrs.Count()), ConsoleColor.Yellow);
+            this.log.LogInformation($"Select: Seconds = {stoper1.Elapsed.TotalSeconds} - UnspentOnly = {availableOnly} - Addr = {address} - Items = {addrs.Count()}");
 
             // this creates a copy of the collection (to avoid thread issues)
             var pool = this.MemoryTransactions.Values;

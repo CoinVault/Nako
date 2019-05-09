@@ -10,19 +10,14 @@
 
 namespace Nako.Api.Handlers
 {
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
     using Nako.Api.Handlers.Types;
     using Nako.Client;
     using Nako.Client.Types;
     using Nako.Operations.Types;
     using Nako.Storage;
-
-    #endregion
 
     /// <summary>
     /// Handler to make get info about a blockchain.
@@ -41,8 +36,6 @@ namespace Nako.Api.Handlers
             this.storage = storage;
             this.syncConnection = connection;
         }
-
-        #region Public Methods and Operators
 
         public async Task<StatsConnection> StatsConnection()
         {
@@ -64,6 +57,7 @@ namespace Nako.Api.Handlers
             stats.TransactionsInPool = this.storage.GetMemoryTransactions().Count();
             stats.SyncBlockIndex = this.storage.BlockGetBlockCount(1).First().BlockIndex;
             stats.Progress = $"{stats.SyncBlockIndex}/{stats.ClientInfo.Blocks} - {stats.ClientInfo.Blocks - stats.SyncBlockIndex}";
+
             return stats;
         }
 
@@ -73,7 +67,5 @@ namespace Nako.Api.Handlers
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
             return (await client.GetPeerInfo()).ToList();
         }
-
-        #endregion
     }
 }

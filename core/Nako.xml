@@ -1,0 +1,1047 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nako</name>
+    </assembly>
+    <members>
+        <member name="M:Nako.Api.Binding.RawStringModelBinder.BindModelAsync(Microsoft.AspNetCore.Mvc.ModelBinding.ModelBindingContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Nako.Api.ConfigureSwaggerOptions">
+            <summary>
+            Configures the Swagger generation options.
+            </summary>
+            <remarks>This allows API versioning to define a Swagger document per API version after the
+            <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider"/> service has been resolved from the service container.</remarks>
+        </member>
+        <member name="M:Nako.Api.ConfigureSwaggerOptions.#ctor(Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider,Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.ConfigureSwaggerOptions"/> class.
+            </summary>
+            <param name="provider">The <see cref="T:Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider">provider</see> used to generate Swagger documents.</param>
+        </member>
+        <member name="M:Nako.Api.ConfigureSwaggerOptions.Configure(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions)">
+            <inheritdoc />
+        </member>
+        <member name="T:Nako.Api.Handlers.CommandController">
+            <summary>
+            Controller to get some information about a coin.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.CommandController.#ctor(Nako.Api.Handlers.CommandHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.CommandController"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.Handlers.CommandHandler">
+            <summary>
+            Handler to make get info about a blockchain.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.CommandHandler.#ctor(Nako.Operations.Types.SyncConnection,Nako.Storage.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.StatsHandler"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.Handlers.QueryController">
+            <summary>
+            Controller to expose an api that queries the blockchain.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.QueryController.#ctor(Nako.Api.Handlers.QueryHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.QueryController"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.Handlers.QueryControllerV2">
+            <summary>
+            Controller to expose an api that queries the blockchain.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.QueryControllerV2.#ctor(Nako.Api.Handlers.QueryHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.QueryController"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.Handlers.QueryHandler">
+            <summary>
+            A handler that make request on the blockchain.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.QueryHandler.#ctor(Nako.Config.NakoConfiguration,Nako.Storage.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.QueryHandler"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.Handlers.StatsController">
+            <summary>
+            Controller to get some information about a coin.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.StatsController.#ctor(Nako.Api.Handlers.StatsHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.StatsController"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.Handlers.StatsHandler">
+            <summary>
+            Handler to make get info about a blockchain.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.StatsHandler.#ctor(Nako.Operations.Types.SyncConnection,Nako.Storage.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.StatsHandler"/> class.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.CoinTag">
+            <summary>
+            Gets or sets the CoinTag.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.Address">
+            <summary>
+            Gets or sets the address.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.Balance">
+            <summary>
+            Gets or sets the balance.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.TotalReceived">
+            <summary>
+            Gets or sets the total received.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.TotalSent">
+            <summary>
+            Gets or sets the total sent.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.UnconfirmedBalance">
+            <summary>
+            Gets or sets the unconfirmed balance.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.Transactions">
+            <summary>
+            Gets or sets the transactions.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddress.UnconfirmedTransactions">
+            <summary>
+            Gets or sets the Unconfirmed transactions.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.Index">
+            <summary>
+            Gets or sets the input index.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.Type">
+            <summary>
+            Gets or sets the type.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.TransactionHash">
+            <summary>
+            Gets or sets the transaction hash.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.SpendingTransactionHash">
+            <summary>
+            Gets or sets the spending transaction hash.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.PubScriptHex">
+            <summary>
+            Gets or sets the script public key hex.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.CoinBase">
+            <summary>
+            Gets or sets the coinbase.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.Value">
+            <summary>
+            Gets or sets the amount.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.BlockIndex">
+            <summary>
+            Gets or sets the block index if included in a block.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.Confirmations">
+            <summary>
+            Gets or sets the confirmations.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryAddressItem.Time">
+            <summary>
+            Gets or sets the transaction time.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.CoinTag">
+            <summary>
+            Gets or sets the CoinTag.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.BlockHash">
+            <summary>
+            Gets or sets the block hash.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.BlockIndex">
+            <summary>
+            Gets or sets the block Height.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.BlockSize">
+            <summary>
+            Gets or sets the block Size.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.BlockTime">
+            <summary>
+            Gets or sets the block Time.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.NextBlockHash">
+            <summary>
+            Gets or sets the block NextHash.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.PreviousBlockHash">
+            <summary>
+            Gets or sets the block PreviousHash.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.Synced">
+            <summary>
+            Gets or sets a value indicating whether sync is complete for this block.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.TransactionCount">
+            <summary>
+            Gets or sets the Transaction Count.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryBlock.Transactions">
+            <summary>
+            Gets or sets the transactions.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.CoinTag">
+            <summary>
+            Gets or sets the CoinTag.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.BlockHash">
+            <summary>
+            Gets or sets the block hash.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.BlockIndex">
+            <summary>
+            Gets or sets the block index.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.Timestamp">
+            <summary>
+            Gets or sets the Timestamp.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.TransactionId">
+            <summary>
+            Gets or sets the transaction id.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.Confirmations">
+            <summary>
+            Gets or sets the confirmations.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.Inputs">
+            <summary>
+            Gets or sets the transaction inputs.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransaction.Outputs">
+            <summary>
+            Gets or sets the transaction outputs.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionInput.InputIndex">
+            <summary>
+            Gets or sets the input index.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionInput.InputAddress">
+            <summary>
+            Gets or sets the addresses.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionInput.CoinBase">
+            <summary>
+            Gets or sets the coinbase id the transaction is the first transaction 'coinbase'.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionInput.InputTransactionId">
+            <summary>
+            Gets or sets the transaction id.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionOutput.Address">
+            <summary>
+            Gets or sets the addresses.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionOutput.Balance">
+            <summary>
+            Gets or sets the amount.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionOutput.Index">
+            <summary>
+            Gets or sets the input index.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.QueryTransactionOutput.OutputType">
+            <summary>
+            Gets or sets the output type.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.Statistics.CoinTag">
+            <summary>
+            Gets or sets the coin tag.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.Statistics.Progress">
+            <summary>
+            Gets or sets the sync progress.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.Statistics.TransactionsInPool">
+            <summary>
+            Gets or sets the number of transactions in pool.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.Statistics.SyncBlockIndex">
+            <summary>
+            Gets or sets the current block index.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.Statistics.ClientInfo">
+            <summary>
+            Gets or sets some data bout a coin.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.Statistics.BlocksPerMinute">
+            <summary>
+            Gets or sets the blocks per minute being processed.
+            </summary>
+        </member>
+        <member name="P:Nako.Api.Handlers.Types.StatsConnection.Connections">
+            <summary>
+            Gets or sets the CoinTag.
+            </summary>
+        </member>
+        <member name="T:Nako.Api.SwaggerDefaultValues">
+            <summary>
+            Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.
+            </summary>
+            <remarks>This <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter"/> is only required due to bugs in the <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator"/>.
+            Once they are fixed and published, this class can be removed.</remarks>
+        </member>
+        <member name="M:Nako.Api.SwaggerDefaultValues.Apply(Swashbuckle.AspNetCore.Swagger.Operation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>
+            Applies the filter to the specified operation using the given context.
+            </summary>
+            <param name="operation">The operation to apply the filter to.</param>
+            <param name="context">The current operation filter context.</param>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Client.BitcoinClient"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Client.BitcoinClient"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.#ctor(System.String,System.Net.NetworkCredential)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Client.BitcoinClient"/> class.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClient.Credentials">
+            <summary>
+            Gets or sets the credentials.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClient.Url">
+            <summary>
+            Gets or sets the Url.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClient.Client">
+            <summary>
+            Gets or sets the client.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.Create(System.String,System.Int32,System.String,System.String,System.Boolean)">
+            <summary>
+            A static method to create a client.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.BackupWalletAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.CreateRawTransactionAsync(Nako.Client.Types.CreateRawTransaction)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.DecodeRawTransactionAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.DumpPrivkeyAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.EncryptWalletAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetAccountAddressAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetAccountAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetAddressesByAccountAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetBalanceAsync(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetBlockAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetBlock(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetBlockCountAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetBlockCount">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetblockHashAsync(System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetblockHash(System.Int64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetConnectionCountAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetDifficultyAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetGenerateAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetHashesPerSecAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetInfoAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetPeerInfo">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetNewAddressAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetRawMemPoolAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetRawMemPool">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetRawTransactionAsync(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetReceivedByAccountAsync(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetReceivedByAddressAsync(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetTransactionAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetTxOutAsync(System.String,System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetWorkAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.GetWorkAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.HelpAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ImportPrivkeyAsync(System.String,System.String,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ListAccountsAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ListReceivedByAccountAsync(System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ListReceivedByAddressAsync(System.Int32,System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ListTransactionsAsync(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ListUnspent(System.Int32,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.MoveAsync(System.String,System.String,System.Decimal,System.Int32,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SendFromAsync(System.String,System.String,System.Decimal,System.Int32,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SendToAddressAsync(System.String,System.Decimal,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SentRawTransactionAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SetAccountAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SetGenerateAsync(System.Boolean,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SetTxFeeAsync(System.Decimal)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SignRawTransactionAsync(Nako.Client.Types.SignRawTransaction)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.StopAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.ValidateAddressAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.WalletLockAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.WalletPassphraseAsync(System.String,System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.WalletPassphraseChangeAsync(System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.CreateException(System.Net.Http.HttpResponseMessage,System.Int32,System.String)">
+            <summary>
+            Create a crypto client exception.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.SendAsync(System.Net.Http.HttpClient,System.Uri,System.Net.Http.HttpContent)">
+            <summary>
+            Send the request and wrap any exception.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.Send(System.Net.Http.HttpClient,System.Uri,System.Net.Http.HttpContent)">
+            <summary>
+            Send the request and wrap any exception.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.CallAsync``1(System.String,System.Object[])">
+            <summary>
+            Make a call to crypto API.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.Call``1(System.String,System.Object[])">
+            <summary>
+            Make a call to crypto API.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.CallAsync(System.String,System.Object[])">
+            <summary>
+            Make a call to crypto API.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.CheckResponseOkAsync``1(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Check the crypto client response is ok.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClient.CheckResponseOk``1(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Check the crypto client response is ok.
+            </summary>
+        </member>
+        <member name="T:Nako.Client.BitcoinClientException">
+            <summary>
+            The bit net client exception.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClientException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Client.BitcoinClientException"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinClientException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Client.BitcoinClientException"/> class.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClientException.ErrorCode">
+            <summary>
+            Gets or sets the error code.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClientException.ErrorMessage">
+            <summary>
+            Gets or sets the error message.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClientException.Message">
+            <summary>
+            Gets the message.
+            </summary>
+        </member>
+        <member name="P:Nako.Client.BitcoinClientException.StatusCode">
+            <summary>
+            Gets or sets the status code.
+            </summary>
+        </member>
+        <member name="T:Nako.Client.BitcoinCommunicationException">
+            <summary>
+            The client communication exception.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.BitcoinCommunicationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Client.BitcoinCommunicationException"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Client.CertificateHandler">
+            <summary>
+            The certificate handler.
+            </summary>
+        </member>
+        <member name="T:Nako.Client.CryptoClientFactory">
+            <summary>
+             a factory to create clients.
+            </summary>
+        </member>
+        <member name="F:Nako.Client.CryptoClientFactory.Cache">
+            <summary>
+                Defines a cache object to hold storage sources.
+            </summary>
+        </member>
+        <member name="F:Nako.Client.CryptoClientFactory.CacheLock">
+            <summary>
+                Defines a lock object for the cache.
+            </summary>
+        </member>
+        <member name="M:Nako.Client.CryptoClientFactory.Create(System.String,System.Int32,System.String,System.String,System.Boolean)">
+            <summary>
+            A static method to create a client.
+            </summary>
+        </member>
+        <member name="T:Nako.Client.JsonUnixTimeConverter">
+            <summary>
+            json Unix time converter.
+            </summary>
+        </member>
+        <member name="M:Nako.Config.NakoConfiguration.Initialize">
+            <summary>
+            Called to configured the configuration settings with the supplied coin tag.
+            </summary>
+        </member>
+        <member name="T:Nako.Extensions.Extensions">
+            <summary>
+            This class defines extension methods.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.UnixTimeStampToDateTime(System.Int64)">
+            <summary>
+            The unix time stamp to date time.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.Batch``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Batch a collection in to fixed size batches.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Implemented a foreach extension for an enumerable object.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Int32})">
+            <summary>
+            Implemented a foreach extension for an enumerable object.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.Split``1(System.Collections.Generic.IEnumerable{``0},System.Int32)">
+            <summary>
+            Split a collection in to batches of collections.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.TakeAndRemove``1(System.Collections.Generic.Queue{``0},System.Int32)">
+            <summary>
+            The take and remove.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.Extensions.YieldBatchElements``1(System.Collections.Generic.IEnumerator{``0},System.Int32)">
+            <summary>
+            Inner method to batch a collection in to fixed size batches.
+            </summary>
+        </member>
+        <member name="T:Nako.Extensions.UnixUtils">
+            <summary>
+            Internal class providing certain utility functions to other classes.
+            </summary>
+        </member>
+        <member name="F:Nako.Extensions.UnixUtils.UnixStartDate">
+            <summary>
+            The Unix start date.
+            </summary>
+        </member>
+        <member name="M:Nako.Extensions.UnixUtils.DateToUnixTimestamp(System.DateTime)">
+            <summary>
+            Converts a <see cref="T:System.DateTime"/> object into a unix timestamp number.
+            </summary>
+            <param name="date">
+            The date to convert.
+            </param>
+            <returns>
+            A long for the number of seconds since 1st January 1970, as per unix specification.
+            </returns>
+        </member>
+        <member name="M:Nako.Extensions.UnixUtils.UnixTimestampToDate(System.String)">
+            <summary>
+            Converts a string, representing a unix timestamp number into a <see cref="T:System.DateTime"/> object.
+            </summary>
+            <param name="timestamp">
+            The timestamp, as a string.
+            </param>
+            <returns>
+            The <see cref="T:System.DateTime"/> object the time represents.
+            </returns>
+        </member>
+        <member name="M:Nako.Extensions.UnixUtils.UnixTimestampToDate(System.Int64)">
+            <summary>
+            Converts a <see cref="T:System.Int64"/>, representing a unix timestamp number into a <see cref="T:System.DateTime"/> object.
+            </summary>
+            <param name="timestamp">
+            The unix timestamp.
+            </param>
+            <returns>
+            The <see cref="T:System.DateTime"/> object the time represents.
+            </returns>
+        </member>
+        <member name="T:Nako.Operations.IStorageOperations">
+            <summary>
+            The StorageOperations interface.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.IStorageOperations.ValidateBlock(Nako.Operations.Types.SyncBlockTransactionsOperation)">
+            <summary>
+            Validate a block.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.IStorageOperations.InsertTransactions(Nako.Operations.Types.SyncBlockTransactionsOperation)">
+            <summary>
+            Insert transactions.
+            </summary>
+        </member>
+        <member name="T:Nako.Operations.ISyncOperations">
+            <summary>
+            The SyncOperations interface.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.ISyncOperations.FindBlock(Nako.Operations.Types.SyncConnection,Nako.Operations.Types.SyncingBlocks)">
+            <summary>
+            The sync block.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.ISyncOperations.FindPoolTransactions(Nako.Operations.Types.SyncConnection,Nako.Operations.Types.SyncingBlocks)">
+            <summary>
+            The sync block.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.ISyncOperations.SyncPool(Nako.Operations.Types.SyncConnection,Nako.Operations.Types.SyncPoolTransactions)">
+            <summary>
+            The sync memory pool.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.ISyncOperations.SyncBlock(Nako.Operations.Types.SyncConnection,Nako.Client.Types.BlockInfo)">
+            <summary>
+            The sync transactions.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.ISyncOperations.CheckBlockReorganization(Nako.Operations.Types.SyncConnection)">
+            <summary>
+            The check block reorganization.
+            </summary>
+        </member>
+        <member name="T:Nako.Operations.Types.InsertStats">
+            <summary>
+            The insert stats.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.InsertStats.Transactions">
+            <summary>
+            Gets or sets the transactions.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.InsertStats.Inputs">
+            <summary>
+            Gets or sets the inputs.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.InsertStats.Outputs">
+            <summary>
+            Gets or sets the outputs.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.InsertStats.Items">
+            <summary>
+            Gets or sets the items.
+            </summary>
+        </member>
+        <member name="T:Nako.Operations.Types.SyncBlockOperation">
+            <summary>
+            The sync block info.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.SyncBlockOperation.BlockInfo">
+            <summary>
+            Gets or sets the block info.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.SyncBlockOperation.IncompleteBlock">
+            <summary>
+            Gets or sets a value indicating whether incomplete block.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.SyncBlockOperation.LastCryptoBlockIndex">
+            <summary>
+            Gets or sets the last crypto block index.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.SyncBlockOperation.PoolTransactions">
+            <summary>
+            Gets or sets the transactions.
+            </summary>
+        </member>
+        <member name="T:Nako.Operations.Types.SyncBlockTransactionsOperation">
+            <summary>
+            The sync block info.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.SyncBlockTransactionsOperation.BlockInfo">
+            <summary>
+            Gets or sets the block info.
+            </summary>
+        </member>
+        <member name="P:Nako.Operations.Types.SyncBlockTransactionsOperation.Transactions">
+            <summary>
+            Gets or sets the transactions.
+            </summary>
+        </member>
+        <member name="M:Nako.Operations.Types.SyncConnection.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Operations.Types.SyncConnection"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Program">
+            <summary>
+            The application program.
+            </summary>
+        </member>
+        <member name="T:Nako.Storage.Mongo.MongoBuilder">
+            <summary>
+            The mongo builder.
+            </summary>
+        </member>
+        <member name="M:Nako.Storage.Mongo.MongoBuilder.#ctor(Microsoft.Extensions.Logging.ILogger{Nako.Storage.Mongo.MongoBuilder},Nako.Storage.IStorage,Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Storage.Mongo.MongoBuilder"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Storage.Mongo.MongoStorageOperations">
+            <summary>
+            Mongo storage operations.
+            </summary>
+        </member>
+        <member name="M:Nako.Storage.Mongo.MongoStorageOperations.#ctor(Nako.Storage.IStorage,Microsoft.Extensions.Logging.ILogger{Nako.Storage.Mongo.MongoStorageOperations},Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Storage.Mongo.MongoStorageOperations"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Sync.SyncOperations">
+            <summary>
+            The CoinOperations interface.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncOperations.#ctor(Nako.Storage.IStorage,Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncOperations},Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncOperations"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncRestartException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncRestartException"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncRestartException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncRestartException"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncRestartException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncRestartException"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Sync.SyncServer">
+            <summary>
+            The processes responsible of triggering sync tasks.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncServer.#ctor(Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncServer},Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncServer"/> class.
+            </summary>
+        </member>
+        <member name="T:Nako.Sync.SyncTasks.BlockFinder">
+            <summary>
+            The block sync.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockFinder.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Nako.Operations.ISyncOperations,Nako.Operations.Types.SyncConnection,Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncTasks.BlockFinder})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.BlockFinder"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockFinder.OnExecute">
+            <inheritdoc />
+        </member>
+        <member name="T:Nako.Sync.SyncTasks.BlockReorger">
+            <summary>
+            The block re-org of the block chain.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockReorger.#ctor(Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncTasks.BlockReorger},Nako.Operations.ISyncOperations,Nako.Operations.Types.SyncConnection)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.BlockReorger"/> class.
+            </summary>
+        </member>
+        <member name="P:Nako.Sync.SyncTasks.BlockReorger.Priority">
+            <summary>
+            Gets the priority.
+            </summary>
+        </member>
+        <member name="T:Nako.Sync.SyncTasks.BlockStore">
+            <summary>
+            The block sync.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockStore.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncTasks.BlockStore},Nako.Operations.IStorageOperations)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.BlockStore"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockStore.OnExecute">
+            <inheritdoc />
+        </member>
+        <member name="T:Nako.Sync.SyncTasks.BlockSyncer">
+            <summary>
+            The block sync.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockSyncer.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Nako.Operations.ISyncOperations,Nako.Operations.Types.SyncConnection,Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncTasks.BlockSyncer})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.BlockSyncer"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.BlockSyncer.OnExecute">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.Notifier.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncTasks.Notifier},Nako.Storage.IStorage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.Notifier"/> class. 
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.Notifier.OnExecute">
+            <inheritdoc />
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.PoolFinder.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Nako.Operations.ISyncOperations,Nako.Operations.Types.SyncConnection,Microsoft.Extensions.Logging.ILogger{Nako.Sync.SyncTasks.PoolFinder})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.PoolFinder"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.PoolFinder.OnExecute">
+            <inheritdoc />
+        </member>
+        <member name="T:Nako.Sync.SyncTasks.Runner">
+            <summary>
+            The runner.
+            </summary>
+        </member>
+        <member name="F:Nako.Sync.SyncTasks.Runner.taskRunners">
+            <summary>
+            The task runners.
+            </summary>
+        </member>
+        <member name="F:Nako.Sync.SyncTasks.Runner.taskStarters">
+            <summary>
+            The task starters.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.Runner.#ctor(System.Collections.Generic.IEnumerable{Nako.Sync.SyncTasks.TaskStarter},System.Collections.Generic.IEnumerable{Nako.Sync.SyncTasks.TaskRunner})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.Runner"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.Runner.RunAll(System.Threading.CancellationTokenSource)">
+            <summary>
+            Run all tasks.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.TaskRunner.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.TaskRunner"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.TaskRunner`1.#ctor(Microsoft.Extensions.Options.IOptions{Nako.Config.NakoConfiguration},Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.TaskRunner`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.TaskStarter.#ctor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Sync.SyncTasks.TaskStarter"/> class.
+            </summary>
+        </member>
+        <member name="M:Nako.Sync.SyncTasks.TaskStarter.Run(Nako.Sync.SyncTasks.Runner,System.Threading.CancellationTokenSource)">
+            <summary>
+            The run.
+            </summary>
+        </member>
+    </members>
+</doc>

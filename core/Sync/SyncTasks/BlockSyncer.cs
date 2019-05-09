@@ -10,19 +10,16 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Client;
     using Nako.Config;
     using Nako.Extensions;
     using Nako.Operations;
     using Nako.Operations.Types;
-
-    #endregion
 
     /// <summary>
     /// The block sync.
@@ -35,18 +32,18 @@ namespace Nako.Sync.SyncTasks
 
         private readonly SyncConnection syncConnection;
 
-        private readonly Tracer tracer;
+        private readonly ILogger<BlockSyncer> log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockSyncer"/> class.
         /// </summary>
-        public BlockSyncer(NakoApplication application, NakoConfiguration config, ISyncOperations syncOperations, SyncConnection syncConnection, Tracer tracer)
-            : base(application, config, tracer)
+        public BlockSyncer(IOptions<NakoConfiguration> configuration, ISyncOperations syncOperations, SyncConnection syncConnection, ILogger<BlockSyncer> logger)
+            : base(configuration, logger)
         {
-            this.tracer = tracer;
+            this.log = logger;
             this.syncConnection = syncConnection;
             this.syncOperations = syncOperations;
-            this.config = config;
+            this.config = configuration.Value;
         }
 
         /// <inheritdoc />
@@ -74,7 +71,7 @@ namespace Nako.Sync.SyncTasks
 
                         this.Runner.Get<BlockStore>().Enqueue(block);
 
-                        this.tracer.Trace("BlockSyncer", string.Format("Seconds = {0} - BlockIndex = {1} - Transactions {2} - Inputs {3} - Outputs {4} - ({5})", stoper.Elapsed.TotalSeconds, block.BlockInfo.Height, block.Transactions.Count(), inputs, outputs, inputs + outputs), ConsoleColor.DarkGreen);
+                        this.log.LogDebug($"Seconds = {stoper.Elapsed.TotalSeconds} - BlockIndex = {block.BlockInfo.Height} - Transactions {block.Transactions.Count()} - Inputs {inputs} - Outputs {outputs} - ({inputs + outputs})");
                     }
 
                     if (item.PoolTransactions != null)
@@ -86,7 +83,7 @@ namespace Nako.Sync.SyncTasks
 
                         this.Runner.Get<BlockStore>().Enqueue(pool);
 
-                        this.tracer.Trace("BlockSyncer", string.Format("Seconds = {0} - Pool = {1} - Transactions {2} - Inputs {3} - Outputs {4} - ({5})", stoper.Elapsed.TotalSeconds, "Sync", pool.Transactions.Count(), inputs, outputs, inputs + outputs), ConsoleColor.DarkGreen);
+                        this.log.LogDebug($"Seconds = {stoper.Elapsed.TotalSeconds} - Pool = Sync - Transactions {pool.Transactions.Count()} - Inputs {inputs} - Outputs {outputs} - ({inputs + outputs})");
                     }
                 }
                 catch (BitcoinClientException bce)

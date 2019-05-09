@@ -11,21 +11,15 @@ namespace Nako.Config
 {
     public class NakoConfiguration
     {
-        #region Public Properties
-
         public string CoinTag { get; set; }
 
         public string RpcPassword { get; set; }
 
         public int SyncInterval { get; set; }
 
-        public int DetailedTrace { get; set; }
-
         public int MaxItemsInQueue { get; set; }
 
         public int ParallelRequestsToTransactionRpc { get; set; }
-
-        public int SyncApiPort { get; set; }
 
         public int RpcAccessPort { get; set; }
 
@@ -49,6 +43,16 @@ namespace Nako.Config
 
         public int MongoBatchSize { get; set; }
 
-        #endregion
+        public int AverageInterval { get; set; }
+
+        /// <summary>
+        /// Called to configured the configuration settings with the supplied coin tag.
+        /// </summary>
+        public void Initialize()
+        {
+            CoinTag = CoinTag.ToUpper();
+            ConnectionString = ConnectionString.Replace("{CoinTag}", CoinTag.ToLower());
+            RpcDomain = RpcDomain.Replace("{CoinTag}", CoinTag.ToLower());
+        }
     }
 }

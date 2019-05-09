@@ -10,16 +10,10 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    #region Using Directives
-
     using Nako.Client.Types;
-
-    #endregion
 
     public class Statistics
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the coin tag.
         /// </summary>
@@ -45,6 +39,9 @@ namespace Nako.Api.Handlers.Types
         /// </summary>
         public ClientInfo ClientInfo { get; set; }
 
-        #endregion
+        /// <summary>
+        /// Gets or sets the blocks per minute being processed.
+        /// </summary>
+        public string BlocksPerMinute { get; set; }
     }
 }

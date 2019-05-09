@@ -10,30 +10,24 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Config;
-
-    #endregion
 
     public abstract class TaskRunner
     {
-        private readonly NakoApplication application;
-
-        private readonly Tracer tracer;
+        private readonly ILogger log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskRunner"/> class.
         /// </summary>
-        protected TaskRunner(NakoApplication application, NakoConfiguration configuration, Tracer tracer)
+        protected TaskRunner(IOptions<NakoConfiguration> configuration, ILogger logger)
         {
-            this.tracer = tracer;
-            this.application = application;
-            this.Delay = TimeSpan.FromSeconds(configuration.SyncInterval);
+            this.log = logger;
+            this.Delay = TimeSpan.FromSeconds(configuration.Value.SyncInterval);
         }
 
         public TimeSpan Delay { get; set; }
@@ -52,7 +46,7 @@ namespace Nako.Sync.SyncTasks
                 {
                     try
                     {
-                        while (!this.Abort && !this.application.ExitApplication)
+                        while (!this.Abort)
                         {
                             if (await this.OnExecute())
                             {
@@ -61,7 +55,7 @@ namespace Nako.Sync.SyncTasks
                                 continue;
                             }
 
-                            this.tracer.Trace("TaskRunner-" + this.GetType().Name, string.Format("Delay = {0}", this.Delay.TotalSeconds));
+                            this.log.LogDebug($"TaskRunner-{GetType().Name} Delay = {Delay.TotalSeconds}");
 
                             cancellationToken.ThrowIfCancellationRequested();
 
@@ -75,7 +69,7 @@ namespace Nako.Sync.SyncTasks
                     }
                     catch (Exception ex)
                     {
-                        this.tracer.Trace("TaskRunner-" + this.GetType().Name, string.Format("Error = {0}", ex), ConsoleColor.Red);
+                        this.log.LogError(ex, $"TaskRunner-{GetType().Name}");
 
                         tokenSource.Cancel();
 
