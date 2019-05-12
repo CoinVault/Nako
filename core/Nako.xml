@@ -665,7 +665,7 @@
             json Unix time converter.
             </summary>
         </member>
-        <member name="M:Nako.Config.NakoConfiguration.Initialize">
+        <member name="M:Nako.Config.NakoConfiguration.Initialize(System.String[])">
             <summary>
             Called to configured the configuration settings with the supplied coin tag.
             </summary>

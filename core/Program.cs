@@ -32,7 +32,7 @@ namespace Nako
               .Build();
 
             var configuration = config.Get<NakoConfiguration>();
-            configuration.Initialize();
+            configuration.Initialize(args);
 
             WebHost.CreateDefaultBuilder(args)
                .UseConfiguration(config)

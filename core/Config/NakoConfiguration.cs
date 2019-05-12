@@ -48,8 +48,13 @@ namespace Nako.Config
         /// <summary>
         /// Called to configured the configuration settings with the supplied coin tag.
         /// </summary>
-        public void Initialize()
+        public void Initialize(string[] args)
         {
+            if (string.IsNullOrWhiteSpace(CoinTag) || CoinTag == "{CoinTag}")
+            {
+                CoinTag = args[0];
+            }
+
             CoinTag = CoinTag.ToUpper();
             ConnectionString = ConnectionString.Replace("{CoinTag}", CoinTag.ToLower());
             RpcDomain = RpcDomain.Replace("{CoinTag}", CoinTag.ToLower());

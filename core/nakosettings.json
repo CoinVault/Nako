@@ -1,23 +1,18 @@
 ﻿{
-	"CoinTag": "CITY",
-
-	//"ConnectionString": "mongodb://{CoinTag}-mongo",
-	"ConnectionString": "mongodb://localhost",
-
+	"CoinTag": "",
+	"ConnectionString": "mongodb://{CoinTag}-mongo",
+	//"ConnectionString": "mongodb://localhost",
 	"RpcAccessPort": 4334,
 	"RpcSecure": false,
-	//"RpcDomain": "{CoinTag}-client",
-	"RpcDomain": "127.0.0.1",
+	"RpcDomain": "{CoinTag}-client",
+	//"RpcDomain": "127.0.0.1",
 	"RpcUser": "rpcuser",
 	"RpcPassword": "rpcpassword",
-
 	"SyncBlockchain": true,
 	"SyncMemoryPool": true,
 	"StartBlockIndex": 1,
-
 	"NotifyUrl": "https://apiurl",
 	"NotifyBatchCount": 0,
-
 	"MongoBatchSize": 500,
 	"ParallelRequestsToTransactionRpc": 50,
 	"MaxItemsInQueue": 200,
