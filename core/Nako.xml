@@ -83,6 +83,16 @@
             Initializes a new instance of the <see cref="T:Nako.Api.Handlers.StatsController"/> class.
             </summary>
         </member>
+        <member name="T:Nako.Api.Handlers.StatusController">
+            <summary>
+            Controller to get some information about a coin.
+            </summary>
+        </member>
+        <member name="M:Nako.Api.Handlers.StatusController.#ctor(Nako.Api.Handlers.StatsHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Nako.Api.Handlers.StatsController"/> class.
+            </summary>
+        </member>
         <member name="T:Nako.Api.Handlers.StatsHandler">
             <summary>
             Handler to make get info about a blockchain.
