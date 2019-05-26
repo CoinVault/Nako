@@ -10,6 +10,7 @@
 
 namespace Nako.Api.Handlers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -50,13 +51,28 @@ namespace Nako.Api.Handlers
         {
             var connection = this.syncConnection;
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
-            
             var stats = new Statistics { CoinTag = this.syncConnection.CoinTag };
 
-            stats.ClientInfo = await client.GetInfoAsync();
+            try
+            {
+                stats.ClientInfo = await client.GetInfoAsync();
+            }
+            catch (Exception ex)
+            {
+                stats.ClientInfo = new ClientInfo { Errors = ex.Message };
+            }
+
             stats.TransactionsInPool = this.storage.GetMemoryTransactions().Count();
-            stats.SyncBlockIndex = this.storage.BlockGetBlockCount(1).First().BlockIndex;
-            stats.Progress = $"{stats.SyncBlockIndex}/{stats.ClientInfo.Blocks} - {stats.ClientInfo.Blocks - stats.SyncBlockIndex}";
+
+            try
+            {
+                stats.SyncBlockIndex = this.storage.BlockGetBlockCount(1).First().BlockIndex;
+                stats.Progress = $"{stats.SyncBlockIndex}/{stats.ClientInfo.Blocks} - {stats.ClientInfo.Blocks - stats.SyncBlockIndex}";
+            }
+            catch (Exception ex)
+            {
+                stats.Progress = ex.Message;
+            }
 
             return stats;
         }

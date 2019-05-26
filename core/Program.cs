@@ -14,6 +14,7 @@ namespace Nako
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Nako.Config;
+    using System.Collections.Generic;
     using System.IO;
 
     /// <summary>
@@ -23,21 +24,22 @@ namespace Nako
     {
         public static void Main(string[] args)
         {
-            var config = new ConfigurationBuilder()
-              .SetBasePath(Directory.GetCurrentDirectory())
-              .AddJsonFile("hosting.json", optional: true)
-              .AddJsonFile("nakosettings.json", optional: false, reloadOnChange: false)
-              .AddCommandLine(args)
-              .AddEnvironmentVariables()
-              .Build();
-
-            var configuration = config.Get<NakoConfiguration>();
-            configuration.Initialize(args);
-
-            WebHost.CreateDefaultBuilder(args)
-               .UseConfiguration(config)
-               .UseStartup<Startup>()
-               .Build().Run();
+            BuildWebHost(args).Run();
         }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+           WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builder, config) =>
+                {
+                    config.AddJsonFile("nakosettings.json", optional: false, reloadOnChange: true);
+
+                    // If the argument is only one, and it does not contain = or -, then we'll for backwards compatibility, use that as CoinTag.
+                    if (args.Length == 1 && !args[0].Contains("=") && !args[0].Contains("-"))
+                    {
+                        config.AddInMemoryCollection(new Dictionary<string, string> { { "CoinTag", args[0].ToUpper() } });
+                    }
+                })
+               .UseStartup<Startup>()
+               .Build();
     }
 }

@@ -11,6 +11,8 @@
 namespace Nako.Api.Handlers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Nako.Api.Handlers.Types;
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
@@ -38,9 +40,18 @@ namespace Nako.Api.Handlers
         [HttpGet()]
         public async Task<IActionResult> Get()
         {
-            var ret = await this.statsHandler.Statistics();
+            Statistics result = null;
 
-            var response = this.CreateOkResponse(ret);
+            try
+            {
+                result = await this.statsHandler.Statistics();
+            }
+            catch (Exception ex)
+            {
+                result = new Statistics { Progress = ex.Message };
+            }
+
+            var response = this.CreateOkResponse(result);
 
             return response;
         }

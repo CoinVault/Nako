@@ -42,7 +42,7 @@ namespace Nako.Storage.Mongo
             this.syncConnection = connection;
             this.log = logger;
             this.configuration = nakoConfiguration.Value;
-            this.mongoClient = new MongoClient(this.configuration.ConnectionString);
+            this.mongoClient = new MongoClient(this.configuration.ConnectionStringActual);
             this.mongoDatabase = this.mongoClient.GetDatabase("Blockchain");
             this.MemoryTransactions = new ConcurrentDictionary<string, DecodedRawTransaction>();
         }

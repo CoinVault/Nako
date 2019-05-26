@@ -21,7 +21,7 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"applicationUrl": "http://localhost:1691/"
+			"applicationUrl": "http://localhost:9000/"
 		},
 		"Nako.Core (STRATIS)": {
 			"commandName": "Project",
@@ -30,7 +30,7 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"applicationUrl": "http://localhost:1691/"
+			"applicationUrl": "http://localhost:9000/"
 		},
 		"Nako.Core (CITY)": {
 			"commandName": "Project",
@@ -39,7 +39,7 @@
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			},
-			"applicationUrl": "http://localhost:1691/"
+			"applicationUrl": "http://localhost:9000/"
 		}
 	}
 }

@@ -7,6 +7,8 @@
 //   //  OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+using Newtonsoft.Json;
+
 namespace Nako.Config
 {
     public class NakoConfiguration
@@ -38,26 +40,17 @@ namespace Nako.Config
         public string NotifyUrl { get; set; }
 
         public string ConnectionString { get; set; }
-
+        
         public int NotifyBatchCount { get; set; }
 
         public int MongoBatchSize { get; set; }
 
         public int AverageInterval { get; set; }
 
-        /// <summary>
-        /// Called to configured the configuration settings with the supplied coin tag.
-        /// </summary>
-        public void Initialize(string[] args)
-        {
-            if (string.IsNullOrWhiteSpace(CoinTag) || CoinTag == "{CoinTag}")
-            {
-                CoinTag = args[0];
-            }
+        [JsonIgnore]
+        public string ConnectionStringActual { get { return ConnectionString.Replace("{CoinTag}", CoinTag.ToLower()); } }
 
-            CoinTag = CoinTag.ToUpper();
-            ConnectionString = ConnectionString.Replace("{CoinTag}", CoinTag.ToLower());
-            RpcDomain = RpcDomain.Replace("{CoinTag}", CoinTag.ToLower());
-        }
+        [JsonIgnore]
+        public string RpcDomainActual { get { return RpcDomain.Replace("{CoinTag}", CoinTag.ToLower()); } }
     }
 }
