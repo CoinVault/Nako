@@ -585,15 +585,27 @@ namespace Nako.Client
                 {
                     using (var jsonStreamReader = new StreamReader(jsonStream))
                     {
-                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(await jsonStreamReader.ReadToEndAsync());
-
                         if (response.StatusCode != HttpStatusCode.OK)
                         {
-                            var code = ret != null && ret.Error != null ? ret.Error.Code : 0;
-                            var msg = ret != null && ret.Error != null ? ret.Error.Message : "Error";
+                            JsonRpcResponse<T> errRet = null;
+                            string res = await jsonStreamReader.ReadToEndAsync();
+
+                            try
+                            {
+                                errRet = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(res);
+                            }
+                            catch
+                            {
+                                throw CreateException(response, 0, res);
+                            }
+
+                            var code = errRet != null && errRet.Error != null ? errRet.Error.Code : 0;
+                            var msg = errRet != null && errRet.Error != null ? errRet.Error.Message : "Error";
 
                             throw CreateException(response, code, msg);
                         }
+
+                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(await jsonStreamReader.ReadToEndAsync());
 
                         return ret.Result;
                     }
@@ -620,15 +632,27 @@ namespace Nako.Client
                 {
                     using (var jsonStreamReader = new StreamReader(jsonStream))
                     {
-                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(jsonStreamReader.ReadToEndAsync().Result);
-
                         if (response.StatusCode != HttpStatusCode.OK)
                         {
-                            var code = ret != null && ret.Error != null ? ret.Error.Code : 0;
-                            var msg = ret != null && ret.Error != null ? ret.Error.Message : "Error";
+                            JsonRpcResponse<T> errRet = null;
+                            string res = jsonStreamReader.ReadToEndAsync().Result;
+
+                            try
+                            {
+                                errRet = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(res);
+                            }
+                            catch
+                            {
+                                throw CreateException(response, 0, res);
+                            }
+
+                            var code = errRet != null && errRet.Error != null ? errRet.Error.Code : 0;
+                            var msg = errRet != null && errRet.Error != null ? errRet.Error.Message : "Error";
 
                             throw CreateException(response, code, msg);
                         }
+
+                        var ret = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(jsonStreamReader.ReadToEndAsync().Result);
 
                         return ret.Result;
                     }
