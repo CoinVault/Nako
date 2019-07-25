@@ -10,18 +10,15 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Config;
     using Nako.Extensions;
     using Nako.Operations;
     using Nako.Operations.Types;
-
-    #endregion
 
     public class PoolFinder : TaskRunner
     {
@@ -31,18 +28,18 @@ namespace Nako.Sync.SyncTasks
 
         private readonly SyncConnection syncConnection;
 
-        private readonly Tracer tracer;
+        private readonly ILogger<PoolFinder> log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PoolFinder"/> class.
         /// </summary>
-        public PoolFinder(NakoApplication application, NakoConfiguration config, ISyncOperations syncOperations, SyncConnection syncConnection, Tracer tracer)
-            : base(application, config, tracer)
+        public PoolFinder(IOptions<NakoConfiguration> configuration, ISyncOperations syncOperations, SyncConnection syncConnection, ILogger<PoolFinder> logger)
+            : base(configuration, logger)
         {
-            this.tracer = tracer;
+            this.log = logger;
             this.syncConnection = syncConnection;
             this.syncOperations = syncOperations;
-            this.config = config;
+            this.config = configuration.Value;
         }
 
         /// <inheritdoc />
@@ -77,7 +74,7 @@ namespace Nako.Sync.SyncTasks
 
             stoper.Stop();
 
-            this.tracer.Trace("PoolFinder", string.Format("Seconds = {0} - New Transactions = {1}/{2}", stoper.Elapsed.TotalSeconds, pool.Transactions.Count, syncingBlocks.CurrentPoolSyncing.Count()), ConsoleColor.DarkYellow);
+            this.log.LogDebug($"Seconds = {stoper.Elapsed.TotalSeconds} - New Transactions = {pool.Transactions.Count}/{syncingBlocks.CurrentPoolSyncing.Count()}");
 
             this.Runner.Get<BlockSyncer>().Enqueue(new SyncBlockOperation { PoolTransactions = pool });
 

@@ -10,17 +10,13 @@
 
 namespace Nako.Storage.Mongo
 {
-    #region Using Directives
-
-    using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using MongoDB.Driver;
-
     using Nako.Config;
     using Nako.Storage.Mongo.Types;
     using Nako.Sync.SyncTasks;
-
-    #endregion
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The mongo builder.
@@ -29,19 +25,19 @@ namespace Nako.Storage.Mongo
     {
         private readonly MongoData mongoData;
 
-        private readonly Tracer tracer;
+        private readonly ILogger<MongoBuilder> log;
 
         private readonly NakoConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoBuilder"/> class.
         /// </summary>
-        public MongoBuilder(Tracer tracer, MongoData data, NakoConfiguration nakoConfiguration)
-            : base(tracer)
+        public MongoBuilder(ILogger<MongoBuilder> logger, IStorage data, IOptions<NakoConfiguration> nakoConfiguration)
+            : base(logger)
         {
-            this.tracer = tracer;
-            this.mongoData = data;
-            this.configuration = nakoConfiguration;
+            this.log = logger;
+            this.mongoData = (MongoData)data;
+            this.configuration = nakoConfiguration.Value;
         }
 
         public override int Priority
@@ -54,7 +50,7 @@ namespace Nako.Storage.Mongo
 
         public override Task OnExecute()
         {
-            this.tracer.Trace("MongoBuilder", "Creating mappings");
+            this.log.LogTrace("MongoBuilder: Creating mappings");
 
             if (!MongoDB.Bson.Serialization.BsonClassMap.IsClassMapRegistered(typeof(MapBlock)))
             {
@@ -84,7 +80,7 @@ namespace Nako.Storage.Mongo
             }
 
             // indexes
-            this.tracer.Trace("MongoBuilder", "Creating indexes");
+            this.log.LogTrace("MongoBuilder: Creating indexes");
 
             var blkIndex = Builders<MapBlock>.IndexKeys.Ascending(blk => blk.BlockIndex);
             this.mongoData.MapBlock.Indexes.CreateOne(blkIndex);

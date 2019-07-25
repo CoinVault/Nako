@@ -11,38 +11,53 @@
 namespace Nako.Api.Handlers
 {
     using Microsoft.AspNetCore.Mvc;
-    #region Using Directives
-
+    using Nako.Api.Handlers.Types;
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
     using System.Threading.Tasks;
     using System.Web.Http;
 
-    #endregion
-
     /// <summary>
     /// Controller to get some information about a coin.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
-    [ApiVersion("1.0")]
-    public class StatsController : Controller
+    [Route("api/status")]
+    [ApiVersion("2.0")]
+    public class StatusController : Controller
     {
         private readonly StatsHandler statsHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatsController"/> class.
         /// </summary>
-        public StatsController(StatsHandler statsHandler)
+        public StatusController(StatsHandler statsHandler)
         {
             this.statsHandler = statsHandler;
         }
 
-        #region Public Methods and Operators
+        [HttpGet()]
+        public async Task<IActionResult> Get()
+        {
+            Statistics result = null;
+
+            try
+            {
+                result = await this.statsHandler.Statistics();
+            }
+            catch (Exception ex)
+            {
+                result = new Statistics { Progress = ex.Message };
+            }
+
+            var response = this.CreateOkResponse(result);
+
+            return response;
+        }
 
         [HttpGet]
-        [Route("[action]")]
+        [Route("heartbeat")]
         public IActionResult Heartbeat()
         {
             var response = this.CreateOkResponse("Heartbeat");
@@ -51,7 +66,7 @@ namespace Nako.Api.Handlers
         }
 
         [HttpGet]
-        [Route("[action]")]
+        [Route("connections")]
         public async Task<IActionResult> Connections()
         {
             var ret = await this.statsHandler.StatsConnection();
@@ -61,18 +76,8 @@ namespace Nako.Api.Handlers
             return response;
         }
 
-        [HttpGet()]
-        public async Task<IActionResult> Get()
-        {
-            var ret = await this.statsHandler.Statistics();
-
-            var response = this.CreateOkResponse(ret);
-
-            return response;
-        }
-
         [HttpGet]
-        [Route("[action]")]
+        [Route("peers")]
         public async Task<IActionResult> Peers()
         {
             var ret = await this.statsHandler.Peers();
@@ -81,7 +86,5 @@ namespace Nako.Api.Handlers
 
             return response;
         }
-
-        #endregion
     }
 }

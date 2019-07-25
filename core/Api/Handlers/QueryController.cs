@@ -11,18 +11,16 @@
 namespace Nako.Api.Handlers
 {
     using Microsoft.AspNetCore.Mvc;
-    #region Using Directives
-
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
 
-    #endregion
-
     /// <summary>
     /// Controller to expose an api that queries the blockchain.
     /// </summary>
+    [ApiController]
     [Route("api/[controller]")]
+    [ApiVersion("1.0")]
     public class QueryController : Controller
     {
         private readonly QueryHandler handler;
@@ -34,8 +32,6 @@ namespace Nako.Api.Handlers
         {
             this.handler = queryHandler;
         }
-
-        #region Public Methods and Operators
 
         [HttpGet]
         [Route("address/{address}/confirmations/{confirmations:long=0}/transactions")]
@@ -210,7 +206,5 @@ namespace Nako.Api.Handlers
 
             return response;
         }
-
-        #endregion
     }
 }

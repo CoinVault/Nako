@@ -10,68 +10,36 @@
 
 namespace Nako
 {
-    #region Using Directives
-
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-
-    using Autofac;
-
-    using Nako.Api;
+    using Microsoft.AspNetCore;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
     using Nako.Config;
-    using Nako.Sync;
-
-    #endregion
+    using System.Collections.Generic;
+    using System.IO;
 
     /// <summary>
     /// The application program.
     /// </summary>
-    internal class Program
+    public class Program
     {
-        #region Methods
-
-        /// <summary>
-        /// The main entry point.
-        /// </summary>
-        internal static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            if (!IsRunningOnLinux())
-            {
-                try
-                {
-                    Console.BufferHeight = 1000;
-                    Console.WindowHeight = 25;
-                    Console.WindowWidth = 150;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-            }
-
-            var builder = new ContainerBuilder();
-            builder.RegisterInstance(ConfigStartup.LoadConfiguration(args)).As<NakoConfiguration>();
-            builder.RegisterAssemblyModules(Assembly.GetEntryAssembly());
-            var container = builder.Build();
-           
-            container.Resolve<ApiServer>().StartApi(container);
-            container.Resolve<SyncServer>().StartSync(container);
-            container.Resolve<Terminator>().Start();
-
-            container.Resolve<NakoApplication>().SyncToken.WaitHandle.WaitOne();
-            container.Resolve<NakoApplication>().ApiTokenSource.Cancel();
-            container.Resolve<NakoApplication>().ApiToken.WaitHandle.WaitOne();
-
-            //Console.Read();
+            BuildWebHost(args).Run();
         }
 
-        public static bool IsRunningOnLinux()
-        {
-            return System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux);
-        }
+        public static IWebHost BuildWebHost(string[] args) =>
+           WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builder, config) =>
+                {
+                    config.AddJsonFile("nakosettings.json", optional: false, reloadOnChange: true);
 
-        #endregion
+                    // If the argument is only one, and it does not contain = or -, then we'll for backwards compatibility, use that as CoinTag.
+                    if (args.Length == 1 && !args[0].Contains("=") && !args[0].Contains("-"))
+                    {
+                        config.AddInMemoryCollection(new Dictionary<string, string> { { "CoinTag", args[0].ToUpper() } });
+                    }
+                })
+               .UseStartup<Startup>()
+               .Build();
     }
 }

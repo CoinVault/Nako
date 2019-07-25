@@ -10,14 +10,12 @@
 
 namespace Nako.Storage.Mongo
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using MongoDB.Driver;
-
     using Nako.Client.Types;
     using Nako.Config;
     using Nako.Extensions;
@@ -27,8 +25,6 @@ namespace Nako.Storage.Mongo
     using Nako.Storage.Types;
     using Nako.Sync;
 
-    #endregion
-
     /// <summary>
     /// Mongo storage operations.
     /// </summary>
@@ -36,7 +32,7 @@ namespace Nako.Storage.Mongo
     {
         private readonly IStorage storage;
 
-        private readonly Tracer tracer;
+        private readonly ILogger<MongoStorageOperations> log;
 
         private readonly NakoConfiguration configuration;
 
@@ -45,15 +41,13 @@ namespace Nako.Storage.Mongo
         /// <summary>
         /// Initializes a new instance of the <see cref="MongoStorageOperations"/> class.
         /// </summary>
-        public MongoStorageOperations(IStorage storage, MongoData mongoData, Tracer tracer, NakoConfiguration nakoConfiguration)
+        public MongoStorageOperations(IStorage storage, ILogger<MongoStorageOperations> logger, IOptions<NakoConfiguration> configuration)
         {
-            this.data = mongoData;
-            this.configuration = nakoConfiguration;
-            this.tracer = tracer;
+            this.data = (MongoData)storage;
+            this.configuration = configuration.Value;
+            this.log = logger;
             this.storage = storage;
         }
-
-        #region Public Methods and Operators
 
         public void ValidateBlock(SyncBlockTransactionsOperation item)
         {
@@ -187,7 +181,6 @@ namespace Nako.Storage.Mongo
             return stats;
         }
         
-        #endregion
 
         private void CompleteBlock(BlockInfo block)
         {

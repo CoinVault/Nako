@@ -10,18 +10,15 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Config;
     using Nako.Extensions;
     using Nako.Operations;
     using Nako.Operations.Types;
-
-    #endregion
 
     /// <summary>
     /// The block sync.
@@ -34,18 +31,18 @@ namespace Nako.Sync.SyncTasks
 
         private readonly SyncConnection syncConnection;
 
-        private readonly Tracer tracer;
+        private readonly ILogger<BlockFinder> log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockFinder"/> class.
         /// </summary>
-        public BlockFinder(NakoApplication application, NakoConfiguration config, ISyncOperations syncOperations, SyncConnection syncConnection, Tracer tracer)
-            : base(application, config, tracer)
+        public BlockFinder(IOptions<NakoConfiguration> configuration, ISyncOperations syncOperations, SyncConnection syncConnection, ILogger<BlockFinder> logger)
+            : base(configuration, logger)
         {
-            this.tracer = tracer;
+            this.log = logger;
             this.syncConnection = syncConnection;
             this.syncOperations = syncOperations;
-            this.config = config;
+            this.config = configuration.Value;
         }
 
         /// <inheritdoc />
@@ -80,7 +77,8 @@ namespace Nako.Sync.SyncTasks
 
             stoper.Stop();
 
-            this.tracer.Trace("BlockFinder", string.Format("Seconds = {0} - SyncedIndex = {1}/{2} - {3} {4}", stoper.Elapsed.TotalSeconds, block.BlockInfo.Height, block.LastCryptoBlockIndex, block.LastCryptoBlockIndex - block.BlockInfo.Height, block.IncompleteBlock ? "Incomplete" : string.Empty), ConsoleColor.DarkCyan);
+            var blockStatus = block.IncompleteBlock ? "Incomplete" : string.Empty;
+            this.log.LogDebug($"Seconds = {stoper.Elapsed.TotalSeconds} - SyncedIndex = {block.BlockInfo.Height}/{block.LastCryptoBlockIndex} - {block.LastCryptoBlockIndex - block.BlockInfo.Height} {blockStatus}");
 
             this.Runner.Get<BlockSyncer>().Enqueue(block);
 

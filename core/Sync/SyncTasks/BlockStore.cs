@@ -10,37 +10,34 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Client.Types;
     using Nako.Config;
     using Nako.Extensions;
     using Nako.Operations;
     using Nako.Operations.Types;
 
-    #endregion
-
     /// <summary>
     /// The block sync.
     /// </summary>
     public class BlockStore : TaskRunner<SyncBlockTransactionsOperation>
     {
-        private readonly Tracer tracer;
+        private readonly ILogger<BlockStore> log;
 
         private readonly IStorageOperations storageOperations;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockStore"/> class.
         /// </summary>
-        public BlockStore(NakoApplication application, NakoConfiguration config, Tracer tracer, IStorageOperations storageOperations)
-            : base(application, config, tracer)
+        public BlockStore(IOptions<NakoConfiguration> configuration, ILogger<BlockStore> logger, IStorageOperations storageOperations)
+            : base(configuration, logger)
         {
             this.storageOperations = storageOperations;
-            this.tracer = tracer;
+            this.log = logger;
         }
 
         /// <inheritdoc />
@@ -74,7 +71,7 @@ namespace Nako.Sync.SyncTasks
                     string.Format("Seconds = {0} - BlockIndex = {1} - TotalItems = {2}", stoper.Elapsed.TotalSeconds, item.BlockInfo.Height, count.Transactions + count.Inputs + count.Outputs) :
                     string.Format("Seconds = {0} - PoolSync - TotalItems = {1}", stoper.Elapsed.TotalSeconds, count.Transactions + count.Inputs + count.Outputs);
 
-                this.tracer.Trace("BlockStore ", message, ConsoleColor.White);
+                this.log.LogDebug(message);
 
                 return await Task.FromResult(true);
             }

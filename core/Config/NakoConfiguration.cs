@@ -7,25 +7,21 @@
 //   //  OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
+using Newtonsoft.Json;
+
 namespace Nako.Config
 {
     public class NakoConfiguration
     {
-        #region Public Properties
-
         public string CoinTag { get; set; }
 
         public string RpcPassword { get; set; }
 
         public int SyncInterval { get; set; }
 
-        public int DetailedTrace { get; set; }
-
         public int MaxItemsInQueue { get; set; }
 
         public int ParallelRequestsToTransactionRpc { get; set; }
-
-        public int SyncApiPort { get; set; }
 
         public int RpcAccessPort { get; set; }
 
@@ -44,11 +40,17 @@ namespace Nako.Config
         public string NotifyUrl { get; set; }
 
         public string ConnectionString { get; set; }
-
+        
         public int NotifyBatchCount { get; set; }
 
         public int MongoBatchSize { get; set; }
 
-        #endregion
+        public int AverageInterval { get; set; }
+
+        [JsonIgnore]
+        public string ConnectionStringActual { get { return ConnectionString.Replace("{CoinTag}", CoinTag.ToLower()); } }
+
+        [JsonIgnore]
+        public string RpcDomainActual { get { return RpcDomain.Replace("{CoinTag}", CoinTag.ToLower()); } }
     }
 }

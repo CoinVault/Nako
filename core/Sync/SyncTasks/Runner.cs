@@ -10,19 +10,14 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-
     using Nako.Client.Types;
     using Nako.Extensions;
     using Nako.Operations.Types;
-
-    #endregion
 
     /// <summary>
     /// The runner.
@@ -42,7 +37,7 @@ namespace Nako.Sync.SyncTasks
         /// <summary>
         /// Initializes a new instance of the <see cref="Runner"/> class.
         /// </summary>
-        public Runner(TaskStarter[] taskStarters, TaskRunner[] taskRunners)
+        public Runner(IEnumerable<TaskStarter> taskStarters, IEnumerable<TaskRunner> taskRunners)
         {
             this.taskStarters = taskStarters;
             this.taskRunners = taskRunners;

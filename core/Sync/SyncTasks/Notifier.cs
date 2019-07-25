@@ -10,27 +10,23 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Net.Security;
     using System.Threading.Tasks;
-
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Nako.Config;
     using Nako.Extensions;
     using Nako.Operations.Types;
     using Nako.Storage;
-
     using Newtonsoft.Json;
-
-    #endregion
 
     public class Notifier : TaskRunner<AddressNotifications>
     {
-        private readonly Tracer tracer;
+        private readonly ILogger<Notifier> log;
 
         private readonly NakoConfiguration configuration;
 
@@ -41,11 +37,11 @@ namespace Nako.Sync.SyncTasks
         /// <summary>
         /// Initializes a new instance of the <see cref="Notifier"/> class. 
         /// </summary>
-        public Notifier(NakoApplication application, NakoConfiguration config, Tracer tracer, IStorage storage)
-            : base(application, config, tracer)
+        public Notifier(IOptions<NakoConfiguration> configuration, ILogger<Notifier> logger, IStorage storage)
+            : base(configuration, logger)
         {
-            this.configuration = config;
-            this.tracer = tracer;
+            this.configuration = configuration.Value;
+            this.log = logger;
             this.storage = storage;
             this.client = new Lazy<HttpClient>(() => new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => errors == SslPolicyErrors.None || errors == SslPolicyErrors.RemoteCertificateNameMismatch }));
         }
@@ -84,7 +80,7 @@ namespace Nako.Sync.SyncTasks
                     }
                     catch (Exception ex)
                     {
-                        this.tracer.Trace("Notifier", string.Format("error = {0}", ex), ConsoleColor.Red);
+                        this.log.LogError(ex, "Notifier");
                         this.Abort = true;
                         return false;
                     }
@@ -93,7 +89,7 @@ namespace Nako.Sync.SyncTasks
 
                 stoper.Stop();
 
-                this.tracer.Trace("Notifier", string.Format("Seconds = {0} - Total = {1} - Requests = {2}", stoper.Elapsed.TotalSeconds, total, sendCount), ConsoleColor.Cyan);
+                this.log.LogDebug($"Seconds = {stoper.Elapsed.TotalSeconds} - Total = {total} - Requests = {sendCount}");
 
                 return true;
             }
@@ -103,15 +99,11 @@ namespace Nako.Sync.SyncTasks
 
         public class CoinAddressInfo
         {
-            #region Public Properties
-
             [JsonProperty("A")]
             public IEnumerable<string> Address { get; set; }
 
             [JsonProperty("C")]
             public string CoinTag { get; set; }
-
-            #endregion
         }
     }
 }
