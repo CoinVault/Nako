@@ -1,0 +1,43 @@
+version: '2'
+services:
+
+  nako:
+    container_name: odx-nako
+    networks: 
+        nakonet:
+            ipv4_address: 172.16.10.100
+    image: coinvault/nako:latest
+    command: odx
+    ports: 
+        - 9040:9000
+    depends_on:
+        - mongo
+        - client
+
+  client:
+    container_name: odx-client
+    networks: 
+        nakonet:
+            ipv4_address: 172.16.10.101
+    image: coinvault/obsidianx:latest
+    command: ["dotnet", "run", 
+              "-server=1", "-maxblkmem=2", "-txindex=1",
+              "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword"]
+    ports: 
+        - 5040:5000
+        - 56660:56660
+
+  mongo:
+    container_name: odx-mongo
+    networks: 
+        nakonet:
+            ipv4_address: 172.16.10.102
+    image: mongo:3.2
+
+networks:
+  nakonet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.10.0/24
