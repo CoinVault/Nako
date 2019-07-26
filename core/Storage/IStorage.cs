@@ -42,7 +42,7 @@ namespace Nako.Storage
 
         void DeleteBlock(string blockHash);
 
-        IEnumerable<DecodedRawTransaction> GetMemoryTransactions();
+        IEnumerable<NBitcoin.Transaction> GetMemoryTransactions();
     }
 }
 

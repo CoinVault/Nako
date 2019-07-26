@@ -19,7 +19,7 @@ namespace Nako.Storage.Types
 
         public string OutputType { get; set; }
 
-        public decimal Value { get; set; }
+        public long Value { get; set; }
 
         #endregion
     }

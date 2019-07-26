@@ -37,15 +37,14 @@ namespace Nako.Api.Handlers.Types
         /// </summary>
         public string PubScriptHex { get; set; }
 
-        /// <summary>
-        /// Gets or sets the coinbase.
-        /// </summary>
-        public string CoinBase { get; set; }
+        public bool CoinBase { get; set; }
+
+        public bool CoinStake { get; set; }
 
         /// <summary>
         /// Gets or sets the amount.
         /// </summary>
-        public decimal Value { get; set; }
+        public long Value { get; set; }
 
         /// <summary>
         /// Gets or sets the block index if included in a block.

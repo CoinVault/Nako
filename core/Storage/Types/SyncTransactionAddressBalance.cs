@@ -19,13 +19,13 @@ namespace Nako.Storage.Types
     {
         #region Public Properties
 
-        public decimal Available { get; set; }
+        public long Available { get; set; }
 
-        public decimal? Received { get; set; }
+        public long? Received { get; set; }
 
-        public decimal? Sent { get; set; }
+        public long? Sent { get; set; }
 
-        public decimal Unconfirmed { get; set; }
+        public long Unconfirmed { get; set; }
 
         public IEnumerable<SyncTransactionAddressItem> Items { get; set; }
 

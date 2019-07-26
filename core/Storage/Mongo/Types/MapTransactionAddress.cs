@@ -9,16 +9,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace Nako.Storage.Mongo.Types
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     public class MapTransactionAddress
     {
-        #region Public Properties
-
         public string Id { get; set; }
 
         public int Index { get; set; }
@@ -29,7 +23,7 @@ namespace Nako.Storage.Mongo.Types
 
         public string ScriptHex { get; set; }
 
-        public double Value { get; set; }
+        public long Value { get; set; }
 
         public string SpendingTransactionId { get; set; }
 
@@ -37,6 +31,6 @@ namespace Nako.Storage.Mongo.Types
 
         public bool CoinBase { get; set; }
 
-        #endregion
+        public bool CoinStake { get; set; }
     }
 }

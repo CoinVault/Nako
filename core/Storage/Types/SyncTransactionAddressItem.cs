@@ -25,13 +25,15 @@ namespace Nako.Storage.Types
 
         public string ScriptHex { get; set; }
 
-        public string CoinBase { get; set; }
+        public bool CoinBase { get; set; }
+
+        public bool CoinStake { get; set; }
 
         public long? BlockIndex { get; set; }
 
         public long? Confirmations { get; set; }
 
-        public decimal Value { get; set; }
+        public long Value { get; set; }
 
         public long Time { get; set; }
 

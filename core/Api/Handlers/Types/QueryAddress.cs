@@ -10,16 +10,10 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     public class QueryAddress
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the CoinTag.
         /// </summary>
@@ -33,22 +27,22 @@ namespace Nako.Api.Handlers.Types
         /// <summary>
         /// Gets or sets the balance.
         /// </summary>
-        public decimal Balance { get; set; }
+        public long Balance { get; set; }
 
         /// <summary>
         /// Gets or sets the total received.
         /// </summary>
-        public decimal? TotalReceived { get; set; }
+        public long? TotalReceived { get; set; }
 
         /// <summary>
         /// Gets or sets the total sent.
         /// </summary>
-        public decimal? TotalSent { get; set; }
+        public long? TotalSent { get; set; }
 
         /// <summary>
         /// Gets or sets the unconfirmed balance.
         /// </summary>
-        public decimal UnconfirmedBalance { get; set; }
+        public long UnconfirmedBalance { get; set; }
 
         /// <summary>
         /// Gets or sets the transactions.
@@ -59,7 +53,5 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the Unconfirmed transactions.
         /// </summary>
         public IEnumerable<QueryAddressItem> UnconfirmedTransactions { get; set; }
-
-        #endregion
     }
 }

@@ -66,8 +66,8 @@ namespace Nako.Sync.SyncTasks
                     {
                         var block = this.syncOperations.SyncBlock(this.syncConnection, item.BlockInfo);
 
-                        var inputs = block.Transactions.SelectMany(s => s.VIn).Count();
-                        var outputs = block.Transactions.SelectMany(s => s.VOut).Count();
+                        var inputs = block.Transactions.SelectMany(s => s.Inputs).Count();
+                        var outputs = block.Transactions.SelectMany(s => s.Outputs).Count();
 
                         this.Runner.Get<BlockStore>().Enqueue(block);
 
@@ -78,8 +78,8 @@ namespace Nako.Sync.SyncTasks
                     {
                         var pool = this.syncOperations.SyncPool(this.syncConnection, item.PoolTransactions);
 
-                        var inputs = pool.Transactions.SelectMany(s => s.VIn).Count();
-                        var outputs = pool.Transactions.SelectMany(s => s.VOut).Count();
+                        var inputs = pool.Transactions.SelectMany(s => s.Inputs).Count();
+                        var outputs = pool.Transactions.SelectMany(s => s.Outputs).Count();
 
                         this.Runner.Get<BlockStore>().Enqueue(pool);
 

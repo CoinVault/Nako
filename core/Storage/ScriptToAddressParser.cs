@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SyncBlockTransactionsOperation.cs" company="SoftChains">
+// <copyright file="IStorage.cs" company="SoftChains">
 //   Copyright 2016 Dan Gershony
 //   //  Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //   //  THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
@@ -10,25 +10,32 @@
 
 using NBitcoin;
 
-namespace Nako.Operations.Types
+namespace Nako.Storage
 {
     using System.Collections.Generic;
-
     using Nako.Client.Types;
+    using Nako.Storage.Types;
 
-    /// <summary>
-    /// The sync block info.
-    /// </summary>
-    public class SyncBlockTransactionsOperation
+    public class ScriptToAddressParser
     {
-        /// <summary>
-        /// Gets or sets the block info.
-        /// </summary>
-        public BlockInfo BlockInfo { get; set; }
+        public static string GetAddress(Network network, Script script)
+        {
+            var template = NBitcoin.StandardScripts.GetTemplateFromScriptPubKey(script);
 
-        /// <summary>
-        /// Gets or sets the transactions.
-        /// </summary>
-        public IEnumerable<Transaction> Transactions { get; set; }
+            if (template == null)
+                return null;
+
+            if (template.Type == TxOutType.TX_NONSTANDARD)
+                return null;
+
+            if (template.Type == TxOutType.TX_NULL_DATA)
+                return null;
+
+            // This is the address that gets indexed
+            var address = script.GetDestinationAddress(network)?.ToString();
+
+            return address;
+        }
     }
 }
+

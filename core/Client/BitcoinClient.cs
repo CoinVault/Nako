@@ -173,6 +173,12 @@ namespace Nako.Client
         }
 
         /// <inheritdoc />
+        public string GetBlockHex(string hash)
+        {
+            return this.Call<string>("getblock", hash, 0);
+        }
+
+        /// <inheritdoc />
         public async Task<int> GetBlockCountAsync()
         {
             return await this.CallAsync<int>("getblockcount");

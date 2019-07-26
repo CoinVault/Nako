@@ -8,6 +8,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Microsoft.Extensions.Options;
+
 namespace Nako.Api.Handlers
 {
     #region Using Directives
@@ -33,13 +35,11 @@ namespace Nako.Api.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="QueryHandler"/> class.
         /// </summary>
-        public QueryHandler(NakoConfiguration configuration, IStorage storage)
+        public QueryHandler(IOptions<NakoConfiguration> configuration, IStorage storage)
         {
             this.storage = storage;
-            this.configuration = configuration;
+            this.configuration = configuration.Value;
         }
-
-        #region Public Methods and Operators
 
         public QueryAddress GetAddressTransactions(string address, long confirmations)
         {
@@ -57,14 +57,35 @@ namespace Nako.Api.Handlers
 
             return new QueryAddress
             {
-                CoinTag = this.configuration.CoinTag, 
-                Address = address, 
-                Balance = stats.Available, 
-                TotalReceived = stats.Received, 
-                TotalSent = stats.Sent, 
-                UnconfirmedBalance = stats.Unconfirmed, 
-                Transactions = confirmed.Select(t => new QueryAddressItem { PubScriptHex = t.ScriptHex, CoinBase = t.CoinBase, Index = t.Index, SpendingTransactionHash = t.SpendingTransactionHash, TransactionHash = t.TransactionHash, Type = t.Type, Value = t.Value, BlockIndex = t.BlockIndex, Confirmations = t.Confirmations, Time = t.Time }), 
-                UnconfirmedTransactions = unconfirmed.Select(t => new QueryAddressItem { PubScriptHex = t.ScriptHex, CoinBase = t.CoinBase, Index = t.Index, SpendingTransactionHash = t.SpendingTransactionHash, TransactionHash = t.TransactionHash, Type = t.Type, Value = t.Value, BlockIndex = t.BlockIndex, Confirmations = t.Confirmations, Time = t.Time })
+                CoinTag = this.configuration.CoinTag,
+                Address = address,
+                Balance = stats.Available,
+                TotalReceived = stats.Received,
+                TotalSent = stats.Sent,
+                UnconfirmedBalance = stats.Unconfirmed,
+                Transactions = confirmed.Select(t => new QueryAddressItem
+                {
+                    PubScriptHex = t.ScriptHex,
+                    CoinBase = t.CoinBase,
+                    Index = t.Index,
+                    SpendingTransactionHash = t.SpendingTransactionHash,
+                    TransactionHash = t.TransactionHash,
+                    Type = t.Type, Value = t.Value,
+                    BlockIndex = t.BlockIndex,
+                    Confirmations = t.Confirmations,
+                    Time = t.Time
+                }),
+                UnconfirmedTransactions = unconfirmed.Select(t => new QueryAddressItem
+                {
+                    PubScriptHex = t.ScriptHex,
+                    CoinBase = t.CoinBase, Index = t.Index,
+                    SpendingTransactionHash = t.SpendingTransactionHash,
+                    TransactionHash = t.TransactionHash,
+                    Type = t.Type, Value = t.Value,
+                    BlockIndex = t.BlockIndex,
+                    Confirmations = t.Confirmations,
+                    Time = t.Time
+                })
             };
         }
 
@@ -345,7 +366,5 @@ namespace Nako.Api.Handlers
                            Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput { CoinBase = i.InputCoinBase, InputAddress = string.Empty, InputIndex = i.PreviousIndex, InputTransactionId = i.PreviousTransactionHash })
                        };
         }
-
-        #endregion
     }
 }

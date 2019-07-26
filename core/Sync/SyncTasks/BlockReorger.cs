@@ -10,15 +10,11 @@
 
 namespace Nako.Sync.SyncTasks
 {
-    #region Using Directives
-
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Nako.Config;
     using Nako.Operations;
     using Nako.Operations.Types;
-
-    #endregion
 
     /// <summary>
     /// The block re-org of the block chain.

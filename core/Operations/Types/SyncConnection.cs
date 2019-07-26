@@ -8,12 +8,82 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using NBitcoin;
+using NBitcoin.DataEncoders;
+
 namespace Nako.Operations.Types
 {
     using System;
     using Microsoft.Extensions.Options;
     using Nako.Config;
 
+    /// <summary>
+    /// Represents a minimal 
+    /// </summary>
+    public class NetworkConfig : Network
+    {
+        public NetworkConfig(NakoConfiguration config)
+        {
+            this.CoinTicker = config.CoinTag;
+
+            ConsensusFactory consensusFactory = (ConsensusFactory)Activator.CreateInstance(Type.GetType(config.NetworkConsensusFactoryType));
+                
+            this.Consensus = new ConsensusConfig(config, consensusFactory);
+
+            this.Base58Prefixes = new byte[12][];
+            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (63) };
+            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (125) };
+
+            this.Bech32Encoders = new Bech32Encoder[2];
+            var encoder = new Bech32Encoder(config.NetworkWitnessPrefix);
+            this.Bech32Encoders[(int)Bech32Type.WITNESS_PUBKEY_ADDRESS] = encoder;
+            this.Bech32Encoders[(int)Bech32Type.WITNESS_SCRIPT_ADDRESS] = encoder;
+
+            // TODO
+            //StandardScripts.RegisterStandardScriptTemplate(ColdStakingScriptTemplate);
+        }
+    }
+
+    public class ConsensusConfig : Consensus
+    {
+        public ConsensusConfig(NakoConfiguration config, ConsensusFactory consensusFactory) : base(
+            consensusFactory: consensusFactory,
+            consensusOptions: null,
+            coinType: 0,
+            hashGenesisBlock: uint256.Zero,
+            subsidyHalvingInterval: 0,
+            majorityEnforceBlockUpgrade: 0,
+            majorityRejectBlockOutdated: 0,
+            majorityWindow: 0,
+            buriedDeployments: null,
+            bip9Deployments: null,
+            bip34Hash: uint256.Zero,
+            ruleChangeActivationThreshold: 0,
+            minerConfirmationWindow: 0,
+            maxReorgLength: 0,
+            defaultAssumeValid: uint256.Zero,
+            maxMoney: 0,
+            coinbaseMaturity: 0,
+            premineHeight: 0,
+            premineReward: 0,
+            proofOfWorkReward: 0,
+            powTargetTimespan: TimeSpan.Zero,
+            powTargetSpacing: TimeSpan.Zero,
+            powAllowMinDifficultyBlocks: false,
+            posNoRetargeting: false,
+            powNoRetargeting: false,
+            powLimit: new Target(uint256.Zero),
+            minimumChainWork: null,
+            isProofOfStake: true,
+            lastPowBlock: 0,
+            proofOfStakeLimit: null,
+            proofOfStakeLimitV2: null,
+            proofOfStakeReward: 0
+        )
+        {
+
+        }
+    }
 
     [Serializable]
     public class SyncConnection
@@ -32,8 +102,13 @@ namespace Nako.Operations.Types
             this.User = configuration.RpcUser;
             this.Secure = configuration.RpcSecure;
             this.StartBlockIndex = configuration.StartBlockIndex;
+
+            // This can be replaced with a specific the network class of a specific coin
+            // Or use the config values to simulate the network class.
+            this.Network = new NetworkConfig(config.Value);
         }
 
+        public NBitcoin.Network Network { get; }
 
         public string CoinTag { get; set; }
 
@@ -52,6 +127,5 @@ namespace Nako.Operations.Types
         public string User { get; set; }
 
         public long StartBlockIndex { get; set; }
-
     }
 }

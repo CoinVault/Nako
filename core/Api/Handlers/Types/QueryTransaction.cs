@@ -19,8 +19,6 @@ namespace Nako.Api.Handlers.Types
 
     public class QueryTransaction
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the CoinTag.
         /// </summary>
@@ -60,7 +58,5 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the transaction outputs.
         /// </summary>
         public IEnumerable<QueryTransactionOutput> Outputs { get; set; }
-
-        #endregion
     }
 }

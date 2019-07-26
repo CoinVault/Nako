@@ -10,16 +10,10 @@
 
 namespace Nako.Api.Handlers.Types
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     public class QueryBlock
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the CoinTag.
         /// </summary>
@@ -69,7 +63,5 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the transactions.
         /// </summary>
         public IEnumerable<string> Transactions { get; set; }
-
-        #endregion
     }
 }

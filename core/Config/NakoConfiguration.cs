@@ -47,6 +47,14 @@ namespace Nako.Config
 
         public int AverageInterval { get; set; }
 
+        public string NetworkConsensusFactoryType { get; set; }
+
+        public int NetworkPubkeyAddressPrefix { get; set; }
+
+        public int NetworkScriptAddressPrefix { get; set; }
+
+        public string NetworkWitnessPrefix { get; set; }
+
         [JsonIgnore]
         public string ConnectionStringActual { get { return ConnectionString.Replace("{CoinTag}", CoinTag.ToLower()); } }
 

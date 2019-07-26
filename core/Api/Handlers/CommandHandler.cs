@@ -42,8 +42,6 @@ namespace Nako.Api.Handlers
             this.syncConnection = connection;
         }
 
-        #region Public Methods and Operators
-
         public async Task<string> SendTransaction(string transactionHex)
         {
             // todo: consider adding support for retries.
@@ -54,7 +52,5 @@ namespace Nako.Api.Handlers
             var trxid = await client.SentRawTransactionAsync(transactionHex);
             return trxid;
         }
-
-        #endregion
     }
 }

@@ -12,8 +12,6 @@ namespace Nako.Api.Handlers.Types
 {
     public class QueryTransactionOutput
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the addresses.
         /// </summary>
@@ -22,7 +20,7 @@ namespace Nako.Api.Handlers.Types
         /// <summary>
         /// Gets or sets the amount.
         /// </summary>
-        public decimal Balance { get; set; }
+        public long Balance { get; set; }
 
         /// <summary>
         /// Gets or sets the input index.
@@ -33,7 +31,5 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the output type.
         /// </summary>
         public string OutputType { get; set; }
-
-        #endregion
     }
 }

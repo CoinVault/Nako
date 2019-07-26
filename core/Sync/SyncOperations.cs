@@ -23,6 +23,8 @@ namespace Nako.Sync
     using Nako.Operations;
     using Nako.Operations.Types;
     using Nako.Storage;
+    using NBitcoin;
+    using NBitcoin.DataEncoders;
 
     /// <summary>
     /// The CoinOperations interface.
@@ -212,7 +214,7 @@ namespace Nako.Sync
             {
                 try
                 {
-                    item.result = client.GetRawTransaction(item.item, 1);
+                    item.result = client.GetRawTransaction(item.item, 0);
                 }
                 catch (BitcoinClientException bce)
                 {
@@ -227,13 +229,16 @@ namespace Nako.Sync
                 }
             });
 
-            var transactions = itemList.Select(s => s.result).ToList();
+            var transactions = itemList.Select(s =>
+            {
+                var trx = connection.Network.Consensus.ConsensusFactory.CreateTransaction(s.result.Hex);
+                trx.PrecomputeHash(false, true);
+                return trx;
+            });
 
-            return new SyncBlockTransactionsOperation { Transactions = transactions };
+            return new SyncBlockTransactionsOperation { Transactions = transactions.ToList() };
         }
 
-        private ConcurrentStack<double> Timings = new ConcurrentStack<double>();
-        private ConcurrentStack<long> TransactionsCount = new ConcurrentStack<long>();
 
         private SyncBlockTransactionsOperation SyncPoolInternal(SyncConnection connection, SyncPoolTransactions poolTransactions)
         {
@@ -259,31 +264,22 @@ namespace Nako.Sync
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
 
-            var returnBlock = this.SyncBlockTransactions(client, connection, block.Transactions, true);
+            var hex = client.GetBlockHex(block.Hash);
 
-            returnBlock.BlockInfo = block;
+            //Block blockItem = connection.Network.Consensus.ConsensusFactory.CreateBlock();
+            //blockItem.ReadWrite(Encoders.Hex.DecodeData(hex), connection.Network.Consensus.ConsensusFactory);
 
-            watch.Stop();
+            Block blockItem = Block.Parse(hex, connection.Network);
 
-            var transactionCount = returnBlock.Transactions.Count();
-            var totalSeconds = watch.Elapsed.TotalSeconds;
-
-            this.log.LogDebug($"SyncBlock: Seconds = {totalSeconds} - Transactions = {transactionCount} - BlockIndex = {returnBlock.BlockInfo.Height}");
-
-            // Whenever we have 10 readings, calculate averages and clear.
-            if (Timings.Count == this.configuration.AverageInterval)
+            foreach (var blockItemTransaction in blockItem.Transactions)
             {
-                var average = Timings.Sum() / this.configuration.AverageInterval;
-                var averageTransactionsCount = TransactionsCount.Sum() / this.configuration.AverageInterval;
-
-                this.log.LogInformation($"SyncBlock: Average Time = {average} - Average Transactions = {averageTransactionsCount} - Current Block Index = {returnBlock.BlockInfo.Height}");
-
-                Timings.Clear();
-                TransactionsCount.Clear();
+                blockItemTransaction.PrecomputeHash(false, true);
             }
 
-            Timings.Push(totalSeconds);
-            TransactionsCount.Push(transactionCount);
+            //var blockItem = Block.Load(Encoders.Hex.DecodeData(hex), consensusFactory);
+            var returnBlock = new SyncBlockTransactionsOperation {BlockInfo = block, Transactions = blockItem.Transactions };  //this.SyncBlockTransactions(client, connection, block.Transactions, true);
+
+            watch.Stop();
 
             return returnBlock;
         }

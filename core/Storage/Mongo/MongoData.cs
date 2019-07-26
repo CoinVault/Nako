@@ -24,6 +24,8 @@ namespace Nako.Storage.Mongo
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using NBitcoin;
+    using NBitcoin.DataEncoders;
 
     public class MongoData : IStorage
     {
@@ -44,7 +46,7 @@ namespace Nako.Storage.Mongo
             this.configuration = nakoConfiguration.Value;
             this.mongoClient = new MongoClient(this.configuration.ConnectionStringActual);
             this.mongoDatabase = this.mongoClient.GetDatabase("Blockchain");
-            this.MemoryTransactions = new ConcurrentDictionary<string, DecodedRawTransaction>();
+            this.MemoryTransactions = new ConcurrentDictionary<string, NBitcoin.Transaction>();
         }
 
         public IMongoCollection<MapTransactionAddress> MapTransactionAddress
@@ -71,7 +73,7 @@ namespace Nako.Storage.Mongo
             }
         }
 
-        public ConcurrentDictionary<string, DecodedRawTransaction> MemoryTransactions { get; set; }
+        public ConcurrentDictionary<string, NBitcoin.Transaction> MemoryTransactions { get; set; }
 
         public IEnumerable<SyncBlockInfo> BlockGetIncompleteBlocks()
         {
@@ -202,7 +204,7 @@ namespace Nako.Storage.Mongo
             return new SyncTransactionItems
                        {
                            Inputs = res.VIn.Select(v => new SyncTransactionItemInput{ PreviousTransactionHash = v.TxId, PreviousIndex = v.VOut, InputCoinBase = v.CoinBase}).ToList(), 
-                           Outputs = res.VOut.Where(v => v.ScriptPubKey != null && v.ScriptPubKey.Addresses != null).Select(v=> new SyncTransactionItemOutput { Address = v.ScriptPubKey.Addresses.FirstOrDefault(), Index = v.N, Value = v.Value, OutputType = v.ScriptPubKey.Type }).ToList()
+                           Outputs = res.VOut.Where(v => v.ScriptPubKey != null && v.ScriptPubKey.Addresses != null).Select(v=> new SyncTransactionItemOutput { Address = v.ScriptPubKey.Addresses.FirstOrDefault(), Index = v.N, Value = (long)v.Value, OutputType = v.ScriptPubKey.Type }).ToList()
                        };
         }
 
@@ -239,7 +241,7 @@ namespace Nako.Storage.Mongo
             this.MapBlock.DeleteOne(blockFilter);
         }
 
-        public IEnumerable<DecodedRawTransaction> GetMemoryTransactions()
+        public IEnumerable<NBitcoin.Transaction> GetMemoryTransactions()
         {
             return this.MemoryTransactions.Values;
         }
@@ -256,8 +258,8 @@ namespace Nako.Storage.Mongo
             return new SyncTransactionAddressBalance
                        {
                            Available = available, 
-                           Received = availableOnly ? default(decimal?) : all, 
-                           Sent = availableOnly ? default(decimal?) : used, 
+                           Received = availableOnly ? default(long?) : all, 
+                           Sent = availableOnly ? default(long?) : used, 
                            Unconfirmed = confirming, 
                            Items = addrs
                        };
@@ -313,7 +315,7 @@ namespace Nako.Storage.Mongo
             ////};
             
             var builder = Builders<MapTransactionAddress>.Filter;
-            var filter = builder.Eq(info => info.Addresses, new List<string> { address });
+            var filter = builder.Eq(info => info.Addresses, new List<string> {address});
 
             if (availableOnly)
             {
@@ -338,7 +340,7 @@ namespace Nako.Storage.Mongo
                 var addrsupdate = addrs;
                 this.GetPoolOutputs(pool).ForEach(f =>
                 {
-                        var adr = addrsupdate.FirstOrDefault(a => a.TransactionId == f.Item1.TxId && a.Index == f.Item1.VOut);
+                        var adr = addrsupdate.FirstOrDefault(a => a.TransactionId == f.Item1.PrevOut.Hash.ToString() && a.Index == f.Item1.PrevOut.N);
                         if (adr != null)
                         {
                             adr.SpendingTransactionId = f.Item2;
@@ -354,7 +356,7 @@ namespace Nako.Storage.Mongo
 
                 // add all pool transactions to main output
                 var paddr = this.PoolToMapTransactionAddress(pool, address).ToList();
-                addrs = addrs.Concat(paddr).ToList();
+                addrs = addrs.OrderByDescending(s => s.BlockIndex).Concat(paddr).ToList();
             }
 
             // map to return type and calculate confirmations
@@ -362,48 +364,52 @@ namespace Nako.Storage.Mongo
             {
                 Address = address, 
                 Index = s.Index, 
-                TransactionHash = !s.CoinBase ? s.TransactionId : string.Empty, 
+                TransactionHash = s.TransactionId, 
                 BlockIndex = s.BlockIndex == -1 ? default(long?) : s.BlockIndex, 
-                Value = System.Convert.ToDecimal(s.Value), 
+                Value = s.Value, 
                 Confirmations = s.BlockIndex == -1 ? 0 : current.BlockIndex - s.BlockIndex + 1, 
                 SpendingTransactionHash = s.SpendingTransactionId, 
-                CoinBase = s.CoinBase ? s.TransactionId : string.Empty, 
-                ScriptHex = s.ScriptHex
+                CoinBase = s.CoinBase,
+                CoinStake = s.CoinStake,
+                ScriptHex = new Script(Encoders.Hex.DecodeData(s.ScriptHex)).ToString(),
+                Type = StandardScripts.GetTemplateFromScriptPubKey(new Script(Encoders.Hex.DecodeData(s.ScriptHex)))?.Type.ToString(),
+                Time = s.BlockIndex == -1 ? UnixUtils.DateToUnixTimestamp(DateTime.UtcNow) : current.BlockTime
             });
         }
 
-        private IEnumerable<Tuple<Vin, string>> GetPoolOutputs(IEnumerable<DecodedRawTransaction> pool)
+        private IEnumerable<Tuple<NBitcoin.TxIn, string>> GetPoolOutputs(IEnumerable<NBitcoin.Transaction> pool)
         {
-            return pool.SelectMany(s => s.VIn.Select(v => new Tuple<Vin, string>(v, s.TxId)));
+            return pool.SelectMany(s => s.Inputs.Select(v => new Tuple<NBitcoin.TxIn, string>(v, s.GetHash().ToString())));
         }
 
-        private IEnumerable<MapTransactionAddress> PoolToMapTransactionAddress(IEnumerable<DecodedRawTransaction> pool, string address)
+        private IEnumerable<MapTransactionAddress> PoolToMapTransactionAddress(IEnumerable<NBitcoin.Transaction> pool, string address)
         {
             foreach (var transaction in pool)
             {
                 var rawTransaction = transaction;
-                var coinBase = rawTransaction.VIn.Any(v => v.CoinBase != null);
 
-                var transactionOutputs = from output in rawTransaction.VOut
-                                         where output.Value > 0
-                                                 && output.ScriptPubKey != null
-                                                 && output.ScriptPubKey.Addresses != null
-                                                 && output.ScriptPubKey.Addresses.Any()
-                                                 && output.ScriptPubKey.Addresses.Contains(address)
-                                         select new MapTransactionAddress
-                                         {
-                                             Id = string.Format("{0}-{1}", rawTransaction.TxId, output.N), 
-                                             TransactionId = rawTransaction.TxId, 
-                                             Value = System.Convert.ToDouble(output.Value), 
-                                             Index = output.N, 
-                                             Addresses = output.ScriptPubKey.Addresses, 
-                                             BlockIndex = -1, 
-                                             CoinBase = coinBase
-                                         };
-
-                foreach (var output in transactionOutputs)
+                var index = 0;
+                foreach (var output in rawTransaction.Outputs)
                 {
-                    yield return output;
+                    var addressIndex = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey);
+
+                    if (address == addressIndex)
+                        continue;
+
+                    var id = rawTransaction.GetHash().ToString();
+
+                    yield return new MapTransactionAddress
+                    {
+                        Id = string.Format("{0}-{1}", id, index),
+                        TransactionId = id,
+                        Value = output.Value,
+                        Index = index++,
+                        Addresses = new List<string> {address},
+                        ScriptHex = output.ScriptPubKey.ToHex(),
+                        BlockIndex = -1,
+                        CoinBase = rawTransaction.IsCoinBase,
+                        CoinStake = rawTransaction.IsCoinStake,
+                    };
                 }
             }
         }

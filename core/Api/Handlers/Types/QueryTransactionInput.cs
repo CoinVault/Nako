@@ -12,8 +12,6 @@ namespace Nako.Api.Handlers.Types
 {
     public class QueryTransactionInput
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the input index.
         /// </summary>
@@ -33,7 +31,5 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the transaction id.
         /// </summary>
         public string InputTransactionId { get; set; }
-
-        #endregion
     }
 }
