@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26114.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nako.Core", "Nako.Core.csproj", "{5148A08D-6DB9-40EE-BCED-04513F481B05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nako.indexer", "nako.indexer\nako.indexer.csproj", "{7A62B325-5349-4AE8-BEF8-5ED3E66DB246}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5148A08D-6DB9-40EE-BCED-04513F481B05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5148A08D-6DB9-40EE-BCED-04513F481B05}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5148A08D-6DB9-40EE-BCED-04513F481B05}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5148A08D-6DB9-40EE-BCED-04513F481B05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A62B325-5349-4AE8-BEF8-5ED3E66DB246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A62B325-5349-4AE8-BEF8-5ED3E66DB246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A62B325-5349-4AE8-BEF8-5ED3E66DB246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A62B325-5349-4AE8-BEF8-5ED3E66DB246}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {64C9DFC8-471B-4D5B-8D58-44BD223EF1BE}
 	EndGlobalSection
 EndGlobal
