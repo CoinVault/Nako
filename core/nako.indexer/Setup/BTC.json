@@ -1,0 +1,7 @@
+{
+	"CoinTag": "BTC",
+	"NetworkConsensusFactoryType": "NBitcoin.ConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
+	"NetworkPubkeyAddressPrefix": 0,
+	"NetworkScriptAddressPrefix": 5,
+	"NetworkWitnessPrefix": "bc"
+}
