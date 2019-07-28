@@ -40,7 +40,9 @@ namespace Nako.Config
         public string NotifyUrl { get; set; }
 
         public string ConnectionString { get; set; }
-        
+
+        public bool DatabaseNameSubfix { get; set; }
+
         public int NotifyBatchCount { get; set; }
 
         public int MongoBatchSize { get; set; }
@@ -49,9 +51,9 @@ namespace Nako.Config
 
         public string NetworkConsensusFactoryType { get; set; }
 
-        public int NetworkPubkeyAddressPrefix { get; set; }
+        public byte NetworkPubkeyAddressPrefix { get; set; }
 
-        public int NetworkScriptAddressPrefix { get; set; }
+        public byte NetworkScriptAddressPrefix { get; set; }
 
         public string NetworkWitnessPrefix { get; set; }
 

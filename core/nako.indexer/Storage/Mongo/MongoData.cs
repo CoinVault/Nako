@@ -45,7 +45,8 @@ namespace Nako.Storage.Mongo
             this.log = logger;
             this.configuration = nakoConfiguration.Value;
             this.mongoClient = new MongoClient(this.configuration.ConnectionStringActual);
-            this.mongoDatabase = this.mongoClient.GetDatabase("Blockchain");
+            var dbName = this.configuration.DatabaseNameSubfix ? "Blockchain" + this.configuration.CoinTag : "Blockchain";
+            this.mongoDatabase = this.mongoClient.GetDatabase(dbName);
             this.MemoryTransactions = new ConcurrentDictionary<string, NBitcoin.Transaction>();
         }
 

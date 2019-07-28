@@ -1,0 +1,11 @@
+{
+	"CoinTag": "CITY",
+	"ConnectionString": "mongodb://localhost",
+	"DatabaseNameSubfix": true,
+	"RpcDomain": "127.0.0.1",
+	"RpcAccessPort": 4334,
+	"NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
+	"NetworkPubkeyAddressPrefix": 28,
+	"NetworkScriptAddressPrefix": 88,
+	"NetworkWitnessPrefix": "bc"
+}

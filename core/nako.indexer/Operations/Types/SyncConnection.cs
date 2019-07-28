@@ -31,8 +31,8 @@ namespace Nako.Operations.Types
             this.Consensus = new ConsensusConfig(config, consensusFactory);
 
             this.Base58Prefixes = new byte[12][];
-            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (63) };
-            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (125) };
+            this.Base58Prefixes[(int)Base58Type.PUBKEY_ADDRESS] = new byte[] { (config.NetworkPubkeyAddressPrefix) };
+            this.Base58Prefixes[(int)Base58Type.SCRIPT_ADDRESS] = new byte[] { (config.NetworkScriptAddressPrefix) };
 
             this.Bech32Encoders = new Bech32Encoder[2];
             var encoder = new Bech32Encoder(config.NetworkWitnessPrefix);

@@ -13,8 +13,7 @@ namespace Nako
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
-    using Nako.Config;
-    using System.Collections.Generic;
+    using System;
     using System.IO;
 
     /// <summary>
@@ -24,22 +23,22 @@ namespace Nako
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
-        }
+            var chain = (args.Length == 0) ? "STRAT" : args[0].ToUpper();
+            chain = (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("CHAIN"))) ? chain : Environment.GetEnvironmentVariable("CHAIN").ToUpper();
 
-        public static IWebHost BuildWebHost(string[] args) =>
-           WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((builder, config) =>
-                {
-                    config.AddJsonFile("nakosettings.json", optional: false, reloadOnChange: true);
+            var config = new ConfigurationBuilder()
+              .SetBasePath(Directory.GetCurrentDirectory())
+              .AddJsonFile("hosting.json", optional: true)
+              .AddJsonFile("nakosettings.json", optional: false, reloadOnChange: false)
+              .AddJsonFile(Path.Combine("Setup", $"{chain}.json"), optional: false, reloadOnChange: false)
+              .AddCommandLine(args)
+              .AddEnvironmentVariables()
+              .Build();
 
-                    // If the argument is only one, and it does not contain = or -, then we'll for backwards compatibility, use that as CoinTag.
-                    if (args.Length == 1 && !args[0].Contains("=") && !args[0].Contains("-"))
-                    {
-                        config.AddInMemoryCollection(new Dictionary<string, string> { { "CoinTag", args[0].ToUpper() } });
-                    }
-                })
+            WebHost.CreateDefaultBuilder(args)
+               .UseConfiguration(config)
                .UseStartup<Startup>()
-               .Build();
+               .Build().Run();
+        }
     }
 }

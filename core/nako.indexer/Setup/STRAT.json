@@ -1,0 +1,7 @@
+{
+	"CoinTag": "STRAT",
+	"NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
+	"NetworkPubkeyAddressPrefix": 63,
+	"NetworkScriptAddressPrefix": 125,
+	"NetworkWitnessPrefix": "bc"
+}
