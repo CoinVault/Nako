@@ -10,18 +10,12 @@
 
 namespace Nako.Client.Types
 {
-    #region Using Directives
-
     using System.Collections.Generic;
 
     using Newtonsoft.Json;
 
-    #endregion
-
     public class BlockInfo
     {
-        #region Public Properties
-
         [JsonProperty("bits")]
         public string Bits { get; set; }
 
@@ -62,6 +56,22 @@ namespace Nako.Client.Types
         [JsonProperty("version")]
         public long Version { get; set; }
 
-        #endregion
+        [JsonProperty("signature")]
+        public string PosBlockSignature { get; set; }
+
+        [JsonProperty("modifierv2")]
+        public string PosModifierv2 { get; set; }
+
+        [JsonProperty("flags")]
+        public string PosFlags { get; set; }
+
+        [JsonProperty("hashproof")]
+        public string PosHashProof { get; set; }
+
+        [JsonProperty("blocktrust")]
+        public string PosBlockTrust { get; set; }
+
+        [JsonProperty("chaintrust")]
+        public string PosChainTrust { get; set; }
     }
 }

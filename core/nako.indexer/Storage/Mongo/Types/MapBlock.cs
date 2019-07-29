@@ -25,9 +25,31 @@ namespace Nako.Storage.Mongo.Types
 
         public string PreviousBlockHash { get; set; }
 
+        public long Confirmations { get; set; }
+
+        public string Bits { get; set; }
+
+        public string Merkleroot { get; set; }
+
+        public long Nonce { get; set; }
+
+        public long Version { get; set; }
+
         public bool SyncComplete { get; set; }
 
         public int TransactionCount { get; set; }
+
+        public string PosBlockSignature { get; set; }
+
+        public string PosModifierv2 { get; set; }
+
+        public string PosFlags { get; set; }
+
+        public string PosHashProof { get; set; }
+
+        public string PosBlockTrust { get; set; }
+
+        public string PosChainTrust { get; set; }
 
         #endregion
     }

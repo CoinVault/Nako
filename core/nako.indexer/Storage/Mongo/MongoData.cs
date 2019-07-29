@@ -268,7 +268,28 @@ namespace Nako.Storage.Mongo
 
         private SyncBlockInfo Convert(MapBlock block)
         {
-            return new SyncBlockInfo { BlockIndex = block.BlockIndex, BlockSize = block.BlockSize, BlockHash = block.BlockHash, BlockTime = block.BlockTime, NextBlockHash = block.NextBlockHash, PreviousBlockHash = block.PreviousBlockHash, TransactionCount = block.TransactionCount, SyncComplete = block.SyncComplete };
+            return new SyncBlockInfo
+            {
+                BlockIndex = block.BlockIndex,
+                BlockSize = block.BlockSize,
+                BlockHash = block.BlockHash,
+                BlockTime = block.BlockTime,
+                NextBlockHash = block.NextBlockHash,
+                PreviousBlockHash = block.PreviousBlockHash,
+                TransactionCount = block.TransactionCount,
+                Nonce = block.Nonce,
+                Merkleroot = block.Merkleroot,
+                PosModifierv2 = block.PosModifierv2,
+                PosHashProof = block.PosHashProof,
+                PosFlags = block.PosFlags,
+                PosChainTrust = block.PosChainTrust,
+                PosBlockTrust = block.PosBlockTrust,
+                PosBlockSignature = block.PosBlockSignature,
+                Confirmations = block.Confirmations,
+                Bits = block.Bits,
+                Version = block.Version,
+                SyncComplete = block.SyncComplete
+            };
         }
 
         private IEnumerable<SyncTransactionAddressItem> SelectAddressWithPool(SyncBlockInfo current, string address, bool availableOnly)

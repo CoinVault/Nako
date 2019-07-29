@@ -201,6 +201,17 @@ namespace Nako.Storage.Mongo
                 NextBlockHash = block.NextBlockHash, 
                 PreviousBlockHash = block.PreviousBlockHash, 
                 TransactionCount = block.Transactions.Count(), 
+                Bits = block.Bits,
+                Confirmations = block.Confirmations,
+                Merkleroot = block.Merkleroot,
+                Nonce = block.Nonce,
+                PosBlockSignature = block.PosBlockSignature,
+                PosBlockTrust = block.PosBlockTrust,
+                PosChainTrust = block.PosChainTrust,
+                PosFlags = block.PosFlags,
+                PosHashProof = block.PosHashProof,
+                PosModifierv2 = block.PosModifierv2,
+                Version = block.Version,
                 SyncComplete = false
             };
 

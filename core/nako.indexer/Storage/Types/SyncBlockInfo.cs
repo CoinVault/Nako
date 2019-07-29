@@ -11,8 +11,6 @@ namespace Nako.Storage.Types
 {
     public class SyncBlockInfo
     {
-        #region Public Properties
-
         public string BlockHash { get; set; }
 
         public long BlockIndex { get; set; }
@@ -33,6 +31,26 @@ namespace Nako.Storage.Types
 
         public string ETag { get; set; }
 
-        #endregion
+        public long Confirmations { get; set; }
+
+        public string Bits { get; set; }
+
+        public string Merkleroot { get; set; }
+
+        public long Nonce { get; set; }
+
+        public long Version { get; set; }
+
+        public string PosBlockSignature { get; set; }
+
+        public string PosModifierv2 { get; set; }
+
+        public string PosFlags { get; set; }
+
+        public string PosHashProof { get; set; }
+
+        public string PosBlockTrust { get; set; }
+
+        public string PosChainTrust { get; set; }
     }
 }

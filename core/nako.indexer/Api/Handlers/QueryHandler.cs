@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace Nako.Api.Handlers
 {
+    using System.Collections.Generic;
     #region Using Directives
 
     using System.Linq;
@@ -217,43 +218,66 @@ namespace Nako.Api.Handlers
         public QueryBlock GetBlock(string blockHash, bool getTransactions = true)
         {
             var block = this.storage.BlockGetByHash(blockHash);
-            
+
             if (block == null)
             {
                 return new QueryBlock();
             }
 
-            if (!getTransactions)
+            var queryBlock = new QueryBlock
             {
-                return new QueryBlock
-                {
-                    CoinTag = this.configuration.CoinTag, 
-                    BlockHash = block.BlockHash, 
-                    BlockIndex = block.BlockIndex, 
-                    BlockSize = block.BlockSize, 
-                    BlockTime = block.BlockTime, 
-                    NextBlockHash = block.NextBlockHash, 
-                    PreviousBlockHash = block.PreviousBlockHash, 
-                    Synced = block.SyncComplete, 
-                    TransactionCount = block.TransactionCount, 
-                    Transactions = Enumerable.Empty<string>()
-                };
+                CoinTag = this.configuration.CoinTag,
+                BlockHash = block.BlockHash,
+                BlockIndex = block.BlockIndex,
+                BlockSize = block.BlockSize,
+                BlockTime = block.BlockTime,
+                NextBlockHash = block.NextBlockHash,
+                PreviousBlockHash = block.PreviousBlockHash,
+                Synced = block.SyncComplete,
+                TransactionCount = block.TransactionCount,
+                Bits = block.Bits,
+                Confirmations = block.Confirmations,
+                Merkleroot = block.Merkleroot,
+                Nonce = block.Nonce,
+                PosBlockSignature = block.PosBlockSignature,
+                PosBlockTrust = block.PosBlockTrust,
+                PosChainTrust = block.PosChainTrust,
+                PosFlags = block.PosFlags,
+                PosHashProof = block.PosHashProof,
+                PosModifierv2 = block.PosModifierv2,
+                Version = block.Version,
+                Transactions = Enumerable.Empty<string>()
+            };
+
+            if (getTransactions)
+            {
+                var transactions = this.storage.BlockTransactionGetByBlockIndex(block.BlockIndex);
+                queryBlock.Transactions = transactions.Select(s => s.TransactionHash);
             }
 
-            var transactions = this.storage.BlockTransactionGetByBlockIndex(block.BlockIndex);
+            return queryBlock;
+        }
 
-            return new QueryBlock
+        public QueryBlocks GetBlocks(long blockIndex, int count)
+        {
+            var blocks = new List<QueryBlock>();
+
+            if (blockIndex == -1)
             {
-                CoinTag = this.configuration.CoinTag, 
-                BlockHash = block.BlockHash, 
-                BlockIndex = block.BlockIndex, 
-                BlockSize = block.BlockSize, 
-                BlockTime = block.BlockTime, 
-                NextBlockHash = block.NextBlockHash, 
-                PreviousBlockHash = block.PreviousBlockHash, 
-                Synced = block.SyncComplete, 
-                TransactionCount = block.TransactionCount, 
-                Transactions = transactions.Select(s => s.TransactionHash) 
+                QueryBlock lastBlock = this.GetLastBlock(false);
+                blocks.Add(lastBlock);
+                blockIndex = lastBlock.BlockIndex - 1;
+                count--;
+            }
+
+            for (long i = 0; i < count; i++)
+            {
+                blocks.Add(this.GetBlock((int)blockIndex - i, false));
+            }
+
+            return new QueryBlocks
+            {
+                Blocks = blocks
             };
         }
 
@@ -266,38 +290,39 @@ namespace Nako.Api.Handlers
                 return new QueryBlock();
             }
 
-            if (!getTransactions)
+            var queryBlock = new QueryBlock
             {
-                return new QueryBlock
-                {
-                    CoinTag = this.configuration.CoinTag, 
-                    BlockHash = block.BlockHash, 
-                    BlockIndex = block.BlockIndex, 
-                    BlockSize = block.BlockSize, 
-                    BlockTime = block.BlockTime, 
-                    NextBlockHash = block.NextBlockHash, 
-                    PreviousBlockHash = block.PreviousBlockHash, 
-                    Synced = block.SyncComplete, 
-                    TransactionCount = block.TransactionCount, 
-                    Transactions = Enumerable.Empty<string>()
-                };
+                CoinTag = this.configuration.CoinTag,
+                BlockHash = block.BlockHash,
+                BlockIndex = block.BlockIndex,
+                BlockSize = block.BlockSize,
+                BlockTime = block.BlockTime,
+                NextBlockHash = block.NextBlockHash,
+                PreviousBlockHash = block.PreviousBlockHash,
+                Synced = block.SyncComplete,
+                TransactionCount = block.TransactionCount,
+                Bits = block.Bits,
+                Confirmations = block.Confirmations,
+                Merkleroot = block.Merkleroot,
+                Nonce = block.Nonce,
+                PosBlockSignature = block.PosBlockSignature,
+                PosBlockTrust = block.PosBlockTrust,
+                PosChainTrust = block.PosChainTrust,
+                PosFlags = block.PosFlags,
+                PosHashProof = block.PosHashProof,
+                PosModifierv2 = block.PosModifierv2,
+                Version = block.Version,
+                Transactions = Enumerable.Empty<string>()
+            };
+
+            if (getTransactions)
+            {
+                var transactions = this.storage.BlockTransactionGetByBlockIndex(block.BlockIndex);
+                queryBlock.Transactions = transactions.Select(s => s.TransactionHash);
             }
 
-            var transactions = this.storage.BlockTransactionGetByBlockIndex(block.BlockIndex);
+            return queryBlock;
 
-            return new QueryBlock
-            {
-                CoinTag = this.configuration.CoinTag, 
-                BlockHash = block.BlockHash, 
-                BlockIndex = block.BlockIndex, 
-                BlockSize = block.BlockSize, 
-                BlockTime = block.BlockTime, 
-                NextBlockHash = block.NextBlockHash, 
-                PreviousBlockHash = block.PreviousBlockHash, 
-                Synced = block.SyncComplete, 
-                TransactionCount = block.TransactionCount, 
-                Transactions = transactions.Select(s => s.TransactionHash)
-            };
         }
 
         public QueryBlock GetLastBlock(bool getTransactions = true)
@@ -309,38 +334,38 @@ namespace Nako.Api.Handlers
                 return new QueryBlock();
             }
 
-            if (!getTransactions)
+            var queryBlock = new QueryBlock
             {
-                return new QueryBlock
-                {
-                    CoinTag = this.configuration.CoinTag, 
-                    BlockHash = block.BlockHash, 
-                    BlockIndex = block.BlockIndex, 
-                    BlockSize = block.BlockSize, 
-                    BlockTime = block.BlockTime, 
-                    NextBlockHash = block.NextBlockHash, 
-                    PreviousBlockHash = block.PreviousBlockHash, 
-                    Synced = block.SyncComplete, 
-                    TransactionCount = block.TransactionCount, 
-                    Transactions = Enumerable.Empty<string>()
-                };
+                CoinTag = this.configuration.CoinTag,
+                BlockHash = block.BlockHash,
+                BlockIndex = block.BlockIndex,
+                BlockSize = block.BlockSize,
+                BlockTime = block.BlockTime,
+                NextBlockHash = block.NextBlockHash,
+                PreviousBlockHash = block.PreviousBlockHash,
+                Synced = block.SyncComplete,
+                TransactionCount = block.TransactionCount,
+                Bits = block.Bits,
+                Confirmations = block.Confirmations,
+                Merkleroot = block.Merkleroot,
+                Nonce = block.Nonce,
+                PosBlockSignature = block.PosBlockSignature,
+                PosBlockTrust = block.PosBlockTrust,
+                PosChainTrust = block.PosChainTrust,
+                PosFlags = block.PosFlags,
+                PosHashProof = block.PosHashProof,
+                PosModifierv2 = block.PosModifierv2,
+                Version = block.Version,
+                Transactions = Enumerable.Empty<string>()
+            };
+
+            if (getTransactions)
+            {
+                var transactions = this.storage.BlockTransactionGetByBlockIndex(block.BlockIndex);
+                queryBlock.Transactions = transactions.Select(s => s.TransactionHash);
             }
 
-            var transactions = this.storage.BlockTransactionGetByBlockIndex(block.BlockIndex);
-
-            return new QueryBlock
-            {
-                CoinTag = this.configuration.CoinTag, 
-                BlockHash = block.BlockHash, 
-                BlockIndex = block.BlockIndex, 
-                BlockSize = block.BlockSize, 
-                BlockTime = block.BlockTime, 
-                NextBlockHash = block.NextBlockHash, 
-                PreviousBlockHash = block.PreviousBlockHash, 
-                Synced = block.SyncComplete, 
-                TransactionCount = block.TransactionCount, 
-                Transactions = transactions.Select(s => s.TransactionHash)
-            };
+            return queryBlock;
         }
 
         public QueryTransaction GetTransaction(string transactionId)

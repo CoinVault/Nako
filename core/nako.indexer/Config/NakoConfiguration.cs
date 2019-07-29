@@ -58,9 +58,21 @@ namespace Nako.Config
         public string NetworkWitnessPrefix { get; set; }
 
         [JsonIgnore]
-        public string ConnectionStringActual { get { return ConnectionString.Replace("{CoinTag}", CoinTag.ToLower()); } }
+        public string ConnectionStringActual
+        {
+            get
+            {
+                return ConnectionString.Replace("{CoinTag}", CoinTag.ToLower());
+            }
+        }
 
         [JsonIgnore]
-        public string RpcDomainActual { get { return RpcDomain.Replace("{CoinTag}", CoinTag.ToLower()); } }
+        public string RpcDomainActual
+        {
+            get
+            {
+                return RpcDomain.Replace("{CoinTag}", CoinTag.ToLower());
+            }
+        }
     }
 }
