@@ -192,6 +192,25 @@ namespace Nako.Api.Handlers
         }
 
         [HttpGet]
+        [Route("block/Index/{blockIndex}/Count/{count}")]
+        public IActionResult GetBlocksCount(long blockIndex, int count)
+        {
+            // Note - if blockIndex == -1 use latest block
+
+            var ret = this.handler.GetBlocks(blockIndex, count);
+
+            if (ret == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var response = this.CreateOkResponse(ret);
+
+            return response;
+        }
+
+
+        [HttpGet]
         [Route("transaction/{transactionId}")]
         public IActionResult GetTransaction(string transactionId)
         {

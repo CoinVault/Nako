@@ -21,8 +21,6 @@ namespace Nako.Operations.Types
     /// </summary>
     public class SyncBlockOperation
     {
-        #region Public Properties
-
         /// <summary>
         /// Gets or sets the block info.
         /// </summary>
@@ -42,7 +40,5 @@ namespace Nako.Operations.Types
         /// Gets or sets the transactions.
         /// </summary>
         public SyncPoolTransactions PoolTransactions { get; set; }
-
-        #endregion
     }
 }

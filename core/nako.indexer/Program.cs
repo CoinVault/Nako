@@ -30,7 +30,7 @@ namespace Nako
               .SetBasePath(Directory.GetCurrentDirectory())
               .AddJsonFile("hosting.json", optional: true)
               .AddJsonFile("nakosettings.json", optional: false, reloadOnChange: false)
-              .AddJsonFile(Path.Combine("Setup", $"{chain}.json"), optional: false, reloadOnChange: false)
+              .AddJsonFile(Path.Combine("Setup", $"{chain}.json"), optional: true, reloadOnChange: false)
               .AddCommandLine(args)
               .AddEnvironmentVariables()
               .Build();
