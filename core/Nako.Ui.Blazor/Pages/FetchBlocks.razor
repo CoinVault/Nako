@@ -1,57 +1,56 @@
-﻿@page "/fetchblock"
-@page "/fetchblock/{blockindex:int}"
+﻿@page "/fetchblocks"
 @inject HttpClient Http
+@inject IUriHelper UriHelper
 
 <h1>Block Info</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (block == null)
+@if (blocks == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
+    <table class="table _table-hover _table-sm">
         <thead>
             <tr>
-                <th>Item</th>
-                <th>Info</th>
+                <th>BlockHash</th>
+                <th>Block Height</th>
+                <th>Time</th>
+                <th>Transactions</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>BlockHash</td>
-                <td>@block.BlockHash</td>
-            </tr>
-            <tr>
-                <td>BlockIndex</td>
-                <td>@block.BlockIndex</td>
-            </tr>
-            <tr>
-                <td>BlockTime</td>
-                <td>@block.BlockTime</td>
-            </tr>
+            @foreach (var block in blocks.Blocks)
+            {
+                <tr>
+                    <td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockHash</td>
+                    <td>@block.BlockIndex</td>
+                    <td>@block.BlockTime</td>
+                    <td>@block.TransactionCount</td>
+                </tr>
+            }
         </tbody>
     </table>
 }
 
 @code {
+    QueryBlocks blocks;
 
-    [Parameter]
-    private int blockindex { get; set; } = -1;
-
-    QueryBlock block;
+    private void NavigateToBlockIndex(long index)
+    {
+        UriHelper.NavigateTo("fetchblock/" + index);
+    }
 
     protected override async Task OnInitAsync()
     {
-        if (this.blockindex == -1)
-        {
-            block = await Http.GetJsonAsync<QueryBlock>("http://localhost:9000/api/Query/block/Latest/1?api-version=1.0");
-            return;
-        }
+        blocks = await Http.GetJsonAsync<QueryBlocks>("http://localhost:9000/api/Query/block/Index/-1/Count/10?api-version=1.0");
+    }
 
-        block = await Http.GetJsonAsync<QueryBlock>("http://localhost:9000/api/Query/block/Index/" + this.blockindex + "/1?api-version=1.0");
+    public class QueryBlocks
+    {
+        public QueryBlock[] Blocks { get; set; }
     }
 
     public class QueryBlock

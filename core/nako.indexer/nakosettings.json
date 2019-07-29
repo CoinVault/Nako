@@ -1,12 +1,12 @@
 ﻿{
-	"CoinTag": "",
+	"CoinTag": "ODX",
 
-	"ConnectionString": "mongodb://{CoinTag}-mongo",
+	"ConnectionString": "mongodb://localhost",
 	"DatabaseNameSubfix": false,
 
 	"RpcAccessPort": 46661,
 	"RpcSecure": false,
-	"RpcDomain": "{CoinTag}-client",
+	"RpcDomain": "127.0.0.1",
 	"RpcUser": "rpcuser",
 	"RpcPassword": "rpcpassword",
 
@@ -21,12 +21,12 @@
 	"MongoBatchSize": 500,
 	"ParallelRequestsToTransactionRpc": 50,
 	"DetailedTrace": 0,
-	"MaxItemsInQueue": 200,
+	"MaxItemsInQueue": 2000,
 	"SyncInterval": 5,
 	"AverageInterval": 10,
 
-	"NetworkConsensusFactoryType": "NBitcoin.ConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
-	"NetworkPubkeyAddressPrefix": 0,
-	"NetworkScriptAddressPrefix": 5,
-	"NetworkWitnessPrefix": "bc"
+	"NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
+	"NetworkPubkeyAddressPrefix": 75,
+	"NetworkScriptAddressPrefix": 125,
+	"NetworkWitnessPrefix": "odx"
 }

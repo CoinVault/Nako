@@ -114,6 +114,8 @@ namespace Nako
           IApplicationLifetime appLifetime,
           IApiVersionDescriptionProvider provider)
         {
+            app.UseCors(builder => builder.AllowAnyOrigin());
+
             app.UseMvc();
 
             app.UseDefaultFiles();
