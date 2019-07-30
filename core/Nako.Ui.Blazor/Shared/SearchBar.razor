@@ -1,0 +1,51 @@
+﻿@inject IUriHelper UriHelper
+@inject GlobalData globalData
+@inject HttpClient Http
+
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span @onclick="Navigate" class="input-group-text">Search</span>
+        </div>
+
+        <input type="search" class="form-control"  placeholder="Blocks, transactions and addresses" @bind="Search"  @onkeyup="KeyUp" />
+
+        <div class="input-group-prepend">
+            <span @onclick="Navigate" class="input-group-text">Find</span>
+        </div>
+    </div>
+
+
+@code {
+    private string Search { get; set; }
+
+    private void KeyUp(UIKeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            this.Navigate();
+        }
+    }
+
+    private async Task Navigate()
+    {
+        if(int.TryParse(this.Search,out int _))
+        {
+            UriHelper.NavigateTo($"fetchblock/{this.Search}");
+            return;
+        }
+
+        var block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/{this.Search}/1?api-version=1.0");
+
+        if (block != null)
+        {
+            this.globalData.BlocksCache[block.BlockIndex] = block;
+                
+            UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
+        }
+
+        // search trx
+
+        // not found
+    }
+
+}

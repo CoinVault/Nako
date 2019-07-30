@@ -15,7 +15,7 @@ else
     <table class="table _table-hover _table-sm">
         <thead>
             <tr>
-                <th>Addr</th>
+                <th>IP address</th>
                 <th>Services</th>
                 <th>ConnTime</th>
                 <th>Version</th>
@@ -41,7 +41,7 @@ else
 
 @code {
    
-    PeerInfo[] peers;
+    DataTypes.PeerInfo[] peers;
 
     private void NavigateToBlockIndex(long index)
     {
@@ -50,29 +50,7 @@ else
 
     protected override async Task OnInitAsync()
     {
-        peers = await Http.GetJsonAsync<PeerInfo[]>("http://localhost:9000/api/stats/peers?api-version=1.0");
+        peers = await Http.GetJsonAsync<DataTypes.PeerInfo[]>("http://localhost:9000/api/stats/peers?api-version=1.0");
     }
 
-    public class PeerInfo
-    {
-        public uint Id { get; set; }
-        public string Addr { get; set; }
-        public string AddrLocal { get; set; }
-        public string Services { get; set; }
-        public long LastSend { get; set; }
-        public long LastRecv { get; set; }
-        public long BytesSent { get; set; }
-        public long BytesRecv { get; set; }
-        public int ConnTime { get; set; }
-        public double PingTime { get; set; }
-        public double Version { get; set; }
-        public string SubVer { get; set; }
-        public bool Inbound { get; set; }
-        public long StartingHeight { get; set; }
-        public int BanScore { get; set; }
-        public long SyncedHeaders { get; set; }
-        public long SyncedBlocks { get; set; }
-        public IList<long> InFlight { get; set; }
-        public bool WhiteListed { get; set; }
-    }
 }

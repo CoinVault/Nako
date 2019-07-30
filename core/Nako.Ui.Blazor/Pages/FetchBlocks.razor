@@ -1,4 +1,5 @@
 ﻿@page "/fetchblocks"
+@page "/fetchblocks/{blockindex:int}/{blockcount:int}"
 @inject HttpClient Http
 @inject IUriHelper UriHelper
 
@@ -15,17 +16,17 @@ else
     <table class="table _table-hover _table-sm">
         <thead>
             <tr>
-                <th>BlockHash</th>
-                <th>Block Height</th>
+                <th>Height</th>
                 <th>Time</th>
                 <th>Transactions</th>
+                <th>Difficulty</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var block in blocks.Blocks)
             {
                 <tr>
-                    <td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockHash</td>
+                    <td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockIndex</td>
                     <td>@block.BlockIndex</td>
                     <td>@block.BlockTime</td>
                     <td>@block.TransactionCount</td>
@@ -34,11 +35,24 @@ else
         </tbody>
     </table>
 
-    <button>Fetch more blocks</button>
+    <button type="button" @onclick="NavigateToMoreBlocks" class="btn btn-light text-center">Fetch more blocks</button>
 }
 
 @code {
-    QueryBlocks blocks;
+    [Parameter]
+    private int blockindex { get; set; } = -1;
+
+    [Parameter]
+    private int blockcount { get; set; } = 10;
+
+    DataTypes.QueryBlocks blocks;
+
+    private void NavigateToMoreBlocks()
+    {
+        var blk = blocks.Blocks.First();
+
+        UriHelper.NavigateTo($"fetchblocks/{blk.BlockIndex}/{ this.blockcount + 10}");
+    }
 
     private void NavigateToBlockIndex(long index)
     {
@@ -47,36 +61,6 @@ else
 
     protected override async Task OnInitAsync()
     {
-        blocks = await Http.GetJsonAsync<QueryBlocks>("http://localhost:9000/api/Query/block/Index/-1/Count/10?api-version=1.0");
-    }
-
-    public class QueryBlocks
-    {
-        public QueryBlock[] Blocks { get; set; }
-    }
-
-    public class QueryBlock
-    {
-        public string CoinTag { get; set; }
-        public string BlockHash { get; set; }
-        public long BlockIndex { get; set; }
-        public long BlockSize { get; set; }
-        public long BlockTime { get; set; }
-        public string NextBlockHash { get; set; }
-        public string PreviousBlockHash { get; set; }
-        public bool Synced { get; set; }
-        public int TransactionCount { get; set; }
-        public long Confirmations { get; set; }
-        public string Bits { get; set; }
-        public string Merkleroot { get; set; }
-        public long Nonce { get; set; }
-        public long Version { get; set; }
-        public string PosBlockSignature { get; set; }
-        public string PosModifierv2 { get; set; }
-        public string PosFlags { get; set; }
-        public string PosHashProof { get; set; }
-        public string PosBlockTrust { get; set; }
-        public string PosChainTrust { get; set; }
-        public IEnumerable<string> Transactions { get; set; }
+        blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://localhost:9000/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
     }
 }

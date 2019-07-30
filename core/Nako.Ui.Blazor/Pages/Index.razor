@@ -33,45 +33,16 @@ else
         </tbody>
     </table>
 
-    @*<SurveyPrompt Title="How is Blazor working for you?" />*@
+    <SearchBar/>
 
 }
 
 @code {
 
-    Statistics stats;
+    DataTypes.Statistics stats;
 
     protected override async Task OnInitAsync()
     {
-        stats = await Http.GetJsonAsync<Statistics>("http://localhost:9000/api/stats?api-version=1.0");
-    }
-
-    public class Statistics
-    {
-        public string CoinTag { get; set; }
-        public string Progress { get; set; }
-        public int TransactionsInPool { get; set; }
-        public long SyncBlockIndex { get; set; }
-        public ClientInfo ClientInfo { get; set; }
-        public string BlocksPerMinute { get; set; }
-    }
-
-    public class ClientInfo
-    {
-        public string Version { get; set; }
-        public string ProtocolVersion { get; set; }
-        public string WalletVersion { get; set; }
-        public decimal Balance { get; set; }
-        public long Blocks { get; set; }
-        public double TimeOffset { get; set; }
-        public long Connections { get; set; }
-        public string Proxy { get; set; }
-        //public double Difficulty { get; set; }
-        public bool Testnet { get; set; }
-        public long KeyPoolEldest { get; set; }
-        public long KeyPoolSize { get; set; }
-        public decimal PayTxFee { get; set; }
-        public decimal RelayTxFee { get; set; }
-        public string Errors { get; set; }
+        stats = await Http.GetJsonAsync<DataTypes.Statistics>("http://localhost:9000/api/stats?api-version=1.0");
     }
 }

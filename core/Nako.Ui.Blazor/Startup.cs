@@ -7,6 +7,7 @@ namespace Nako.Ui.Blazor
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<GlobalData>();
         }
 
         public void Configure(IComponentsApplicationBuilder app)
