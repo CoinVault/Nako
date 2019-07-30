@@ -2,9 +2,9 @@
 @inject HttpClient Http
 @inject IUriHelper UriHelper
 
-<h1>Block Info</h1>
+<h1>Recent Blocks</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
+<p>This component shows recent blocks.</p>
 
 @if (blocks == null)
 {
@@ -33,6 +33,8 @@ else
             }
         </tbody>
     </table>
+
+    <button>Fetch more blocks</button>
 }
 
 @code {
@@ -56,45 +58,25 @@ else
     public class QueryBlock
     {
         public string CoinTag { get; set; }
-
         public string BlockHash { get; set; }
-
         public long BlockIndex { get; set; }
-
         public long BlockSize { get; set; }
-
         public long BlockTime { get; set; }
-
         public string NextBlockHash { get; set; }
-
         public string PreviousBlockHash { get; set; }
-
         public bool Synced { get; set; }
-
         public int TransactionCount { get; set; }
-
         public long Confirmations { get; set; }
-
         public string Bits { get; set; }
-
         public string Merkleroot { get; set; }
-
         public long Nonce { get; set; }
-
         public long Version { get; set; }
-
         public string PosBlockSignature { get; set; }
-
         public string PosModifierv2 { get; set; }
-
         public string PosFlags { get; set; }
-
         public string PosHashProof { get; set; }
-
         public string PosBlockTrust { get; set; }
-
         public string PosChainTrust { get; set; }
-
         public IEnumerable<string> Transactions { get; set; }
     }
 }

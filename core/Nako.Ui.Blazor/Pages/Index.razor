@@ -1,7 +1,77 @@
 ﻿@page "/"
+@inject HttpClient Http
 
-<h1>Hello, world!</h1>
+@if (stats == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>@stats.CoinTag explorer</h1>
 
-Welcome to your new app.
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Progress</td><td>@stats.Progress</td></tr>
+            <tr><td>Blocks</td><td>@stats.ClientInfo.Blocks</td></tr>
+            <tr><td>Connections</td><td>@stats.ClientInfo.Connections</td></tr>
+            <tr><td>Version</td><td>@stats.ClientInfo.Version</td></tr>
+            <tr><td>Testnet</td><td>@stats.ClientInfo.Testnet</td></tr>
+            <tr><td>RelayTxFee</td><td>@stats.ClientInfo.RelayTxFee</td></tr>
+            <tr><td>ProtocolVersion</td><td>@stats.ClientInfo.ProtocolVersion</td></tr>
+            <tr><td>TransactionsInPool</td><td>@stats.TransactionsInPool</td></tr>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+            @if (@stats.ClientInfo.Errors != null)
+            {
+                <tr><td>Errors</td><td>@stats.ClientInfo.Errors</td></tr>
+            }
+        </tbody>
+    </table>
+
+    @*<SurveyPrompt Title="How is Blazor working for you?" />*@
+
+}
+
+@code {
+
+    Statistics stats;
+
+    protected override async Task OnInitAsync()
+    {
+        stats = await Http.GetJsonAsync<Statistics>("http://localhost:9000/api/stats?api-version=1.0");
+    }
+
+    public class Statistics
+    {
+        public string CoinTag { get; set; }
+        public string Progress { get; set; }
+        public int TransactionsInPool { get; set; }
+        public long SyncBlockIndex { get; set; }
+        public ClientInfo ClientInfo { get; set; }
+        public string BlocksPerMinute { get; set; }
+    }
+
+    public class ClientInfo
+    {
+        public string Version { get; set; }
+        public string ProtocolVersion { get; set; }
+        public string WalletVersion { get; set; }
+        public decimal Balance { get; set; }
+        public long Blocks { get; set; }
+        public double TimeOffset { get; set; }
+        public long Connections { get; set; }
+        public string Proxy { get; set; }
+        //public double Difficulty { get; set; }
+        public bool Testnet { get; set; }
+        public long KeyPoolEldest { get; set; }
+        public long KeyPoolSize { get; set; }
+        public decimal PayTxFee { get; set; }
+        public decimal RelayTxFee { get; set; }
+        public string Errors { get; set; }
+    }
+}
