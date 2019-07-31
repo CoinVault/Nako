@@ -4,13 +4,13 @@
 
     <div class="input-group">
         <div class="input-group-prepend">
-            <span @onclick="Navigate" class="input-group-text">Search</span>
+            <span style="cursor: pointer;" @onclick="Navigate" class="input-group-text">Search</span>
         </div>
 
         <input type="search" style="max-width:60%" class="form-control"  placeholder="Blocks, transactions and addresses" @bind="Search"  @onkeyup="KeyUp" />
 
         <div class="input-group-prepend">
-            <span @onclick="Navigate" class="input-group-text">Find</span>
+            <span style="cursor: pointer;" @onclick="Navigate" class="input-group-text">Find</span>
         </div>
     </div>
 
@@ -39,11 +39,26 @@
         if (block != null)
         {
             this.globalData.BlocksCache.Add(block.BlockIndex, block);
-                
+
             UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
+            return;
         }
 
-        // search trx
+        var transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://localhost:9000/api/Query/transaction/{this.Search}?api-version=1.0");
+
+        if(transaction != null)
+        {
+            UriHelper.NavigateTo($"FetchTransaction/{transaction.TransactionId}");
+            return;
+        }
+
+        var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://localhost:9000/api/Query/address/{this.Search}/confirmations/0?api-version=1.0");
+
+        if(address != null)
+        {
+            UriHelper.NavigateTo($"FetchAddress/{address.Address}");
+            return;
+        }
 
         // not found
     }

@@ -1,5 +1,4 @@
-﻿@page "/FetchTransaction"
-@page "/FetchTransaction/{transactionhash}"
+﻿@page "/FetchTransaction/{transactionhash}"
 @inject HttpClient Http
 @inject IUriHelper UriHelper
 @inject GlobalData globalData
@@ -42,12 +41,15 @@ else
                     <div class="list-group">
                         @foreach (var input in transaction.Inputs)
                         {
-                        <a style="cursor: pointer;" class="list-group-item list-group-item-action" @onclick="@(() => NavigateToTransactionkIndex(input.InputTransactionId))">
-                            <p class="mb-1">Input index - @input.InputIndex</p>
-                            <p class="mb-1">@input.InputTransactionId</p>
-                            <p class="mb-1">[script]</p>
-
-                        </a>
+                            <div class="list-group-item list-group-item-action">
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr><td>Input index:</td><td># @input.InputIndex</td></tr>
+                                        <tr><td>Input Hash:</td><td @onclick="@(() => NavigateToTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link">@input.InputTransactionId</td></tr>
+                                        <tr><td>ScriptSig</td><td></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         }
                     </div>
                 </td>
@@ -55,13 +57,17 @@ else
                     <div class="list-group">
                         @foreach (var output in transaction.Outputs)
                         {
-                        <a style="cursor: pointer;" class="list-group-item list-group-item-action" @onclick="@(() => NavigateToTransactionkIndex(output.Address))">
-                            <p class="mb-1">Output index - @output.Index</p>
-                            <p class="mb-1">@output.Address</p>
-                            <p class="mb-1">@output.OutputType</p>
-                            <p class="mb-1">[script]</p>
-
-                        </a>
+                            <div class="list-group-item list-group-item-action">
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr><td>Output index:</td><td># @output.Index</td></tr>
+                                        <tr><td>output.Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))" style="cursor: pointer;" class=" btn btn-link">@output.Address</td></tr>
+                                        <tr><td>OutputType</td><td>@output.OutputType</td></tr>
+                                        <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
+                                        <tr><td>ScriptPubKey</td><td></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         }
                     </div>
                 </td>
@@ -75,7 +81,7 @@ else
     [Parameter]
     private string transactionhash { get; set; }
 
-    private void NavigateToTransactionkIndex(string trxHash)
+    private void NavigateToTransactionHash(string trxHash)
     {
         UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
     }
@@ -83,6 +89,11 @@ else
     private void NavigateToBlockIndex(long index)
     {
         UriHelper.NavigateTo($"fetchblock/{index}");
+    }
+
+        private void NavigateToAddress(string address)
+    {
+        UriHelper.NavigateTo($"FetchAddress/{address}");
     }
 
     DataTypes.QueryTransaction transaction;

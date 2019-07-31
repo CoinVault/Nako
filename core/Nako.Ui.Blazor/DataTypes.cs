@@ -128,5 +128,48 @@ namespace Nako.Ui.Blazor
             public string OutputType { get; set; }
         }
 
+        public class QueryAddress
+        {
+            public string CoinTag { get; set; }
+
+            public string Address { get; set; }
+
+            public long Balance { get; set; }
+
+            public long? TotalReceived { get; set; }
+
+            public long? TotalSent { get; set; }
+
+            public long UnconfirmedBalance { get; set; }
+
+            public IEnumerable<QueryAddressItem> Transactions { get; set; }
+
+            public IEnumerable<QueryAddressItem> UnconfirmedTransactions { get; set; }
+        }
+
+        public class QueryAddressItem
+        {
+            public int Index { get; set; }
+
+            public string Type { get; set; }
+
+            public string TransactionHash { get; set; }
+
+            public string SpendingTransactionHash { get; set; }
+
+            public string PubScriptHex { get; set; }
+
+            public bool CoinBase { get; set; }
+
+            public bool CoinStake { get; set; }
+
+            public long Value { get; set; }
+
+            public long? BlockIndex { get; set; }
+
+            public long? Confirmations { get; set; }
+
+            public long Time { get; set; }
+        }
     }
 }
