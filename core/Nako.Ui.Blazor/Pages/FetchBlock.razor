@@ -28,8 +28,8 @@ else
             <tr><td>BlockTime</td><td>@block.BlockTime</td></tr>
             <tr><td>TransactionCount</td><td>@block.TransactionCount</td></tr>
             <tr><td>Version</td><td>@block.Version</td></tr>
-            <tr><td>PreviousBlockHash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockHash(block.PreviousBlockHash))" >@block.PreviousBlockHash</td></tr>
-            <tr><td>NextBlockHash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
+            <tr><td>PreviousBlockHash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => UpdateBlockHash(block.PreviousBlockHash))" >@block.PreviousBlockHash</td></tr>
+            <tr><td>NextBlockHash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => UpdateBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
             <tr><td>Merkleroot</td><td>@block.Merkleroot</td></tr>
             <tr><td>Nonce</td><td>@block.Nonce</td></tr>
             <tr><td>BlockSize</td><td>@block.BlockSize</td></tr>
@@ -75,9 +75,9 @@ else
         UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
     }
 
-    private void NavigateToBlockHash(string hash)
+    private async Task UpdateBlockHash(string hash)
     {
-        UriHelper.NavigateTo($"fetchblock/{hash}");
+        block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/{hash}/1?api-version=1.0");
     }
 
     protected override async Task OnInitAsync()

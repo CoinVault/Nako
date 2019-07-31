@@ -45,7 +45,7 @@ else
                                 <table class="table table-sm table-borderless">
                                     <tbody>
                                         <tr><td>Input index:</td><td># @input.InputIndex</td></tr>
-                                        <tr><td>Input Hash:</td><td @onclick="@(() => NavigateToTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link">@input.InputTransactionId</td></tr>
+                                        <tr><td>Input Hash:</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link">@input.InputTransactionId</td></tr>
                                         <tr><td>ScriptSig</td><td></td></tr>
                                     </tbody>
                                 </table>
@@ -81,9 +81,9 @@ else
     [Parameter]
     private string transactionhash { get; set; }
 
-    private void NavigateToTransactionHash(string trxHash)
+    private async Task UpdateTransactionHash(string trxHash)
     {
-        UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
+        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://localhost:9000/api/Query/transaction/{trxHash}?api-version=1.0");
     }
 
     private void NavigateToBlockIndex(long index)
@@ -91,7 +91,7 @@ else
         UriHelper.NavigateTo($"fetchblock/{index}");
     }
 
-        private void NavigateToAddress(string address)
+    private void NavigateToAddress(string address)
     {
         UriHelper.NavigateTo($"FetchAddress/{address}");
     }

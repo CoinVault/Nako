@@ -1,32 +1,32 @@
 ﻿{
-	"CoinTag": "ODX",
+  "CoinTag": "",
 
-	"ConnectionString": "mongodb://localhost",
-	"DatabaseNameSubfix": false,
+  "ConnectionString": "mongodb://{CoinTag}-mongo",
+  "DatabaseNameSubfix": false,
 
-	"RpcAccessPort": 46661,
-	"RpcSecure": false,
-	"RpcDomain": "127.0.0.1",
-	"RpcUser": "rpcuser",
-	"RpcPassword": "rpcpassword",
+  "RpcAccessPort": 46661,
+  "RpcSecure": false,
+  "RpcDomain": "{CoinTag}-client",
+  "RpcUser": "rpcuser",
+  "RpcPassword": "rpcpassword",
 
-	"SyncApiPort": 9000,
-	"SyncBlockchain": true,
-	"SyncMemoryPool": true,
-	"StartBlockIndex": 1,
+  "SyncApiPort": 9000,
+  "SyncBlockchain": true,
+  "SyncMemoryPool": true,
+  "StartBlockIndex": 1,
 
-	"NotifyUrl": "https://apiurl",
-	"NotifyBatchCount": 0,
+  "NotifyUrl": "https://apiurl",
+  "NotifyBatchCount": 0,
 
-	"MongoBatchSize": 500,
-	"ParallelRequestsToTransactionRpc": 50,
-	"DetailedTrace": 0,
-	"MaxItemsInQueue": 2000,
-	"SyncInterval": 5,
-	"AverageInterval": 10,
+  "MongoBatchSize": 500,
+  "ParallelRequestsToTransactionRpc": 50,
+  "DetailedTrace": 0,
+  "MaxItemsInQueue": 200,
+  "SyncInterval": 5,
+  "AverageInterval": 10,
 
-	"NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
-	"NetworkPubkeyAddressPrefix": 75,
-	"NetworkScriptAddressPrefix": 125,
-	"NetworkWitnessPrefix": "odx"
+  "NetworkConsensusFactoryType": "NBitcoin.ConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
+  "NetworkPubkeyAddressPrefix": 0,
+  "NetworkScriptAddressPrefix": 5,
+  "NetworkWitnessPrefix": "bc"
 }

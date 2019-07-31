@@ -36,6 +36,7 @@ else
     </table>
 
     <button type="button" @onclick="NavigateToMoreBlocks" class="btn btn-light text-center">Fetch more blocks</button>
+    <br />
 }
 
 @code {
@@ -47,11 +48,14 @@ else
 
     DataTypes.QueryBlocks blocks;
 
-    private void NavigateToMoreBlocks()
+    private async Task NavigateToMoreBlocks()
     {
-        var blk = blocks.Blocks.First();
+        var blk = blocks.Blocks.Last();
+        var moreblocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://localhost:9000/api/Query/block/Index/{blk.BlockIndex - 1}/Count/{this.blockcount}?api-version=1.0");
 
-        UriHelper.NavigateTo($"fetchblocks/{blk.BlockIndex}/{ this.blockcount + 10}");
+        moreblocks.Blocks = this.blocks.Blocks.Concat(moreblocks.Blocks).ToArray();
+
+        this.blocks = moreblocks;
     }
 
     private void NavigateToBlockIndex(long index)

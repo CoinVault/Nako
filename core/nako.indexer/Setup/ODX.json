@@ -1,0 +1,7 @@
+{
+  "CoinTag": "ODX",
+  "NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
+  "NetworkPubkeyAddressPrefix": 75,
+  "NetworkScriptAddressPrefix": 125,
+  "NetworkWitnessPrefix": "odx"
+}
