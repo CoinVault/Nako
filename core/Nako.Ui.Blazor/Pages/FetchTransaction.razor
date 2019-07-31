@@ -24,46 +24,50 @@ else
         <tbody>
             <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
             <tr><td>BlockHash</td><td>@transaction.BlockHash</td></tr>
-            <tr><td>BlockIndex</td><td>@transaction.BlockIndex</td></tr>
+            <tr><td>BlockIndex</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
             <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
         </tbody>
     </table>
 
     <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Inputs</th>
+                <th>Outputs</th>
+            </tr>
+        </thead>
         <tbody>
             <tr>
                 <td>
-                    @foreach (var input in transaction.Inputs)
-                    {
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr><td>Hash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToTransactionkIndex(input.InputTransactionId))">@input.InputTransactionId</td></tr>
-                                <tr><td>InputIndex</td><td>@input.InputIndex</td></tr>
-                                <tr><td>InputAddress</td><td>@input.InputAddress</td></tr>
-                            </tbody>
-                        </table>
-                    }
+                    <div class="list-group">
+                        @foreach (var input in transaction.Inputs)
+                        {
+                        <a style="cursor: pointer;" class="list-group-item list-group-item-action" @onclick="@(() => NavigateToTransactionkIndex(input.InputTransactionId))">
+                            <p class="mb-1">Input index - @input.InputIndex</p>
+                            <p class="mb-1">@input.InputTransactionId</p>
+                            <p class="mb-1">[script]</p>
+
+                        </a>
+                        }
+                    </div>
                 </td>
-            </tr>
-            <tr>
                 <td>
-                    @foreach (var output in transaction.Outputs)
-                    {
-                        <table class="table table-sm">
-                            <tbody>
-                                <tr><td>Hash</td><td>@output.Address</td></tr>
-                                <tr><td>Index</td><td>@output.Index</td></tr>
-                                <tr><td>Balance</td><td>@output.Balance</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="list-group">
+                        @foreach (var output in transaction.Outputs)
+                        {
+                        <a style="cursor: pointer;" class="list-group-item list-group-item-action" @onclick="@(() => NavigateToTransactionkIndex(output.Address))">
+                            <p class="mb-1">Output index - @output.Index</p>
+                            <p class="mb-1">@output.Address</p>
+                            <p class="mb-1">@output.OutputType</p>
+                            <p class="mb-1">[script]</p>
 
-                    }
+                        </a>
+                        }
+                    </div>
                 </td>
             </tr>
-
         </tbody>
     </table>
-
 }
 
 @code {
@@ -74,6 +78,11 @@ else
     private void NavigateToTransactionkIndex(string trxHash)
     {
         UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
+    }
+
+    private void NavigateToBlockIndex(long index)
+    {
+        UriHelper.NavigateTo($"fetchblock/{index}");
     }
 
     DataTypes.QueryTransaction transaction;

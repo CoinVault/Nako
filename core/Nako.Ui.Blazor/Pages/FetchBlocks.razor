@@ -56,7 +56,7 @@ else
 
     private void NavigateToBlockIndex(long index)
     {
-        UriHelper.NavigateTo("fetchblock/" + index);
+        UriHelper.NavigateTo($"fetchblock/{index}");
     }
 
     protected override async Task OnInitAsync()

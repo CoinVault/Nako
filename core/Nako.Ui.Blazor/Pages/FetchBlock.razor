@@ -1,5 +1,6 @@
 ﻿@page "/fetchblock"
-@page "/fetchblock/{blockindex:int}"
+@page "/fetchblock/{blockindex:long}"
+@page "/fetchblock/{blockhash}"
 @inject HttpClient Http
 @inject IUriHelper UriHelper
 @inject GlobalData globalData
@@ -27,8 +28,8 @@ else
             <tr><td>BlockTime</td><td>@block.BlockTime</td></tr>
             <tr><td>TransactionCount</td><td>@block.TransactionCount</td></tr>
             <tr><td>Version</td><td>@block.Version</td></tr>
-            <tr><td>PreviousBlockHash</td><td>@block.PreviousBlockHash</td></tr>
-            <tr><td>NextBlockHash</td><td>@block.NextBlockHash</td></tr>
+            <tr><td>PreviousBlockHash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockHash(block.PreviousBlockHash))" >@block.PreviousBlockHash</td></tr>
+            <tr><td>NextBlockHash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
             <tr><td>Merkleroot</td><td>@block.Merkleroot</td></tr>
             <tr><td>Nonce</td><td>@block.Nonce</td></tr>
             <tr><td>BlockSize</td><td>@block.BlockSize</td></tr>
@@ -62,20 +63,34 @@ else
 @code {
 
     [Parameter]
-    private int blockindex { get; set; } = -1;
+    private long blockindex { get; set; } = -1;
+
+    [Parameter]
+    private string blockhash { get; set; }
+
+    DataTypes.QueryBlock block;
 
     private void NavigateToTransactionkIndex(string trxHash)
     {
         UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
     }
 
-    DataTypes.QueryBlock block;
+    private void NavigateToBlockHash(string hash)
+    {
+        UriHelper.NavigateTo($"fetchblock/{hash}");
+    }
 
     protected override async Task OnInitAsync()
     {
         if (this.blockindex == -1)
         {
             block = await Http.GetJsonAsync<DataTypes.QueryBlock>("http://localhost:9000/api/Query/block/Latest/1?api-version=1.0");
+            return;
+        }
+
+        if(!string.IsNullOrEmpty(this.blockhash))
+        {
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/{this.blockhash}/1?api-version=1.0");
             return;
         }
 

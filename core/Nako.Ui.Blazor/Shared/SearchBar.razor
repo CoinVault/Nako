@@ -38,7 +38,7 @@
 
         if (block != null)
         {
-            this.globalData.BlocksCache[block.BlockIndex] = block;
+            this.globalData.BlocksCache.Add(block.BlockIndex, block);
                 
             UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
         }
