@@ -4,7 +4,7 @@
   "ConnectionString": "mongodb://{CoinTag}-mongo",
   "DatabaseNameSubfix": false,
 
-  "RpcAccessPort": 46661,
+  "RpcAccessPort": 5000,
   "RpcSecure": false,
   "RpcDomain": "{CoinTag}-client",
   "RpcUser": "rpcuser",
