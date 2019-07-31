@@ -8,6 +8,13 @@
 else
 {
     <h1>@stats.CoinTag explorer</h1>
+    
+    <br />
+    <SearchBar />
+    <br />
+    <br />
+
+    <p>Network information.</p>
 
     <table class="table table-sm">
         <thead>
@@ -17,23 +24,21 @@ else
             </tr>
         </thead>
         <tbody>
-            <tr><td>Progress</td><td>@stats.Progress</td></tr>
-            <tr><td>Blocks</td><td>@stats.ClientInfo.Blocks</td></tr>
+            <tr><td>Last block</td><td>@stats.ClientInfo.Blocks</td></tr>
             <tr><td>Connections</td><td>@stats.ClientInfo.Connections</td></tr>
-            <tr><td>Version</td><td>@stats.ClientInfo.Version</td></tr>
-            <tr><td>Testnet</td><td>@stats.ClientInfo.Testnet</td></tr>
+            <tr><td>Is Testnet</td><td>@stats.ClientInfo.Testnet</td></tr>
             <tr><td>RelayTxFee</td><td>@stats.ClientInfo.RelayTxFee</td></tr>
             <tr><td>ProtocolVersion</td><td>@stats.ClientInfo.ProtocolVersion</td></tr>
-            <tr><td>TransactionsInPool</td><td>@stats.TransactionsInPool</td></tr>
-
+            <tr><td>Version</td><td>@stats.ClientInfo.Version</td></tr>
+            <tr><td>Sync Progress</td><td>@stats.Progress</td></tr>
+            <tr><td>Transactions In Pool</td><td>@stats.TransactionsInPool</td></tr>
+            
             @if (@stats.ClientInfo.Errors != null)
             {
                 <tr><td>Errors</td><td>@stats.ClientInfo.Errors</td></tr>
             }
         </tbody>
     </table>
-
-    <SearchBar/>
 
 }
 

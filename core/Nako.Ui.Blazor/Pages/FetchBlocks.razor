@@ -27,9 +27,9 @@ else
             {
                 <tr>
                     <td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockIndex</td>
-                    <td>@block.BlockIndex</td>
-                    <td>@block.BlockTime</td>
+                    <td>@UnixTimeToDateTime((ulong)@block.BlockTime)</td>
                     <td>@block.TransactionCount</td>
+                    <td>@block.Bits</td>
                 </tr>
             }
         </tbody>
@@ -63,4 +63,20 @@ else
     {
         blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://localhost:9000/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
     }
+
+    private static DateTimeOffset unixRef = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+    public static string UnixTimeToDateTime(ulong timestamp)
+    {
+        TimeSpan span = TimeSpan.FromSeconds(timestamp);
+        var blocktime = (unixRef + span);
+
+        var ret = (DateTime.UtcNow - blocktime).ToString();
+
+        ret = ret.Substring(0, ret.IndexOf("."));
+
+        return ret;
+
+    }
+
 }
