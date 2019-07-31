@@ -89,5 +89,44 @@ namespace Nako.Ui.Blazor
             public string Errors { get; set; }
         }
 
+        public class QueryTransaction
+        {
+            public string CoinTag { get; set; }
+
+            public string BlockHash { get; set; }
+
+            public long BlockIndex { get; set; }
+
+            public DateTime Timestamp { get; set; }
+
+            public string TransactionId { get; set; }
+
+            public long Confirmations { get; set; }
+
+            public IEnumerable<QueryTransactionInput> Inputs { get; set; }
+
+            public IEnumerable<QueryTransactionOutput> Outputs { get; set; }
+        }
+        public class QueryTransactionInput
+        {
+            public int InputIndex { get; set; }
+
+            public string InputAddress { get; set; }
+
+            public string CoinBase { get; set; }
+
+            public string InputTransactionId { get; set; }
+        }
+        public class QueryTransactionOutput
+        {
+            public string Address { get; set; }
+
+            public long Balance { get; set; }
+
+            public int Index { get; set; }
+
+            public string OutputType { get; set; }
+        }
+
     }
 }

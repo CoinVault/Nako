@@ -1,0 +1,86 @@
+﻿@page "/FetchTransaction"
+@page "/FetchTransaction/{transactionhash}"
+@inject HttpClient Http
+@inject IUriHelper UriHelper
+@inject GlobalData globalData
+
+<h1>Transaction Info</h1>
+
+<p>This component shows information about a block.</p>
+
+@if (transaction == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
+            <tr><td>BlockHash</td><td>@transaction.BlockHash</td></tr>
+            <tr><td>BlockIndex</td><td>@transaction.BlockIndex</td></tr>
+            <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
+        </tbody>
+    </table>
+
+    <table class="table table-sm">
+        <tbody>
+            <tr>
+                <td>
+                    @foreach (var input in transaction.Inputs)
+                    {
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr><td>Hash</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToTransactionkIndex(input.InputTransactionId))">@input.InputTransactionId</td></tr>
+                                <tr><td>InputIndex</td><td>@input.InputIndex</td></tr>
+                                <tr><td>InputAddress</td><td>@input.InputAddress</td></tr>
+                            </tbody>
+                        </table>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @foreach (var output in transaction.Outputs)
+                    {
+                        <table class="table table-sm">
+                            <tbody>
+                                <tr><td>Hash</td><td>@output.Address</td></tr>
+                                <tr><td>Index</td><td>@output.Index</td></tr>
+                                <tr><td>Balance</td><td>@output.Balance</td></tr>
+                            </tbody>
+                        </table>
+
+                    }
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+}
+
+@code {
+
+    [Parameter]
+    private string transactionhash { get; set; }
+
+    private void NavigateToTransactionkIndex(string trxHash)
+    {
+        UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
+    }
+
+    DataTypes.QueryTransaction transaction;
+
+    protected override async Task OnInitAsync()
+    {
+        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://localhost:9000/api/Query/transaction/{this.transactionhash}?api-version=1.0");
+
+    }
+}
