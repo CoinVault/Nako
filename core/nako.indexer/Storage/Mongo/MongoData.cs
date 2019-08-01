@@ -66,6 +66,14 @@ namespace Nako.Storage.Mongo
             }
         }
 
+        public IMongoCollection<MapTransaction> MapTransaction
+        {
+            get
+            {
+                return this.mongoDatabase.GetCollection<MapTransaction>("MapTransaction");
+            }
+        }
+
         public IMongoCollection<MapBlock> MapBlock
         {
             get
@@ -115,6 +123,18 @@ namespace Nako.Storage.Mongo
         public void InsertBlock(MapBlock info)
         {
             this.MapBlock.InsertOne(info);
+        }
+
+        public SyncRawTransaction TransactionGetByHash(string trxHash)
+        {
+            var filter = Builders<MapTransaction>.Filter.Eq(info => info.TransactionId, trxHash);
+
+            return this.MapTransaction.Find(filter).ToList().Select(t => new SyncRawTransaction { TransactionHash = trxHash, RawTransaction = t.RawTransaction }).FirstOrDefault();
+        }
+
+        public void InsertTransaction(MapTransaction info)
+        {
+            this.MapTransaction.InsertOne(info);
         }
 
         public void CompleteBlock(string blockHash)
@@ -198,14 +218,41 @@ namespace Nako.Storage.Mongo
 
         public SyncTransactionItems TransactionItemsGet(string transactionId)
         {
-            var client = CryptoClientFactory.Create(this.syncConnection.ServerDomain, this.syncConnection.RpcAccessPort, this.syncConnection.User, this.syncConnection.Password, this.syncConnection.Secure);
+            NBitcoin.Transaction transaction;
 
-            var res = client.GetRawTransactionAsync(transactionId, 1).Result;
+            // Try to find the trx in disk
+            var rawtrx = this.TransactionGetByHash(transactionId);
+            if(rawtrx == null)
+            {
+                var client = CryptoClientFactory.Create(this.syncConnection.ServerDomain, this.syncConnection.RpcAccessPort, this.syncConnection.User, this.syncConnection.Password, this.syncConnection.Secure);
+
+                var res = client.GetRawTransactionAsync(transactionId, 0).Result;
+
+                transaction = this.syncConnection.Network.Consensus.ConsensusFactory.CreateTransaction(res.Hex);
+                transaction.PrecomputeHash(false, true);
+            }
+            else
+            {
+                transaction = this.syncConnection.Network.Consensus.ConsensusFactory.CreateTransaction(rawtrx.RawTransaction);
+                transaction.PrecomputeHash(false, true);
+            }
 
             return new SyncTransactionItems
                        {
-                           Inputs = res.VIn.Select(v => new SyncTransactionItemInput{ PreviousTransactionHash = v.TxId, PreviousIndex = v.VOut, InputCoinBase = v.CoinBase}).ToList(), 
-                           Outputs = res.VOut.Where(v => v.ScriptPubKey != null && v.ScriptPubKey.Addresses != null).Select(v=> new SyncTransactionItemOutput { Address = v.ScriptPubKey.Addresses.FirstOrDefault(), Index = v.N, Value = (long)v.Value, OutputType = v.ScriptPubKey.Type }).ToList()
+                           Inputs = transaction.Inputs.Select(v => new SyncTransactionItemInput
+                           {
+                               PreviousTransactionHash = v.PrevOut.Hash.ToString(),
+                               PreviousIndex = (int)v.PrevOut.N,
+                           })
+                           .ToList(),
+                           Outputs = transaction.Outputs.Select((output, index) => new SyncTransactionItemOutput
+                           {
+                               Address = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey),
+                               Index = index,
+                               Value = (long)output.Value,
+                               OutputType = StandardScripts.GetTemplateFromScriptPubKey(output.ScriptPubKey)?.Type.ToString()
+                           })
+                           .ToList()
                        };
         }
 

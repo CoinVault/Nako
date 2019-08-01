@@ -1,23 +1,33 @@
 ﻿{
+  // Coin information
   "CoinTag": "",
 
   "ConnectionString": "mongodb://{CoinTag}-mongo",
   "DatabaseNameSubfix": false,
 
+  // Communication with RPC endpoints
   "RpcAccessPort": 5000,
   "RpcSecure": false,
   "RpcDomain": "{CoinTag}-client",
   "RpcUser": "rpcuser",
   "RpcPassword": "rpcpassword",
 
+  // Api parameters
   "SyncApiPort": 9000,
-  "SyncBlockchain": true,
-  "SyncMemoryPool": true,
-  "StartBlockIndex": 1,
 
+  // Information about the coin that will be available from the Api
+  "LogoUrl": "",
+  "CoinName": "",
+  "CoinInformation": "",
+
+  // Notification parameters
   "NotifyUrl": "https://apiurl",
   "NotifyBatchCount": 0,
 
+  // Syncing parameters
+  "SyncBlockchain": true,
+  "SyncMemoryPool": true,
+  "StartBlockIndex": 1,
   "MongoBatchSize": 500,
   "ParallelRequestsToTransactionRpc": 50,
   "DetailedTrace": 0,
@@ -25,6 +35,10 @@
   "SyncInterval": 5,
   "AverageInterval": 10,
 
+  // Store the trx hex in mongo storage or read it from RPC
+  "StoreRawTransactions": false,
+
+  // Parameters that define the network
   "NetworkConsensusFactoryType": "NBitcoin.ConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
   "NetworkPubkeyAddressPrefix": 0,
   "NetworkScriptAddressPrefix": 5,

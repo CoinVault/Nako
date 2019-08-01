@@ -79,6 +79,15 @@ namespace Nako.Storage.Mongo
                     });
             }
 
+            if (!MongoDB.Bson.Serialization.BsonClassMap.IsClassMapRegistered(typeof(MapTransaction)))
+            {
+                MongoDB.Bson.Serialization.BsonClassMap.RegisterClassMap<MapTransaction>(cm =>
+                {
+                    cm.AutoMap();
+                    cm.MapIdMember(c => c.TransactionId);
+                });
+            }
+
             // indexes
             this.log.LogTrace("MongoBuilder: Creating indexes");
 
@@ -92,6 +101,9 @@ namespace Nako.Storage.Mongo
 
             var trxBlkIndex = Builders<MapTransactionBlock>.IndexKeys.Ascending(trxBlk => trxBlk.BlockIndex);
             this.mongoData.MapTransactionBlock.Indexes.CreateOne(trxBlkIndex);
+
+            var trxIndex = Builders<MapTransaction>.IndexKeys.Ascending(trxBlk => trxBlk.TransactionId);
+            this.mongoData.MapTransaction.Indexes.CreateOne(trxIndex);
 
             return Task.FromResult(1);
         }

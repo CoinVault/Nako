@@ -1,7 +1,16 @@
 {
   "CoinTag": "ODX",
+  "RpcAccessPort": 46661,
+
   "NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
   "NetworkPubkeyAddressPrefix": 75,
   "NetworkScriptAddressPrefix": 125,
-  "NetworkWitnessPrefix": "odx"
+  "NetworkWitnessPrefix": "odx",
+
+  "StoreRawTransactions": true,
+
+
+  "ConnectionString": "mongodb://localhost", // temporary
+  "RpcDomain": "127.0.0.1" // temporary
+
 }

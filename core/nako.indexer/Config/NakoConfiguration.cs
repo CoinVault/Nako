@@ -57,6 +57,8 @@ namespace Nako.Config
 
         public string NetworkWitnessPrefix { get; set; }
 
+        public bool StoreRawTransactions { get; set; }
+
         [JsonIgnore]
         public string ConnectionStringActual
         {
