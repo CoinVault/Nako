@@ -34,7 +34,7 @@
             return;
         }
 
-        var block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/{this.Search}/1?api-version=1.0");
+        var block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{this.Search}/1?api-version=1.0");
 
         if (block.BlockHash != null)
         {
@@ -45,7 +45,7 @@
         }
 
         Console.WriteLine("before trx");
-        var transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://localhost:9000/api/Query/transaction/{this.Search}?api-version=1.0");
+        var transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.Search}?api-version=1.0");
 
         if(transaction.TransactionId != null)
         {
@@ -55,7 +55,7 @@
         }
 
         Console.WriteLine("before address");
-        var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://localhost:9000/api/Query/address/{this.Search}/confirmations/0?api-version=1.0");
+        var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.Search}/confirmations/0?api-version=1.0");
 
         if(address.Address != null)
         {

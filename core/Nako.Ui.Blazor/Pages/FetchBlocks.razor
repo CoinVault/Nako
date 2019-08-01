@@ -2,6 +2,7 @@
 @page "/fetchblocks/{blockindex:int}/{blockcount:int}"
 @inject HttpClient Http
 @inject IUriHelper UriHelper
+@inject GlobalData globalData
 
 <h1>Recent Blocks</h1>
 
@@ -51,7 +52,7 @@ else
     private async Task NavigateToMoreBlocks()
     {
         var blk = blocks.Blocks.Last();
-        var moreblocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://localhost:9000/api/Query/block/Index/{blk.BlockIndex - 1}/Count/{this.blockcount}?api-version=1.0");
+        var moreblocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{blk.BlockIndex - 1}/Count/{this.blockcount}?api-version=1.0");
 
         moreblocks.Blocks = this.blocks.Blocks.Concat(moreblocks.Blocks).ToArray();
 
@@ -65,7 +66,7 @@ else
 
     protected override async Task OnInitAsync()
     {
-        blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://localhost:9000/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
+        blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
     }
 
     private static DateTimeOffset unixRef = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);

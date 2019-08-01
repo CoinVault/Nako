@@ -9,10 +9,11 @@ namespace Nako.Ui.Blazor
     {
         public GlobalData()
         {
+            this.ApiUrl = "209.97.177.144:9040";
             this.BlocksCache = new LimitedDictionary<long, DataTypes.QueryBlock>();
         }
 
-        public string Search { get; set; }
+        public string ApiUrl { get; }
 
         /// <summary>
         /// TODO: fix this to have a max count in memory

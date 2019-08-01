@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject HttpClient Http
+@inject GlobalData globalData
 
 @if (stats == null)
 {
@@ -8,7 +9,7 @@
 else
 {
     <h1>@stats.CoinTag explorer</h1>
-    
+
     <br />
     <SearchBar />
     <br />
@@ -32,7 +33,7 @@ else
             <tr><td>Version</td><td>@stats.ClientInfo.Version</td></tr>
             <tr><td>Sync Progress</td><td>@stats.Progress</td></tr>
             <tr><td>Transactions In Pool</td><td>@stats.TransactionsInPool</td></tr>
-            
+
             @if (@stats.ClientInfo.Errors != null)
             {
                 <tr><td>Errors</td><td>@stats.ClientInfo.Errors</td></tr>
@@ -48,6 +49,6 @@ else
 
     protected override async Task OnInitAsync()
     {
-        stats = await Http.GetJsonAsync<DataTypes.Statistics>("http://localhost:9000/api/stats?api-version=1.0");
+        stats = await Http.GetJsonAsync<DataTypes.Statistics>($"http://{this.globalData.ApiUrl}/api/stats?api-version=1.0");
     }
 }

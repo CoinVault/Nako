@@ -77,26 +77,26 @@ else
 
     private async Task UpdateBlockHash(string hash)
     {
-        block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/{hash}/1?api-version=1.0");
+        block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{hash}/1?api-version=1.0");
     }
 
     protected override async Task OnInitAsync()
     {
         if (this.blockindex == -1)
         {
-            block = await Http.GetJsonAsync<DataTypes.QueryBlock>("http://localhost:9000/api/Query/block/Latest/1?api-version=1.0");
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/Latest/1?api-version=1.0");
             return;
         }
 
         if(!string.IsNullOrEmpty(this.blockhash))
         {
-            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/{this.blockhash}/1?api-version=1.0");
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{this.blockhash}/1?api-version=1.0");
             return;
         }
 
         if (!this.globalData.BlocksCache.TryGetValue(this.blockindex, out block))
         {
-            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://localhost:9000/api/Query/block/Index/{this.blockindex}/1?api-version=1.0");
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/1?api-version=1.0");
         }
     }
 }

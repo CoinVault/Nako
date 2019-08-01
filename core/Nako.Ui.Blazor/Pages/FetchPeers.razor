@@ -1,6 +1,8 @@
 ﻿@page "/fetchpeers"
 @inject HttpClient Http
 @inject IUriHelper UriHelper
+@inject GlobalData globalData
+
 
 <h1>Conneced peers</h1>
 
@@ -26,21 +28,21 @@ else
         <tbody>
             @foreach (var peer in this.peers)
             {
-            <tr>
-                <td>@peer.Addr</td>
-                <td>@peer.Services</td>
-                <td>@peer.ConnTime</td>
-                <td>@peer.Version</td>
-                <td>@peer.Inbound</td>
-                <td>@peer.StartingHeight</td>
-            </tr>
+                <tr>
+                    <td>@peer.Addr</td>
+                    <td>@peer.Services</td>
+                    <td>@peer.ConnTime</td>
+                    <td>@peer.Version</td>
+                    <td>@peer.Inbound</td>
+                    <td>@peer.StartingHeight</td>
+                </tr>
             }
         </tbody>
     </table>
 }
 
 @code {
-   
+
     DataTypes.PeerInfo[] peers;
 
     private void NavigateToBlockIndex(long index)
@@ -50,7 +52,7 @@ else
 
     protected override async Task OnInitAsync()
     {
-        peers = await Http.GetJsonAsync<DataTypes.PeerInfo[]>("http://localhost:9000/api/stats/peers?api-version=1.0");
+        peers = await Http.GetJsonAsync<DataTypes.PeerInfo[]>($"http://{this.globalData.ApiUrl}/api/stats/peers?api-version=1.0");
     }
 
 }

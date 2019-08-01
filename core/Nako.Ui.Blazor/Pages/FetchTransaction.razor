@@ -41,15 +41,17 @@ else
                     <div class="list-group">
                         @foreach (var input in transaction.Inputs)
                         {
-                            <div class="list-group-item list-group-item-action">
-                                <table class="table table-sm table-borderless">
-                                    <tbody>
-                                        <tr><td>Input index:</td><td># @input.InputIndex</td></tr>
-                                        <tr><td>Input Hash:</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link">@input.InputTransactionId</td></tr>
-                                        <tr><td>ScriptSig</td><td></td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <small>
+                                <div class="list-group-item list-group-item-action">
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link"><small>@input.InputTransactionId</small></td></tr>
+                                            <tr><td>Value:</td><td></td></tr>
+                                            <tr><td>ScriptSig</td><td></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </small>
                         }
                     </div>
                 </td>
@@ -57,17 +59,18 @@ else
                     <div class="list-group">
                         @foreach (var output in transaction.Outputs)
                         {
-                            <div class="list-group-item list-group-item-action">
-                                <table class="table table-sm table-borderless">
-                                    <tbody>
-                                        <tr><td>Output index:</td><td># @output.Index</td></tr>
-                                        <tr><td>output.Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))" style="cursor: pointer;" class=" btn btn-link">@output.Address</td></tr>
-                                        <tr><td>OutputType</td><td>@output.OutputType</td></tr>
-                                        <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
-                                        <tr><td>ScriptPubKey</td><td></td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <small>
+                                <div class="list-group-item list-group-item-action">
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))" style="cursor: pointer;" class=" btn btn-link"><small>@output.Address</small></td></tr>
+                                            <tr><td>OutputType</td><td>@output.OutputType</td></tr>
+                                            <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
+                                            <tr><td>ScriptPubKey</td><td></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </small>
                         }
                     </div>
                 </td>
@@ -83,7 +86,7 @@ else
 
     private async Task UpdateTransactionHash(string trxHash)
     {
-        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://localhost:9000/api/Query/transaction/{trxHash}?api-version=1.0");
+        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{trxHash}?api-version=1.0");
     }
 
     private void NavigateToBlockIndex(long index)
@@ -100,7 +103,7 @@ else
 
     protected override async Task OnInitAsync()
     {
-        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://localhost:9000/api/Query/transaction/{this.transactionhash}?api-version=1.0");
+        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.transactionhash}?api-version=1.0");
 
     }
 }
