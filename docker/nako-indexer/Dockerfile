@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y nano git \
     && echo -e "\nexport TERM=xterm" >> ~/.bashrc
 
 RUN git clone https://github.com/CoinVault/Nako.git /nako
+RUN git checkout origin nako-ui-blazor
 WORKDIR /nako/core/nako.indexer
 
 RUN dotnet build
