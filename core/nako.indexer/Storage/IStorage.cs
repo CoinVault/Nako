@@ -36,7 +36,7 @@ namespace Nako.Storage
 
         SyncTransactionItems TransactionItemsGet(string transactionId);
 
-        SyncTransactionAddressBalance AddressGetBalance(string address, long confirmations);
+        SyncTransactionAddressBalance AddressGetBalance(string address, long confirmations, int? max = null);
 
         SyncTransactionAddressBalance AddressGetBalanceUtxo(string address, long confirmations);
 

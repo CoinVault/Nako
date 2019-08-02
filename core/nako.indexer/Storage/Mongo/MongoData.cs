@@ -256,11 +256,11 @@ namespace Nako.Storage.Mongo
                        };
         }
 
-        public SyncTransactionAddressBalance AddressGetBalance(string address, long confirmations)
+        public SyncTransactionAddressBalance AddressGetBalance(string address, long confirmations, int? max = null)
         {
             var current = this.BlockGetBlockCount(1).First();
 
-            var addrs = this.SelectAddressWithPool(current, address, false).ToList();
+            var addrs = this.SelectAddressWithPool(current, address, false, max).ToList();
             return this.CreateAddresBalance(confirmations, addrs, false);
         }
 
@@ -339,7 +339,7 @@ namespace Nako.Storage.Mongo
             };
         }
 
-        private IEnumerable<SyncTransactionAddressItem> SelectAddressWithPool(SyncBlockInfo current, string address, bool availableOnly)
+        private IEnumerable<SyncTransactionAddressItem> SelectAddressWithPool(SyncBlockInfo current, string address, bool availableOnly, int? max = null)
         {
             // this code will not work as we need to have the actual transactions to deduct their value in case a memory pool transaction is found.
             // this is not way to know if a mem pool transaction belongs to an address with heavily querying mongo, so the best solution (for now)
@@ -394,7 +394,9 @@ namespace Nako.Storage.Mongo
 
             var stoper1 = Stopwatch.Start();
 
-            var addrs = this.MapTransactionAddress.Find(filter).ToList();
+            var sort = Builders<MapTransactionAddress>.Sort.Descending(info => info.BlockIndex);
+
+            var addrs = this.MapTransactionAddress.Find(filter).Sort(sort).Limit(max).ToList();
 
             stoper1.Stop();
 

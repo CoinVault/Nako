@@ -1,4 +1,5 @@
 ﻿@page "/FetchAddress/{addresshash}"
+@using System.Threading
 @inject HttpClient Http
 @inject IUriHelper UriHelper
 @inject GlobalData globalData
@@ -30,7 +31,7 @@ else
     </table>
 
     <div class="list-group">
-        @foreach (var transaction in address.Transactions.OrderByDescending(b => b.BlockIndex))
+        @foreach (var transaction in address.Transactions)
         {
             <div class="list-group-item list-group-item-action">
                 <table class="table table-sm table-borderless">
@@ -43,12 +44,12 @@ else
 
                         @if (string.IsNullOrEmpty(transaction.SpendingTransactionHash))
                         {
-                            <tr><td>Value</td><td class="text-success">+ @(transaction.Value / 100000000)  @address.CoinTag</td></tr>
+                            <tr><td>Value</td><td class="text-success">+ @(transaction.Value / 100000000) @address.CoinTag</td></tr>
 
                         }
                         else
                         {
-                            <tr><td>Value</td><td class="text-danger">- @(transaction.Value / 100000000)  @address.CoinTag</td></tr>
+                            <tr><td>Value</td><td class="text-danger">- @(transaction.Value / 100000000) @address.CoinTag</td></tr>
                             <tr><td>Spent in:</td><td @onclick="@(() => NavigateToTransactionHash(transaction.SpendingTransactionHash))" style="cursor: pointer;" class="btn btn-link">@transaction.SpendingTransactionHash</td></tr>
                         }
 
@@ -57,12 +58,30 @@ else
             </div>
         }
     </div>
+
+    // Assume that if maxitems equals count there is more to fetch.
+    @if (this.maxitems != -1 && this.address.Transactions.Count() == this.maxitems)
+    {
+        <br />
+        <button type="button" @onclick="FetchMoreAddresses" class="btn btn-light text-center">Fetch another 100</button>
+
+        // Not to abuse the fetch all button
+        @if (this.maxitems > 300)
+        {
+            <button type="button" @onclick="FetchAllAddresses" class="btn btn-light text-center">Fetch all</button>
+        }
+
+        <br />
+    }
+
 }
 
 @code {
 
     [Parameter]
     private string addresshash { get; set; }
+
+    private int maxitems { get; set; } = 10;
 
     private void NavigateToTransactionHash(string trxHash)
     {
@@ -76,8 +95,22 @@ else
 
     DataTypes.QueryAddress address;
 
+    private async Task FetchMoreAddresses()
+    {
+        this.maxitems += 100;
+
+        address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions/{this.maxitems}?api-version=1.0");
+    }
+
+    private async Task FetchAllAddresses()
+    {
+        this.maxitems = -1;
+
+        address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions?api-version=1.0");
+    }
+
     protected override async Task OnInitAsync()
     {
-        address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions?api-version=1.0");
+        address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions/{this.maxitems}?api-version=1.0");
     }
 }
