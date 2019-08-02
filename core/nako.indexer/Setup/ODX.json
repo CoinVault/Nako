@@ -9,6 +9,4 @@
 
   "StoreRawTransactions": true,
 
-  "ConnectionString": "mongodb://localhost", // temporary
-  "RpcDomain": "127.0.0.1" // temporary
 }
