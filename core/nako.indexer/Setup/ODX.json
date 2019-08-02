@@ -13,7 +13,5 @@
   "CoinName": "ObsidianX",
   "CoinInformation": "Decentralized anonymous messenger",
 
-  "ConnectionString": "mongodb://localhost",
-  "RpcDomain": "127.0.0.1"
 
 }
