@@ -42,9 +42,9 @@ namespace Nako.Api.Handlers
             this.configuration = configuration.Value;
         }
 
-        public QueryAddress GetAddressTransactions(string address, long confirmations, int? max = null)
+        public QueryAddress GetAddressTransactions(string address, long confirmations)
         {
-            var stats = this.storage.AddressGetBalance(address, confirmations, max);
+            var stats = this.storage.AddressGetBalance(address, confirmations);
 
             if (stats == null)
             {

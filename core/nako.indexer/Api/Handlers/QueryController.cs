@@ -50,7 +50,17 @@ namespace Nako.Api.Handlers
         [Route("address/{address}/confirmations/{confirmations:long=0}/transactions/{max}")]
         public IActionResult GetAddressTransactionsCount(string address, long confirmations, int max)
         {
-            var ret = this.handler.GetAddressTransactions(address, confirmations, max);
+            var ret = this.handler.GetAddressTransactions(address, confirmations);
+
+            if(ret.Transactions.Count() > max)
+            {
+                ret.Transactions = ret.Transactions.Take(max);
+            }
+
+            if (ret.UnconfirmedTransactions.Count() > max)
+            {
+                ret.UnconfirmedTransactions = ret.UnconfirmedTransactions.Take(max);
+            }
 
             var response = this.CreateOkResponse(ret);
 
