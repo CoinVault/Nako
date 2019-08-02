@@ -3,17 +3,100 @@
 @inject IUriHelper UriHelper
 @inject GlobalData globalData
 
-<h1>Transaction Info</h1>
-
-<p>This component shows information about a block.</p>
-
 @if (transaction == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table table-sm">
+
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">Details for Block</h2>
+                    </div>
+                </div>
+                <div class="offset-lg-3 col-lg-6">
+                    <div class="center-text">
+                        <p>Additional information about a block.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-bottom-70">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests table-detail">
+                            <tbody>
+                                <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
+                                <tr><td>BlockHash</td><td>@transaction.BlockHash</td></tr>
+                                <tr><td>BlockIndex</td><td style="cursor: pointer;" class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
+                                <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests">
+                            <thead>
+                                <tr>
+                                    <th>Inputs</th>
+                                    <th>Outputs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="list-group">
+                                            @foreach (var input in transaction.Inputs)
+                                            {
+                                                <small>
+                                                    <div class="list-group-item list-group-item-action">
+                                                        <table class="table table-sm table-borderless">
+                                                            <tbody>
+                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))"  class=" mousepointer"><small>@input.InputTransactionId</small></td></tr>
+                                                                <tr><td>Value:</td><td></td></tr>
+                                                                <tr><td>ScriptSig</td><td></td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </small>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="list-group">
+                                            @foreach (var output in transaction.Outputs)
+                                            {
+                                                <small>
+                                                    <div class="list-group-item list-group-item-action">
+                                                        <table class="table table-sm table-borderless">
+                                                            <tbody>
+                                                                <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))"  class=" mousepointer"><small>@output.Address</small></td></tr>
+                                                                <tr><td>OutputType</td><td>@output.OutputType</td></tr>
+                                                                <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
+                                                                <tr><td>ScriptPubKey</td><td></td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </small>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @*<table class="table table-sm">
         <thead>
             <tr>
                 <th>Item</th>
@@ -26,9 +109,9 @@ else
             <tr><td>BlockIndex</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
             <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
         </tbody>
-    </table>
+    </table>*@
 
-    <table class="table table-sm">
+    @*<table class="table table-sm">
         <thead>
             <tr>
                 <th>Inputs</th>
@@ -76,7 +159,7 @@ else
                 </td>
             </tr>
         </tbody>
-    </table>
+    </table>*@
 }
 
 @code {

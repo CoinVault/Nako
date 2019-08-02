@@ -17,6 +17,8 @@ namespace Nako.Ui.Blazor
             this.BlocksCache = new LimitedDictionary<long, DataTypes.QueryBlock>();
         }
 
+        public string CoinTag { get; set; }
+
         public string ApiUrl { get; }
 
         /// <summary>

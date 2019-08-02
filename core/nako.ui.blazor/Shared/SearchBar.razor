@@ -2,18 +2,20 @@
 @inject GlobalData globalData
 @inject HttpClient Http
 
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span style="cursor: pointer;" @onclick="Navigate" class="input-group-text">Search</span>
-        </div>
-
-        <input type="search" style="max-width:60%" class="form-control"  placeholder="Blocks, transactions and addresses" @bind="Search"  @onkeyup="KeyUp" />
-
-        <div class="input-group-prepend">
-            <span style="cursor: pointer;" @onclick="Navigate" class="input-group-text">Find</span>
+<div class="search">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-wrapper">
+                    <div class="input">
+                        <input @bind="Search" type="text" @onkeyup="KeyUp" placeholder="block, hash, transaction, etc..." />
+                        <button @onclick="Navigate"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
+</div>	
 
 @code {
     private string Search { get; set; }
@@ -28,7 +30,7 @@
 
     private async Task Navigate()
     {
-        if(int.TryParse(this.Search,out int _))
+        if(int.TryParse(this.Search, out int _))
         {
             UriHelper.NavigateTo($"fetchblock/{this.Search}");
             return;
@@ -66,5 +68,4 @@
 
         // not found
     }
-
 }

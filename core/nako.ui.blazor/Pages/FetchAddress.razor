@@ -4,9 +4,6 @@
 @inject IUriHelper UriHelper
 @inject GlobalData globalData
 
-<h1>Address Info</h1>
-
-<p>This component shows information about a block.</p>
 
 @if (address == null)
 {
@@ -14,23 +11,108 @@
 }
 else
 {
-    <table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Info</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Address</td><td>@address.Address </td></tr>
-            <tr><td>Balance</td><td>@(address.Balance / 100000000)  @address.CoinTag</td></tr>
-            <tr><td>UnconfirmedBalance</td><td>@(address.UnconfirmedBalance / 100000000) @address.CoinTag</td></tr>
-            <tr><td>TotalReceived</td><td>@(address.TotalReceived / 100000000)  @address.CoinTag</td></tr>
-            <tr><td>TotalSent</td><td>@(address.TotalSent / 100000000)  @address.CoinTag</td></tr>
-        </tbody>
-    </table>
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">Details for Block</h2>
+                    </div>
+                </div>
+                <div class="offset-lg-3 col-lg-6">
+                    <div class="center-text">
+                        <p>Additional information about a block.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-bottom-70">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests table-detail">
+                            <tbody>
+                                <tr><td><strong>Address</strong></td><td>@address.Address </td></tr>
+                                <tr><td><strong>Balance</strong></td><td>@(address.Balance / 100000000)  @address.CoinTag</td></tr>
+                                <tr><td><strong>UnconfirmedBalance</strong></td><td>@(address.UnconfirmedBalance / 100000000) @address.CoinTag</td></tr>
+                                <tr><td><strong>TotalReceived</strong></td><td>@(address.TotalReceived / 100000000)  @address.CoinTag</td></tr>
+                                <tr><td><strong>TotalSent</strong></td><td>@(address.TotalSent / 100000000)  @address.CoinTag</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">Transactions</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests">
+                            <thead>
+                                <tr>
+                                    <th>Hash</th>
+                                    <th>Block</th>
+                                    <th>Confirmations</th>
+                                    <th>Amount</th>
+                                    <th>spent in</th>
 
-    <div class="list-group">
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var transaction in address.Transactions)
+                                {
+                                    <tr>
+                                          <td @onclick="@(() => NavigateToTransactionHash(transaction.TransactionHash))"  class=" mousepointer">@transaction.TransactionHash</td>
+                                          <td @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex.Value))"  class=" mousepointer">@transaction.BlockIndex </td>
+                                          <td>@transaction.Confirmations</td>
+
+                                        @if (string.IsNullOrEmpty(transaction.SpendingTransactionHash))
+                                         {
+                                             <td class="text-success">+@(transaction.Value / 100000000) @address.CoinTag</td>
+                                             <td class="text-success"></td>
+
+                                         }
+                                         else
+                                         {
+                                             <td class="text-danger">-@(transaction.Value / 100000000) @address.CoinTag</td>
+                                             <td @onclick="@(() => NavigateToTransactionHash(transaction.SpendingTransactionHash))" class="mousepointer">@transaction.SpendingTransactionHash.Substring(0, 10)</td>
+                                         }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        @*Assume that if maxitems equals count there is more to fetch.*@
+                        @if (this.maxitems != -1 && this.address.Transactions.Count() == this.maxitems)
+                        {
+                            <br />
+                            <button type="button" @onclick="FetchMoreAddresses" class="btn btn-light text-center">Fetch another 100</button>
+
+                            // Not to abuse the fetch all button
+                            @if (this.maxitems > 300)
+                             {
+                                 <button type="button" @onclick="FetchAllAddresses" class="btn btn-light text-center">Fetch all</button>
+                             }
+
+                            <br />
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    @*<div class="list-group">
         @foreach (var transaction in address.Transactions)
         {
             <div class="list-group-item list-group-item-action">
@@ -57,9 +139,9 @@ else
                 </table>
             </div>
         }
-    </div>
+    </div>*@
 
-    // Assume that if maxitems equals count there is more to fetch.
+    @*// Assume that if maxitems equals count there is more to fetch.
     @if (this.maxitems != -1 && this.address.Transactions.Count() == this.maxitems)
     {
         <br />
@@ -72,7 +154,7 @@ else
         }
 
         <br />
-    }
+    }*@
 
 }
 
