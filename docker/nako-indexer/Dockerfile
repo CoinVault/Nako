@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:latest 
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
@@ -7,11 +7,11 @@ RUN apt-get update && apt-get install -y nano git \
     && echo -e "\nexport TERM=xterm" >> ~/.bashrc
 
 RUN git clone https://github.com/CoinVault/Nako.git /nako
-RUN git checkout origin nako-ui-blazor
-WORKDIR /nako/core/nako.indexer
 
+WORKDIR /nako/core/nako.indexer
 RUN dotnet build
 
 EXPOSE 9000
 
 ENTRYPOINT ["dotnet", "run"]
+
