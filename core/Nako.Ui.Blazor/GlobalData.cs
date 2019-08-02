@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 
 namespace Nako.Ui.Blazor
 {
     public class GlobalData
     {
-        public GlobalData()
+        public GlobalData(HttpClient httpClient)
         {
-            this.ApiUrl = "209.97.177.144:9040";
+            // For now api support by default on the same ip host (we use the default port for Nako api 9000)
+            this.ApiUrl =  $"{httpClient.BaseAddress.Host}:{9000}";
+
             this.BlocksCache = new LimitedDictionary<long, DataTypes.QueryBlock>();
         }
 
         public string ApiUrl { get; }
 
         /// <summary>
-        /// TODO: fix this to have a max count in memory
+        /// TODO: Add expiry time to the collection.
         /// </summary>
         public LimitedDictionary<long, DataTypes.QueryBlock> BlocksCache;
     }
