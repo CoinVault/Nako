@@ -59,6 +59,12 @@ namespace Nako.Config
 
         public bool StoreRawTransactions { get; set; }
 
+        public string LogoUrl { get; set; }
+
+        public string CoinName { get; set; }
+
+        public string CoinInformation { get; set; }
+
         [JsonIgnore]
         public string ConnectionStringActual
         {

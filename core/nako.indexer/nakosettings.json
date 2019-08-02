@@ -1,6 +1,6 @@
 ﻿{
   // Coin information
-  "CoinTag": "",
+  "CoinTag": "BTC",
 
   "ConnectionString": "mongodb://{CoinTag}-mongo",
   "DatabaseNameSubfix": false,
@@ -17,8 +17,8 @@
 
   // Information about the coin that will be available from the Api
   "LogoUrl": "",
-  "CoinName": "",
-  "CoinInformation": "",
+  "CoinName": "Bitcoin",
+  "CoinInformation": "Electronic P2P cash",
 
   // Notification parameters
   "NotifyUrl": "https://apiurl",

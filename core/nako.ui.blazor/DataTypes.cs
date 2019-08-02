@@ -171,5 +171,18 @@ namespace Nako.Ui.Blazor
 
             public long Time { get; set; }
         }
+
+        public class CoinInfo
+        {
+            public string CoinTag { get; set; }
+
+            public string LogoUrl { get; set; }
+
+            public string CoinName { get; set; }
+
+            public string CoinInformation { get; set; }
+
+            public long BlockHeight { get; set; }
+        }
     }
 }

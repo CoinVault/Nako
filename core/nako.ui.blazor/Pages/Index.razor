@@ -39,7 +39,7 @@ else
                 </div>
                 <div class="offset-lg-3 col-lg-6">
                     <div class="center-text">
-                        <p>[LINK FROM NAKO].</p>
+                        <p>@this.globalData.Info?.CoinInformation</p>
                     </div>
                 </div>
             </div>
@@ -151,10 +151,7 @@ else
     {
         stats = await Http.GetJsonAsync<DataTypes.Statistics>($"http://{this.globalData.ApiUrl}/api/stats?api-version=1.0");
 
-        if(this.globalData.CoinTag == null)
-        {
-            this.globalData.CoinTag = stats.CoinTag;
-        }
+        this.globalData.Info.BlockHeight = stats.ClientInfo.Blocks;
     }
 
     private void NavigateToBlockIndex(long index)

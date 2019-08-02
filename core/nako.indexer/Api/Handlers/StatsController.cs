@@ -73,6 +73,17 @@ namespace Nako.Api.Handlers
 
         [HttpGet]
         [Route("[action]")]
+        public async Task<IActionResult> Info()
+        {
+            var ret = await this.statsHandler.CoinInformation();
+
+            var response = this.CreateOkResponse(ret);
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("[action]")]
         public async Task<IActionResult> Peers()
         {
             var ret = await this.statsHandler.Peers();

@@ -12,6 +12,19 @@ namespace Nako.Api.Handlers.Types
 {
     using Nako.Client.Types;
 
+    public class CoinInfo
+    {
+        public string CoinTag { get; set; }
+
+        public long BlockHeight { get; set; }
+
+        public string LogoUrl { get; set; }
+
+        public string CoinName { get; set; }
+
+        public string CoinInformation { get; set; }
+    }
+
     public class Statistics
     {
         /// <summary>
