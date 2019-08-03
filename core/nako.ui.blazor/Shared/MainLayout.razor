@@ -1,0 +1,82 @@
+@inherits LayoutComponentBase
+@inject GlobalData globalData
+@inject HttpClient Http
+@inject IUriHelper UriHelper
+
+<!-- ***** Header Area Start ***** -->
+<header class="header-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <NavMenu />
+            </div>
+        </div>
+    </div>
+</header>
+<!-- ***** Header Area End ***** -->
+@*<div class="sidebar">
+        <NavMenu />
+    </div>*@
+
+<!-- ***** Wellcome Area Start ***** -->
+<section class="block-explorer-wrapper bg-bottom-center" id="welcome-1">
+    <div class="block-explorer text">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-12 align-self-center">
+                    <h1>@this.globalData.Info?.CoinName Explorer</h1>
+                </div>
+                <div class="offset-lg-3 col-lg-6 mousepointer">
+                    <p @onclick="@(() => NavigateToBlock())" >Last Block @this.globalData.Info?.BlockHeight</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <SearchBar />
+
+</section>
+<!-- ***** Wellcome Area End ***** -->
+
+@Body
+
+@*<div class="main">
+        <div class="top-row px-4">
+                <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+    </div>*@
+
+
+<!-- ***** Contact & Footer Start ***** -->
+<footer id="contact">
+    <div class="footer-bottom slim">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="copyright">Nako</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- ***** Contact & Footer End ***** -->
+
+@code {
+
+    protected override async Task OnInitAsync()
+    {
+        if (this.globalData.Info == null)
+        {
+            this.globalData.Info = await Http.GetJsonAsync<DataTypes.CoinInfo>($"http://{this.globalData.ApiUrl}/api/stats/info?api-version=1.0");
+        }
+    }
+
+    private void NavigateToBlock()
+    {
+        UriHelper.NavigateTo($"fetchblock");
+    }
+}

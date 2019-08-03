@@ -31,5 +31,11 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the transaction id.
         /// </summary>
         public string InputTransactionId { get; set; }
+
+        public string ScriptSig { get; set; }
+
+        public string WitScript { get; set; }
+
+        public string SequenceLock { get; set; }
     }
 }

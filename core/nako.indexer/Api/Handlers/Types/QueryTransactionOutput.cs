@@ -31,5 +31,7 @@ namespace Nako.Api.Handlers.Types
         /// Gets or sets the output type.
         /// </summary>
         public string OutputType { get; set; }
+
+        public string ScriptPubKey { get; set; }
     }
 }

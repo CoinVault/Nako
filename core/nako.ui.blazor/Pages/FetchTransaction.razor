@@ -1,0 +1,194 @@
+﻿@page "/FetchTransaction/{transactionhash}"
+@inject HttpClient Http
+@inject IUriHelper UriHelper
+@inject GlobalData globalData
+
+@if (transaction == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">Details for Block</h2>
+                    </div>
+                </div>
+                <div class="offset-lg-3 col-lg-6">
+                    <div class="center-text">
+                        <p>Additional information about a block.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-bottom-70">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests table-detail">
+                            <tbody>
+                                <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
+                                <tr><td>BlockHash</td><td>@transaction.BlockHash</td></tr>
+                                <tr><td>BlockIndex</td><td style="cursor: pointer;" class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
+                                <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latest table-sm ">
+                            <thead>
+                                <tr>
+                                    <th>Inputs</th>
+                                    <th>Outputs</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="list-group">
+                                            @foreach (var input in transaction.Inputs)
+                                            {
+                                                <small>
+                                                    <div class="list-group-item list-group-item-action">
+                                                        <table class="table table-sm table-borderless table-sm">
+                                                            <tbody>
+                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))"  class=" mousepointer"><small>@input.InputTransactionId</small></td></tr>
+                                                                <tr><td>Value:</td><td></td></tr>
+                                                                <tr><td>ScriptSig</td><td><small>@input.ScriptSig</small></td></tr>
+                                                                <tr><td>WitScript</td><td class="mw-100" ><small>@input.WitScript</small></td></tr>
+                                                                <tr><td>SequenceLock</td><td>@input.SequenceLock</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </small>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="list-group">
+                                            @foreach (var output in transaction.Outputs)
+                                            {
+                                                <small>
+                                                    <div class="list-group-item list-group-item-action">
+                                                        <table class="table table-sm table-borderless table-sm">
+                                                            <tbody>
+                                                                <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))"  class=" mousepointer">@output.Address</td></tr>
+                                                                <tr><td>OutputType</td><td>@output.OutputType</td></tr>
+                                                                <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
+                                                                <tr><td>ScriptPubKey</td><td><small>@output.ScriptPubKey</small></td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </small>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @*<table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
+            <tr><td>BlockHash</td><td>@transaction.BlockHash</td></tr>
+            <tr><td>BlockIndex</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
+            <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
+        </tbody>
+    </table>*@
+
+    @*<table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Inputs</th>
+                <th>Outputs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="list-group">
+                        @foreach (var input in transaction.Inputs)
+                        {
+                            <small>
+                                <div class="list-group-item list-group-item-action">
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link"><small>@input.InputTransactionId</small></td></tr>
+                                            <tr><td>Value:</td><td></td></tr>
+                                            <tr><td>ScriptSig</td><td></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </small>
+                        }
+                    </div>
+                </td>
+                <td>
+                    <div class="list-group">
+                        @foreach (var output in transaction.Outputs)
+                        {
+                            <small>
+                                <div class="list-group-item list-group-item-action">
+                                    <table class="table table-sm table-borderless">
+                                        <tbody>
+                                            <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))" style="cursor: pointer;" class=" btn btn-link"><small>@output.Address</small></td></tr>
+                                            <tr><td>OutputType</td><td>@output.OutputType</td></tr>
+                                            <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
+                                            <tr><td>ScriptPubKey</td><td></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </small>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>*@
+}
+
+@code {
+
+    [Parameter]
+    private string transactionhash { get; set; }
+
+    private async Task UpdateTransactionHash(string trxHash)
+    {
+        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{trxHash}?api-version=1.0");
+    }
+
+    private void NavigateToBlockIndex(long index)
+    {
+        UriHelper.NavigateTo($"fetchblock/{index}");
+    }
+
+    private void NavigateToAddress(string address)
+    {
+        UriHelper.NavigateTo($"FetchAddress/{address}");
+    }
+
+    DataTypes.QueryTransaction transaction;
+
+    protected override async Task OnInitAsync()
+    {
+        transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.transactionhash}?api-version=1.0");
+
+    }
+}

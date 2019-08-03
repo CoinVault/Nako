@@ -1,0 +1,30 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "commandLineArgs": "http://localhost:9000",
+    "iisExpress": {
+      "applicationUrl": "http://localhost:22942/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "commandLineArgs": "http://localhost:9000",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "Nako.Ui.Blazor": {
+      "commandName": "Project",
+      "commandLineArgs": "http://localhost:9000",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:22941/" 
+    }
+  }
+}

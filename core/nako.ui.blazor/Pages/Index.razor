@@ -1,0 +1,171 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject GlobalData globalData
+@inject IUriHelper UriHelper
+
+@if (stats == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <!-- ***** Wellcome Area Start ***** -->
+    @*<section class="block-explorer-wrapper bg-bottom-center" id="welcome-1">
+        <div class="block-explorer text">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-12 align-self-center">
+                        <h1>@stats.CoinTag Explorer</h1>
+                    </div>
+                    <div class="offset-lg-3 col-lg-6">
+                        <p>Last Block @stats.ClientInfo.Blocks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <SearchBar />
+
+    </section>*@
+    <!-- ***** Wellcome Area End ***** -->
+
+    <section class="block-explorer-features section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">General Information</h2>
+                    </div>
+                </div>
+                <div class="offset-lg-3 col-lg-6">
+                    <div class="center-text">
+                        <p>@this.globalData.Info?.CoinInformation</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <div class="title">
+                            <div class="icon"></div>
+                            <h5>Connections</h5>
+                        </div>
+                        <div class="text mousepointer">
+                            <span @onclick="@(() => NavigateToPeers())">@stats.ClientInfo.Connections</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <div class="title">
+                            <div class="icon"></div>
+                            <h5>Sync Progress</h5>
+                        </div>
+                        <div class="text">
+                            <span>@stats.Progress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <div class="title">
+                            <div class="icon"></div>
+                            <h5>Transactions In Pool</h5>
+                        </div>
+                        <div class="text mousepointer">
+                            <span @onclick="@(() => NavigateToMempool())">@stats.TransactionsInPool</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <div class="title">
+                            <div class="icon"></div>
+                            <h5>Protocol Version</h5>
+                        </div>
+                        <div class="text">
+                            <span>@stats.ClientInfo.ProtocolVersion</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <div class="title">
+                            <div class="icon"></div>
+                            <h5>Node time</h5>
+                        </div>
+                        <div class="text">
+                            <span>@stats.ClientInfo.TimeOffset <i class="blue fa fa-long-arrow-up"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                    <div class="item">
+                        <div class="title">
+                            <div class="icon"></div>
+                            <h5>Last Block</h5>
+                        </div>
+                        <div class="text mousepointer">
+                            <span @onclick="@(() => NavigateToBlockIndex(stats.ClientInfo.Blocks))">@stats.ClientInfo.Blocks</span>
+                        </div>
+                    </div>
+                </div>
+                @*<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="item">
+                            <div class="title">
+                                <div class="icon"></div>
+                                <h5>Transactions Per Day</h5>
+                            </div>
+                            <div class="text">
+                                <span>208919</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="item">
+                            <div class="title">
+                                <div class="icon"></div>
+                                <h5>Trade Volume</h5>
+                            </div>
+                            <div class="text">
+                                <span>$479,093,652.91</span>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+
+        @if (@stats.ClientInfo.Errors != null)
+        {
+            <div>@stats.ClientInfo.Errors</div>
+        }
+
+    </section>
+}
+
+@code {
+
+    DataTypes.Statistics stats;
+
+    protected override async Task OnInitAsync()
+    {
+        stats = await Http.GetJsonAsync<DataTypes.Statistics>($"http://{this.globalData.ApiUrl}/api/stats?api-version=1.0");
+
+        this.globalData.Info.BlockHeight = stats.ClientInfo.Blocks;
+    }
+
+    private void NavigateToBlockIndex(long index)
+    {
+        UriHelper.NavigateTo($"fetchblock/{index}");
+    }
+
+    private void NavigateToPeers()
+    {
+        UriHelper.NavigateTo($"FetchPeers");
+    }
+
+    private void NavigateToMempool()
+    {
+        UriHelper.NavigateTo($"FetchPeers");
+    }
+}

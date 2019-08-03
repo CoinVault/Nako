@@ -11,8 +11,6 @@ namespace Nako.Storage.Types
 {
     public class SyncTransactionInfo
     {
-        #region Public Properties
-
         public string BlockHash { get; set; }
 
         public long BlockIndex { get; set; }
@@ -22,7 +20,5 @@ namespace Nako.Storage.Types
         public string TransactionHash { get; set; }
 
         public long Confirmations { get; set; }
-
-        #endregion
     }
 }

@@ -380,16 +380,33 @@ namespace Nako.Api.Handlers
             var transactionItems = this.storage.TransactionItemsGet(transactionId);
 
             return new QueryTransaction
-                       {
-                           CoinTag = this.configuration.CoinTag, 
-                           BlockHash = transaction.BlockHash, 
-                           BlockIndex = transaction.BlockIndex, 
-                           Timestamp = transaction.Timestamp.UnixTimeStampToDateTime(), 
-                           TransactionId = transaction.TransactionHash, 
-                           Confirmations = transaction.Confirmations, 
-                           Outputs = transactionItems.Outputs.Select(o => new QueryTransactionOutput { Address = o.Address, Balance = o.Value, Index = o.Index, OutputType = o.OutputType }), 
-                           Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput { CoinBase = i.InputCoinBase, InputAddress = string.Empty, InputIndex = i.PreviousIndex, InputTransactionId = i.PreviousTransactionHash })
-                       };
+            {
+                CoinTag = this.configuration.CoinTag,
+                BlockHash = transaction.BlockHash,
+                BlockIndex = transaction.BlockIndex,
+                Timestamp = transaction.Timestamp.UnixTimeStampToDateTime(),
+                TransactionId = transaction.TransactionHash,
+                Confirmations = transaction.Confirmations,
+                Outputs = transactionItems.Outputs.Select(o => new QueryTransactionOutput
+                {
+                    Address = o.Address,
+                    Balance = o.Value,
+                    Index = o.Index,
+                    OutputType = o.OutputType,
+                    ScriptPubKey =  o.ScriptPubKey
+                    
+                }),
+                Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput
+                {
+                    CoinBase = i.InputCoinBase,
+                    InputAddress = string.Empty,
+                    InputIndex = i.PreviousIndex,
+                    InputTransactionId = i.PreviousTransactionHash,
+                    ScriptSig = i.ScriptSig,
+                    WitScript = i.WitScript,
+                    SequenceLock = i.SequenceLock
+                })
+            };
         }
     }
 }

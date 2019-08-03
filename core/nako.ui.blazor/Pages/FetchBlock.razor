@@ -1,0 +1,126 @@
+﻿@page "/fetchblock"
+@page "/fetchblock/{blockindex:long}"
+@page "/fetchblock/{blockhash}"
+@inject HttpClient Http
+@inject IUriHelper UriHelper
+@inject GlobalData globalData
+
+@if (block == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">Details for Block</h2>
+                    </div>
+                </div>
+                <div class="offset-lg-3 col-lg-6">
+                    <div class="center-text">
+                        <p>Additional information about a block.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-bottom-70">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests table-detail">
+                            <tbody>
+                                <tr><td><strong>Block Height</strong></td><td>@block.BlockIndex</td></tr>
+                                <tr><td><strong>Hash</strong></td><td>@block.BlockHash</td></tr>
+                                <tr><td><strong>Next Block</strong></td><td  class="mousepointer" @onclick="@(() => UpdateBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
+                                <tr><td><strong>Previous Block</strong></td><td  class="mousepointer" @onclick="@(() => UpdateBlockHash(block.PreviousBlockHash))">@block.PreviousBlockHash</td></tr>
+                                <tr><td><strong>No. Transactions</strong></td><td>@block.TransactionCount</td></tr>
+                                <tr><td><strong>Block Time</strong></td><td>@block.BlockTime</td></tr>
+                                <tr><td><strong>Version</strong></td><td>@block.Version</td></tr>
+                                <tr><td><strong>Merkleroot</strong></td><td>@block.Merkleroot</td></tr>
+                                <tr><td><strong>Nonce</strong></td><td>@block.Nonce</td></tr>
+                                <tr><td><strong>Hash</strong></td><td>@block.BlockSize KB</td></tr>
+                                @*
+                                    <tr><td>Confirmations</td><td>@block.Confirmations</td></tr>
+                                    <tr><td>PosModifierv2</td><td>@block.PosModifierv2</td></tr>
+                                    <tr><td>PosChainTrust</td><td>@block.PosChainTrust</td></tr>
+                                    <tr><td>PosBlockTrust</td><td>@block.PosBlockTrust</td></tr>
+                                    <tr><td>PosFlags</td><td>@block.PosFlags</td></tr>
+                                *@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center-heading">
+                        <h2 class="section-title">Transactions</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-latests">
+                            <thead>
+                                <tr>
+                                    <th>Transaction Hash</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var transaction in block.Transactions)
+                                {
+                                    <tr>
+                                        <td class="mousepointer" @onclick="@(() => NavigateToTransactionkIndex(transaction))">@transaction</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@code {
+
+    [Parameter]
+    private long blockindex { get; set; } = -1;
+
+    [Parameter]
+    private string blockhash { get; set; }
+
+    DataTypes.QueryBlock block;
+
+    private void NavigateToTransactionkIndex(string trxHash)
+    {
+        UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
+    }
+
+    private async Task UpdateBlockHash(string hash)
+    {
+        block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{hash}/1?api-version=1.0");
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        if (this.blockindex == -1)
+        {
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/Latest/1?api-version=1.0");
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(this.blockhash))
+        {
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{this.blockhash}/1?api-version=1.0");
+            return;
+        }
+
+        if (!this.globalData.BlocksCache.TryGetValue(this.blockindex, out block))
+        {
+            block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/1?api-version=1.0");
+        }
+    }
+}

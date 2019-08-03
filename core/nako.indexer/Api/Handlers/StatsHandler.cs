@@ -14,9 +14,11 @@ namespace Nako.Api.Handlers
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Options;
     using Nako.Api.Handlers.Types;
     using Nako.Client;
     using Nako.Client.Types;
+    using Nako.Config;
     using Nako.Operations.Types;
     using Nako.Storage;
 
@@ -29,13 +31,16 @@ namespace Nako.Api.Handlers
 
         private readonly IStorage storage;
 
+        private readonly NakoConfiguration configuration;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StatsHandler"/> class.
         /// </summary>
-        public StatsHandler(SyncConnection connection, IStorage storage)
+        public StatsHandler(SyncConnection connection, IStorage storage, IOptions<NakoConfiguration> configuration)
         {
             this.storage = storage;
             this.syncConnection = connection;
+            this.configuration = configuration.Value;
         }
 
         public async Task<StatsConnection> StatsConnection()
@@ -45,6 +50,20 @@ namespace Nako.Api.Handlers
 
             var clientConnection = await client.GetConnectionCountAsync();
             return new StatsConnection { Connections = clientConnection };
+        }
+
+        public async Task<CoinInfo> CoinInformation()
+        {
+            var index = this.storage.BlockGetBlockCount(1).FirstOrDefault()?.BlockIndex ?? 0;
+
+            return new CoinInfo
+            {
+                CoinTag = this.configuration.CoinTag,
+                BlockHeight = index,
+                LogoUrl = this.configuration.LogoUrl,
+                CoinName = this.configuration.CoinName,
+                CoinInformation = this.configuration.CoinInformation
+            };
         }
 
         public async Task<Statistics> Statistics()

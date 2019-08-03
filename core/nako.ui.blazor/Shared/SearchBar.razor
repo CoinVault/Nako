@@ -1,0 +1,71 @@
+﻿@inject IUriHelper UriHelper
+@inject GlobalData globalData
+@inject HttpClient Http
+
+<div class="search">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="input-wrapper">
+                    <div class="input">
+                        <input @bind="Search" type="text" @onkeyup="KeyUp" placeholder="block, hash, transaction, etc..." />
+                        <button @onclick="Navigate"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>	
+
+@code {
+    private string Search { get; set; }
+
+    private void KeyUp(UIKeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            this.Navigate();
+        }
+    }
+
+    private async Task Navigate()
+    {
+        if (long.TryParse(this.Search, out long index))
+        {
+            UriHelper.NavigateTo($"fetchblock/{index}");
+            this.Search = null;
+            return;
+        }
+
+        var block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{this.Search}/1?api-version=1.0");
+
+        if (block.BlockHash != null)
+        {
+            this.globalData.BlocksCache.Add(block.BlockIndex, block);
+
+            UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
+            this.Search = null;
+            return;
+        }
+
+        var transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.Search}?api-version=1.0");
+
+        if(transaction.TransactionId != null)
+        {
+            UriHelper.NavigateTo($"FetchTransaction/{transaction.TransactionId}");
+            this.Search = null;
+            return;
+        }
+
+        var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.Search}?api-version=1.0");
+
+        if(address.TotalReceived > 0)
+        {
+            UriHelper.NavigateTo($"FetchAddress/{address.Address}");
+            this.Search = null;
+            return;
+        }
+
+        // not found
+    }
+}

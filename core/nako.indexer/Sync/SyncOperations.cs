@@ -266,9 +266,6 @@ namespace Nako.Sync
 
             var hex = client.GetBlockHex(block.Hash);
 
-            //Block blockItem = connection.Network.Consensus.ConsensusFactory.CreateBlock();
-            //blockItem.ReadWrite(Encoders.Hex.DecodeData(hex), connection.Network.Consensus.ConsensusFactory);
-
             Block blockItem = Block.Parse(hex, connection.Network);
 
             foreach (var blockItemTransaction in blockItem.Transactions)

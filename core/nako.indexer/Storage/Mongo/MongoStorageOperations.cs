@@ -104,7 +104,7 @@ namespace Nako.Storage.Mongo
                         this.data.MemoryTransactions.TryRemove(t.GetHash().ToString(), out outer);
                     });
 
-                // break the work in to batches transactions
+                // break the work in to batches of transactions
                 var queue = new Queue<NBitcoin.Transaction>(item.Transactions);
                 do
                 {
@@ -156,6 +156,23 @@ namespace Nako.Storage.Mongo
                     var outputs = this.CreateOutputs(items).ToList();
                     stats.Outputs += outputs.Count();
                     outputs.ForEach(outp => this.data.MarkOutput(outp.InputTransactionId, outp.InputIndex, outp.TransactionId));
+
+                    // If insert trx supported then push trx in batches.
+                    if (this.configuration.StoreRawTransactions)
+                    {
+                        try
+                        {
+                            var inserts = items.Select(t => new MapTransaction { TransactionId = t.GetHash().ToString(), RawTransaction = t.ToBytes(syncConnection.Network.Consensus.ConsensusFactory) }).ToList();
+                            this.data.MapTransaction.InsertMany(inserts);
+                        }
+                        catch (MongoBulkWriteException mbwex)
+                        {
+                            if (!mbwex.Message.Contains("E11000 duplicate key error collection"))
+                            {
+                                throw;
+                            }
+                        }
+                    }
                 }
                 while (queue.Any());
 

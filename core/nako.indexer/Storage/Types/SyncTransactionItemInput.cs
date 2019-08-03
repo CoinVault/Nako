@@ -19,6 +19,12 @@ namespace Nako.Storage.Types
 
         public string PreviousTransactionHash { get; set; }
 
+        public string ScriptSig { get; set; }
+
+        public string WitScript { get; set; }
+
+        public string SequenceLock { get; set; }
+
         #endregion
     }
 }

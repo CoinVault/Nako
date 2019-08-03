@@ -1,0 +1,58 @@
+﻿@page "/fetchpeers"
+@inject HttpClient Http
+@inject IUriHelper UriHelper
+@inject GlobalData globalData
+
+
+<h1>Conneced peers</h1>
+
+<p>This component show connected peers.</p>
+
+@if (peers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table _table-hover _table-sm">
+        <thead>
+            <tr>
+                <th>IP address</th>
+                <th>Services</th>
+                <th>ConnTime</th>
+                <th>Version</th>
+                <th>Inbound</th>
+                <th>StartingHeight</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var peer in this.peers)
+            {
+                <tr>
+                    <td>@peer.Addr</td>
+                    <td>@peer.Services</td>
+                    <td>@peer.ConnTime</td>
+                    <td>@peer.Version</td>
+                    <td>@peer.Inbound</td>
+                    <td>@peer.StartingHeight</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    DataTypes.PeerInfo[] peers;
+
+    private void NavigateToBlockIndex(long index)
+    {
+        UriHelper.NavigateTo("fetchblock/" + index);
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        peers = await Http.GetJsonAsync<DataTypes.PeerInfo[]>($"http://{this.globalData.ApiUrl}/api/stats/peers?api-version=1.0");
+    }
+
+}
