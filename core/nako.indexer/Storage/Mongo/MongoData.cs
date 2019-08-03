@@ -243,6 +243,9 @@ namespace Nako.Storage.Mongo
                            {
                                PreviousTransactionHash = v.PrevOut.Hash.ToString(),
                                PreviousIndex = (int)v.PrevOut.N,
+                               WitScript = v.WitScript.ToScript().ToHex(),
+                               ScriptSig = v.ScriptSig.ToHex(),
+                               SequenceLock = v.Sequence.ToString(),
                            })
                            .ToList(),
                            Outputs = transaction.Outputs.Select((output, index) => new SyncTransactionItemOutput
@@ -250,7 +253,8 @@ namespace Nako.Storage.Mongo
                                Address = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey),
                                Index = index,
                                Value = (long)output.Value,
-                               OutputType = StandardScripts.GetTemplateFromScriptPubKey(output.ScriptPubKey)?.Type.ToString()
+                               OutputType = StandardScripts.GetTemplateFromScriptPubKey(output.ScriptPubKey)?.Type.ToString(),
+                               ScriptPubKey = output.ScriptPubKey.ToHex()
                            })
                            .ToList()
                        };

@@ -21,6 +21,8 @@ namespace Nako.Storage.Types
 
         public long Value { get; set; }
 
+        public string ScriptPubKey { get; set; }
+
         #endregion
     }
 }

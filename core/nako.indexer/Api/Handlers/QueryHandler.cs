@@ -392,14 +392,19 @@ namespace Nako.Api.Handlers
                     Address = o.Address,
                     Balance = o.Value,
                     Index = o.Index,
-                    OutputType = o.OutputType
+                    OutputType = o.OutputType,
+                    ScriptPubKey =  o.ScriptPubKey
+                    
                 }),
                 Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput
                 {
                     CoinBase = i.InputCoinBase,
                     InputAddress = string.Empty,
                     InputIndex = i.PreviousIndex,
-                    InputTransactionId = i.PreviousTransactionHash
+                    InputTransactionId = i.PreviousTransactionHash,
+                    ScriptSig = i.ScriptSig,
+                    WitScript = i.WitScript,
+                    SequenceLock = i.SequenceLock
                 })
             };
         }

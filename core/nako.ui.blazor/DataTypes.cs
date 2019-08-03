@@ -116,6 +116,13 @@ namespace Nako.Ui.Blazor
             public string CoinBase { get; set; }
 
             public string InputTransactionId { get; set; }
+
+            public string ScriptSig { get; set; }
+
+            public string WitScript { get; set; }
+
+            public string SequenceLock { get; set; }
+
         }
         public class QueryTransactionOutput
         {
@@ -126,6 +133,8 @@ namespace Nako.Ui.Blazor
             public int Index { get; set; }
 
             public string OutputType { get; set; }
+
+            public string ScriptPubKey { get; set; }
         }
 
         public class QueryAddress
