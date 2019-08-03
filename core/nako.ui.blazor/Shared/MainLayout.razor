@@ -1,6 +1,7 @@
 @inherits LayoutComponentBase
 @inject GlobalData globalData
 @inject HttpClient Http
+@inject IUriHelper UriHelper
 
 <!-- ***** Header Area Start ***** -->
 <header class="header-area">
@@ -25,8 +26,8 @@
                 <div class="col-lg-12 align-self-center">
                     <h1>@this.globalData.Info?.CoinName Explorer</h1>
                 </div>
-                <div class="offset-lg-3 col-lg-6">
-                    <p>Last Block @this.globalData.Info?.BlockHeight</p>
+                <div class="offset-lg-3 col-lg-6 mousepointer">
+                    <p @onclick="@(() => NavigateToBlock())" >Last Block @this.globalData.Info?.BlockHeight</p>
                 </div>
             </div>
         </div>
@@ -72,5 +73,10 @@
         {
             this.globalData.Info = await Http.GetJsonAsync<DataTypes.CoinInfo>($"http://{this.globalData.ApiUrl}/api/stats/info?api-version=1.0");
         }
+    }
+
+    private void NavigateToBlock()
+    {
+        UriHelper.NavigateTo($"fetchblock");
     }
 }

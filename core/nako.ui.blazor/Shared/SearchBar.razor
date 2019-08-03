@@ -30,9 +30,9 @@
 
     private async Task Navigate()
     {
-        if(int.TryParse(this.Search, out int _))
+        if (long.TryParse(this.Search, out long index))
         {
-            UriHelper.NavigateTo($"fetchblock/{this.Search}");
+            UriHelper.NavigateTo($"fetchblock/{index}");
             return;
         }
 
@@ -46,22 +46,18 @@
             return;
         }
 
-        Console.WriteLine("before trx");
         var transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.Search}?api-version=1.0");
 
         if(transaction.TransactionId != null)
         {
-            Console.WriteLine("inside trx");
             UriHelper.NavigateTo($"FetchTransaction/{transaction.TransactionId}");
             return;
         }
 
-        Console.WriteLine("before address");
-        var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.Search}/confirmations/0?api-version=1.0");
+        var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.Search}?api-version=1.0");
 
-        if(address.Address != null)
+        if(address.TotalReceived > 0)
         {
-            Console.WriteLine("before address");
             UriHelper.NavigateTo($"FetchAddress/{address.Address}");
             return;
         }
