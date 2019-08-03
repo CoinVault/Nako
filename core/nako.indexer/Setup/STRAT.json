@@ -1,7 +1,12 @@
 {
-	"CoinTag": "STRAT",
-	"NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
-	"NetworkPubkeyAddressPrefix": 63,
-	"NetworkScriptAddressPrefix": 125,
-	"NetworkWitnessPrefix": "bc"
+  "CoinTag": "STRAT",
+  "NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
+  "NetworkPubkeyAddressPrefix": 63,
+  "NetworkScriptAddressPrefix": 125,
+  "NetworkWitnessPrefix": "strat",
+
+  "LogoUrl": "",
+  "CoinName": "Stratis",
+  "CoinInformation": "Decentralize the enterprise"
+
 }

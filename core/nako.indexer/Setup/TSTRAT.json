@@ -1,0 +1,12 @@
+{
+  "CoinTag": "TSTRAT",
+  "NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
+  "NetworkPubkeyAddressPrefix": 65,
+  "NetworkScriptAddressPrefix": 196,
+  "NetworkWitnessPrefix": "tstrat",
+
+  "LogoUrl": "",
+  "CoinName": "Stratis Testnet",
+  "CoinInformation": "Decentralize the enterprise"
+
+}

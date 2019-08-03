@@ -1,15 +1,23 @@
 version: '2'
 services:
 
+  noko-ui:
+    container_name: tstrat-nako-ui
+    image: coinvault/nako-ui-blazor:latest
+    command: --urls=http://0.0.0.0:80
+    ports:
+        - 80:80
+
   nako:
     container_name: tstrat-nako
     networks: 
         nakonet:
             ipv4_address: 172.16.10.100
-    image: coinvault/nako:latest
+    image: coinvault/nako-indexer:latest
     command: tstrat
     ports: 
         - 9040:9000
+        - 9000:9000
     depends_on:
         - mongo
         - client
