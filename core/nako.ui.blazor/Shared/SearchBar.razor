@@ -33,6 +33,7 @@
         if (long.TryParse(this.Search, out long index))
         {
             UriHelper.NavigateTo($"fetchblock/{index}");
+            this.Search = null;
             return;
         }
 
@@ -43,6 +44,7 @@
             this.globalData.BlocksCache.Add(block.BlockIndex, block);
 
             UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
+            this.Search = null;
             return;
         }
 
@@ -51,6 +53,7 @@
         if(transaction.TransactionId != null)
         {
             UriHelper.NavigateTo($"FetchTransaction/{transaction.TransactionId}");
+            this.Search = null;
             return;
         }
 
@@ -59,6 +62,7 @@
         if(address.TotalReceived > 0)
         {
             UriHelper.NavigateTo($"FetchAddress/{address.Address}");
+            this.Search = null;
             return;
         }
 
