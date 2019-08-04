@@ -250,7 +250,7 @@ namespace Nako.Storage.Mongo
                            .ToList(),
                            Outputs = transaction.Outputs.Select((output, index) => new SyncTransactionItemOutput
                            {
-                               Address = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey),
+                               Address = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey)?.FirstOrDefault(),
                                Index = index,
                                Value = (long)output.Value,
                                OutputType = StandardScripts.GetTemplateFromScriptPubKey(output.ScriptPubKey)?.Type.ToString(),
@@ -468,7 +468,7 @@ namespace Nako.Storage.Mongo
                 {
                     var addressIndex = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey);
 
-                    if (address == addressIndex)
+                    if (address == addressIndex.FirstOrDefault())
                         continue;
 
                     var id = rawTransaction.GetHash().ToString();

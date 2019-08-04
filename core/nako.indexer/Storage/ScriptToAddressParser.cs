@@ -8,6 +8,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Linq;
 using NBitcoin;
 
 namespace Nako.Storage
@@ -18,7 +19,7 @@ namespace Nako.Storage
 
     public class ScriptToAddressParser
     {
-        public static string GetAddress(Network network, Script script)
+        public static string[] GetAddress(Network network, Script script)
         {
             var template = NBitcoin.StandardScripts.GetTemplateFromScriptPubKey(script);
 
@@ -31,10 +32,36 @@ namespace Nako.Storage
             if (template.Type == TxOutType.TX_NULL_DATA)
                 return null;
 
-            // This is the address that gets indexed
-            var address = script.GetDestinationAddress(network)?.ToString();
+            if (template.Type == TxOutType.TX_PUBKEY)
+            {
+                var pubkeys = script.GetDestinationPublicKeys(network);
+                return new[] {pubkeys[0].GetAddress(network).ToString()};
+            }
 
-            return address;
+            if (template.Type == TxOutType.TX_PUBKEYHASH ||
+                template.Type == TxOutType.TX_SCRIPTHASH ||
+                template.Type == TxOutType.TX_SEGWIT)
+            {
+                BitcoinAddress bitcoinAddress = script.GetDestinationAddress(network);
+                if (bitcoinAddress != null)
+                {
+                    return new[] { bitcoinAddress.ToString() };
+                }
+            }
+
+            if (template.Type == TxOutType.TX_MULTISIG)
+            {
+                // TODO;
+                return null;
+            }
+
+            if (template.Type == TxOutType.TX_COLDSTAKE)
+            {
+                // TODO;
+                return null;
+            }
+
+            return null;
         }
     }
 }

@@ -296,7 +296,7 @@ namespace Nako.Storage.Mongo
                         TransactionId = id,
                         Value = output.Value,
                         Index = index++,
-                        Addresses = new List<string> {address}, 
+                        Addresses = address.ToList(), 
                         ScriptHex = output.ScriptPubKey.ToHex(),
                         BlockIndex = blockIndex,
                         CoinBase = rawTransaction.IsCoinBase,
