@@ -42,8 +42,8 @@ else
                             <tbody>
                                 <tr><td><strong>Block Height</strong></td><td>@block.BlockIndex</td></tr>
                                 <tr><td><strong>Hash</strong></td><td>@block.BlockHash</td></tr>
-                                <tr><td><strong>Next Block</strong></td><td  class="mousepointer" @onclick="@(() => UpdateBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
-                                <tr><td><strong>Previous Block</strong></td><td  class="mousepointer" @onclick="@(() => UpdateBlockHash(block.PreviousBlockHash))">@block.PreviousBlockHash</td></tr>
+                                <tr><td><strong>Next Block</strong></td><td class="mousepointer" @onclick="@(() => UpdateBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
+                                <tr><td><strong>Previous Block</strong></td><td class="mousepointer" @onclick="@(() => UpdateBlockHash(block.PreviousBlockHash))">@block.PreviousBlockHash</td></tr>
                                 <tr><td><strong>No. Transactions</strong></td><td>@block.TransactionCount</td></tr>
                                 <tr><td><strong>Block Time</strong></td><td>@GlobalData.UnixTimeToDateTime((ulong)block.BlockTime).ToString("dd/MM/yyyy HH:mm")</td></tr>
                                 <tr><td><strong>Version</strong></td><td>@block.Version</td></tr>
@@ -57,6 +57,7 @@ else
                                     <tr><td>PosChainTrust</td><td>@block.PosChainTrust</td></tr>
                                     <tr><td>PosBlockTrust</td><td>@block.PosBlockTrust</td></tr>
                                     <tr><td>PosFlags</td><td>@block.PosFlags</td></tr>
+                                    @*<tr><td>Block Signature</td><td> @block.PosBlockSignature</td></tr>*@
                                 }
                             </tbody>
                         </table>
