@@ -16,7 +16,7 @@ else
             <div class="row">
                 <div class="col-lg-12">
                     <div class="center-heading">
-                        <h2 class="section-title">Details for Block</h2>
+                        <h2 class="section-title">Details for Block @block.BlockIndex</h2>
                     </div>
                 </div>
                 <div class="offset-lg-3 col-lg-6">
@@ -35,18 +35,19 @@ else
                                 <tr><td><strong>Next Block</strong></td><td  class="mousepointer" @onclick="@(() => UpdateBlockHash(block.NextBlockHash))">@block.NextBlockHash</td></tr>
                                 <tr><td><strong>Previous Block</strong></td><td  class="mousepointer" @onclick="@(() => UpdateBlockHash(block.PreviousBlockHash))">@block.PreviousBlockHash</td></tr>
                                 <tr><td><strong>No. Transactions</strong></td><td>@block.TransactionCount</td></tr>
-                                <tr><td><strong>Block Time</strong></td><td>@block.BlockTime</td></tr>
+                                <tr><td><strong>Block Time</strong></td><td>@GlobalData.UnixTimeToDateTime((ulong)block.BlockTime).ToString("dd/MM/yyyy HH:mm")</td></tr>
                                 <tr><td><strong>Version</strong></td><td>@block.Version</td></tr>
                                 <tr><td><strong>Merkleroot</strong></td><td>@block.Merkleroot</td></tr>
                                 <tr><td><strong>Nonce</strong></td><td>@block.Nonce</td></tr>
-                                <tr><td><strong>Hash</strong></td><td>@block.BlockSize KB</td></tr>
-                                @*
+                                <tr><td><strong>Size</strong></td><td>@block.BlockSize KB</td></tr>
+                                @if (!string.IsNullOrEmpty(@block.PosModifierv2))
+                                {
                                     <tr><td>Confirmations</td><td>@block.Confirmations</td></tr>
                                     <tr><td>PosModifierv2</td><td>@block.PosModifierv2</td></tr>
                                     <tr><td>PosChainTrust</td><td>@block.PosChainTrust</td></tr>
                                     <tr><td>PosBlockTrust</td><td>@block.PosBlockTrust</td></tr>
                                     <tr><td>PosFlags</td><td>@block.PosFlags</td></tr>
-                                *@
+                                }
                             </tbody>
                         </table>
                     </div>

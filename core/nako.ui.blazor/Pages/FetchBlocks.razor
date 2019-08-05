@@ -18,11 +18,11 @@ else
                         <h2 class="section-title">Latest Blocks</h2>
                     </div>
                 </div>
-                @*<div class="offset-lg-3 col-lg-6">
+                <div class="offset-lg-3 col-lg-6">
                     <div class="center-text">
-                        <p>Fusce placerat pretium mauris, vel sollicitudin elit lacinia vitae. Quisque sit amet nisi erat.</p>
+                        <p>Scroll to the bottom to fetch more blocks</p>
                     </div>
-                </div>*@
+                </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">
@@ -33,7 +33,7 @@ else
                                 <td>Block Height</td>
                                 <td>Age</td>
                                 <td>Transactions</td>
-                                <td>Value Out</td>
+                                <td>Size</td>
                                 <td>Difficulty</td>
                             </tr>
                             </thead>
@@ -45,9 +45,9 @@ else
 
                                 <tr>
                                     <td><a class="mousepointer" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockIndex</a></td>
-                                    <td>@UnixTimeToDateTime((ulong) @block.BlockTime) minutes</td>
+                                    <td>@UnixTimeToDateTime(@block.BlockTime) ago</td>
                                     <td>@block.TransactionCount</td>
-                                    <td></td>
+                                    <td>@block.BlockSize KB</td>
                                     <td>@block.Bits</td>
                                 </tr>
                             }
@@ -67,84 +67,46 @@ else
     </section>
 }
 
-    @*<h1>Recent Blocks</h1>
-
-    <p>This component shows recent blocks.</p>
-
-    @if (blocks == null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else
-    {
-        <table class="table _table-hover _table-sm">
-            <thead>
-                <tr>
-                    <th>Height</th>
-                    <th>Time</th>
-                    <th>Transactions</th>
-                    <th>Difficulty</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var block in blocks.Blocks)
-                {
-                    <tr>
-                        <td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockIndex</td>
-                        <td>@UnixTimeToDateTime((ulong)@block.BlockTime)</td>
-                        <td>@block.TransactionCount</td>
-                        <td>@block.Bits</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-        <button type="button" @onclick="NavigateToMoreBlocks" class="btn btn-light text-center">Fetch more blocks</button>
-        <br />
-    }*@
-
     @code {
-[Parameter]
-    private int blockindex { get; set; } = -1;
+        [Parameter]
+        private int blockindex { get; set; } = -1;
 
-    [Parameter]
-    private int blockcount { get; set; } = 10;
+        [Parameter]
+        private int blockcount { get; set; } = 10;
 
-    DataTypes.QueryBlocks blocks;
+        DataTypes.QueryBlocks blocks;
 
-    private async Task NavigateToMoreBlocks()
-    {
-        var blk = blocks.Blocks.Last();
-        var moreblocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{blk.BlockIndex - 1}/Count/{this.blockcount}?api-version=1.0");
+        private async Task NavigateToMoreBlocks()
+        {
+            var blk = blocks.Blocks.Last();
+            var moreblocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{blk.BlockIndex - 1}/Count/{this.blockcount}?api-version=1.0");
 
-        moreblocks.Blocks = this.blocks.Blocks.Concat(moreblocks.Blocks).ToArray();
+            moreblocks.Blocks = this.blocks.Blocks.Concat(moreblocks.Blocks).ToArray();
 
-        this.blocks = moreblocks;
-    }
+            this.blocks = moreblocks;
+        }
 
-    private void NavigateToBlockIndex(long index)
-    {
-        UriHelper.NavigateTo($"fetchblock/{index}");
-    }
+        private void NavigateToBlockIndex(long index)
+        {
+            UriHelper.NavigateTo($"fetchblock/{index}");
+        }
 
-    protected override async Task OnInitAsync()
-    {
-        blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
-    }
+        protected override async Task OnInitAsync()
+        {
+            blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
+        }
 
-    private static DateTimeOffset unixRef = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        public static string UnixTimeToDateTime(long timestamp)
+        {
 
-    public static string UnixTimeToDateTime(ulong timestamp)
-    {
-        TimeSpan span = TimeSpan.FromSeconds(timestamp);
-        var blocktime = (unixRef + span);
+            var blocktime = @GlobalData.UnixTimeToDateTime((ulong)timestamp);
 
-        var ret = (DateTime.UtcNow - blocktime).ToString();
+            var ret = (DateTime.UtcNow - blocktime).ToString();
 
-        ret = ret.Substring(0, ret.IndexOf("."));
+            ret = ret.Substring(0, ret.IndexOf("."));
 
-        return ret;
+            return ret;
 
-    }
+        }
 
     }

@@ -25,7 +25,22 @@ namespace Nako.Ui.Blazor
         /// TODO: Add expiry time to the collection.
         /// </summary>
         public LimitedDictionary<long, DataTypes.QueryBlock> BlocksCache;
+
+        private static DateTimeOffset unixRef = new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+        public static DateTime UnixTimeToDateTime(ulong timestamp)
+        {
+            TimeSpan span = TimeSpan.FromSeconds(timestamp);
+            var blocktime = (unixRef + span);
+
+            //var ret = (DateTime.UtcNow - blocktime).ToString();
+
+            //ret = ret.Substring(0, ret.IndexOf("."));
+
+            return blocktime.UtcDateTime;
+        }
     }
+
 
     public class LimitedDictionary<TKey, TValue>
     {

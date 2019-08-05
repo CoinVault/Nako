@@ -106,7 +106,7 @@ else
                             <h5>Last Block</h5>
                         </div>
                         <div class="text mousepointer">
-                            <span @onclick="@(() => NavigateToBlockIndex(stats.ClientInfo.Blocks))">@stats.ClientInfo.Blocks</span>
+                            <span @onclick="@(() => NavigateToBlockIndex(stats.ClientInfo.Blocks))">@stats.SyncBlockIndex</span>
                         </div>
                     </div>
                 </div>
