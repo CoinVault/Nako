@@ -1,6 +1,13 @@
 ﻿
 
 /*Added by Dan*/
+
 .mousepointer {
     cursor: pointer;
 }
+
+  
+.multiline-text {
+    word-break: break-all
+}
+

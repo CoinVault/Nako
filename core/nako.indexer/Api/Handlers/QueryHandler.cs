@@ -9,6 +9,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using Microsoft.Extensions.Options;
+using NBitcoin;
 
 namespace Nako.Api.Handlers
 {
@@ -393,7 +394,8 @@ namespace Nako.Api.Handlers
                     Balance = o.Value,
                     Index = o.Index,
                     OutputType = o.OutputType,
-                    ScriptPubKey =  o.ScriptPubKey
+                    ScriptPubKey =  o.ScriptPubKey,
+                    ScriptPubKeyAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(o.ScriptPubKey)).ToString()
                     
                 }),
                 Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput
@@ -403,6 +405,7 @@ namespace Nako.Api.Handlers
                     InputIndex = i.PreviousIndex,
                     InputTransactionId = i.PreviousTransactionHash,
                     ScriptSig = i.ScriptSig,
+                    ScriptSigAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(i.ScriptSig)).ToString(),
                     WitScript = i.WitScript,
                     SequenceLock = i.SequenceLock
                 })

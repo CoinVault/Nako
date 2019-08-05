@@ -119,6 +119,8 @@ namespace Nako.Ui.Blazor
 
             public string ScriptSig { get; set; }
 
+            public string ScriptSigAsm { get; set; }
+
             public string WitScript { get; set; }
 
             public string SequenceLock { get; set; }
@@ -135,6 +137,8 @@ namespace Nako.Ui.Blazor
             public string OutputType { get; set; }
 
             public string ScriptPubKey { get; set; }
+
+            public string ScriptPubKeyAsm { get; set; }
         }
 
         public class QueryAddress

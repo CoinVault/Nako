@@ -50,18 +50,24 @@ else
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
+                                    <td class="w-50">
                                         <div class="list-group">
                                             @foreach (var input in transaction.Inputs)
                                             {
                                                 <small>
-                                                    <div class="list-group-item list-group-item-action">
+                                                    <div style="padding: .55rem .55rem" class="list-group-item list-group-item-action">
                                                         <table class="table table-sm table-borderless table-sm">
                                                             <tbody>
-                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))"  class=" mousepointer"><small>@input.InputTransactionId</small></td></tr>
-                                                                <tr><td>Value:</td><td></td></tr>
-                                                                <tr><td>ScriptSig</td><td><small>@input.ScriptSig</small></td></tr>
-                                                                <tr><td>WitScript</td><td class="mw-100" ><small>@input.WitScript</small></td></tr>
+                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))"  class=" mousepointer">@input.InputTransactionId</td></tr>
+                                                                <tr><td colspan="2"><strong>ScriptSig</strong></td></tr>
+                                                                <tr><td colspan="2" class="multiline-text">@input.ScriptSig:</td></tr>
+                                                                <tr><td colspan="2"><strong>ScriptSig(Asm)</strong></td></tr>
+                                                                <tr><td colspan="2" class="multiline-text">@input.ScriptSigAsm:</td></tr>
+                                                                @if (!string.IsNullOrEmpty(@input.WitScript))
+                                                                {
+                                                                   <tr><td colspan="2">WitScript</td></tr>
+                                                                   <tr><td colspan="2" class="multiline-text">@input.WitScript</td></tr>
+                                                                }
                                                                 <tr><td>SequenceLock</td><td>@input.SequenceLock</td></tr>
                                                             </tbody>
                                                         </table>
@@ -70,18 +76,21 @@ else
                                             }
                                         </div>
                                     </td>
-                                    <td>
+                                    <td  class="w-50">
                                         <div class="list-group">
                                             @foreach (var output in transaction.Outputs)
                                             {
                                                 <small>
-                                                    <div class="list-group-item list-group-item-action">
+                                                    <div style="padding: .55rem .55rem" class="list-group-item list-group-item-action">
                                                         <table class="table table-sm table-borderless table-sm">
                                                             <tbody>
                                                                 <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))"  class=" mousepointer">@output.Address</td></tr>
-                                                                <tr><td>OutputType</td><td>@output.OutputType</td></tr>
+                                                                <tr><td>OutputType</td><td>@(output.OutputType == "TX_NULL_DATA" ?"OP_RETURN" : output.OutputType)</td></tr>
                                                                 <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
-                                                                <tr><td>ScriptPubKey</td><td><small>@output.ScriptPubKey</small></td></tr>
+                                                                <tr><td colspan="2"><strong>ScriptPubKey:</strong></td></tr>
+                                                                <tr><td colspan="2" class="multiline-text">@output.ScriptPubKey</td></tr>
+                                                                <tr><td colspan="2"><strong>ScriptPubKey(Asm):</strong></td></tr>
+                                                                <tr><td colspan="2" class="multiline-text">@output.ScriptPubKeyAsm</td></tr>
                                                             </tbody>
                                                         </table>
                                                     </div>

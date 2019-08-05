@@ -32,6 +32,8 @@ namespace Nako.Api.Handlers.Types
         /// </summary>
         public string OutputType { get; set; }
 
+        public string ScriptPubKeyAsm { get; set; }
+
         public string ScriptPubKey { get; set; }
     }
 }

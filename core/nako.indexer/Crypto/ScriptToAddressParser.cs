@@ -8,15 +8,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Linq;
 using NBitcoin;
 
-namespace Nako.Storage
+namespace Nako.Crypto
 {
-    using System.Collections.Generic;
-    using Nako.Client.Types;
-    using Nako.Storage.Types;
-
     public class ScriptToAddressParser
     {
         public static string[] GetAddress(Network network, Script script)
@@ -57,7 +52,16 @@ namespace Nako.Storage
 
             if (template.Type == TxOutType.TX_COLDSTAKE)
             {
-                // TODO;
+                if (ColdStakingScriptTemplate.Instance.ExtractScriptPubKeyParameters(script, out KeyId hotPubKeyHash, out KeyId coldPubKeyHash))
+                {
+                    // We want to index based on both the cold and hot key
+                    return new[]
+                    {
+                        hotPubKeyHash.GetAddress(network).ToString(),
+                        coldPubKeyHash.GetAddress(network).ToString(),
+                    };
+                }
+
                 return null;
             }
 

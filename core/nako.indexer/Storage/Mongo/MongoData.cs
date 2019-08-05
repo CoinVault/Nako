@@ -8,6 +8,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Nako.Crypto;
+
 namespace Nako.Storage.Mongo
 {
     using Microsoft.Extensions.Logging;
@@ -345,50 +347,9 @@ namespace Nako.Storage.Mongo
 
         private IEnumerable<SyncTransactionAddressItem> SelectAddressWithPool(SyncBlockInfo current, string address, bool availableOnly)
         {
-            // this code will not work as we need to have the actual transactions to deduct their value in case a memory pool transaction is found.
-            // this is not way to know if a mem pool transaction belongs to an address with heavily querying mongo, so the best solution (for now)
-            // is to just fetch the entire history,  this could be limited to the available balance only.
-
-            ////var confirmations = 3;
-  
-            //// var res = this.MapTransactionAddress.Aggregate()
-            ////    .Match(new BsonDocument
-            ////        {
-            ////            new BsonElement("Addresses", new BsonArray(new[] { address })),
-            ////            // in case we only want unspet values un comment this row
-            ////            //new BsonElement("SpendingTransactionId", new BsonDocument("$eq", BsonNull.Value))
-            ////        })
-            ////    .Project(new BsonDocument
-            ////        {
-            ////            new BsonElement("confirmed", new BsonDocument(new BsonElement("$lte", new BsonArray(new[] {"$BlockIndex", (object)(current.BlockIndex - confirmations + 1)})))),
-            ////            new BsonElement("val", new BsonString("$Value")),
-            ////            new BsonElement("spent", new BsonDocument(new BsonElement("$ne", new BsonArray(new[] {"$SpendingTransactionId", (object)BsonNull.Value})))),
-									
-            ////        })
-            ////    .Group(new BsonDocument
-            ////        {
-            ////            new BsonElement("_id", new BsonDocument{ {"Confirmed", new BsonString("$confirmed") }, { new BsonDocument("Spent", new BsonString("$spent")) }}),
-            ////            new BsonElement("TotalAmount", new BsonDocument("$sum", new BsonString("$val"))),       
-            ////            new BsonElement("Count", new BsonDocument("$sum", 1)),                  
-            ////        });
-
-            //// var results = res.ToList().Select(s => BsonSerializer.Deserialize<SelectBalanceResult>(s)).ToList();
-            ////var enumerated = results.ToList();
-
-            ////var received = enumerated.Where(w => w.id.Confirmed).Sum(s => s.TotalAmount);
-            ////var sent = enumerated.Where(w => w.id.Spent).Sum(s => s.TotalAmount);
-            ////var uncinfirmed = enumerated.Where(w => !w.id.Confirmed).Sum(s => s.TotalAmount);
-
-            ////// the mongo aggregator may change the precision so we corrected here limiting to 8 digits.
-            ////var balanceNew = new SyncTransactionAddressBalance
-            ////{
-            ////    Received = System.Convert.ToDecimal(received.ToString("#0.########")),
-            ////    Sent = System.Convert.ToDecimal(sent.ToString("#0.########")),
-            ////    Unconfirmed = System.Convert.ToDecimal(uncinfirmed.ToString("#0.########")),
-            ////};
-            
             var builder = Builders<MapTransactionAddress>.Filter;
-            var filter = builder.Eq(info => info.Addresses, new List<string> {address});
+            var addressFiler = new List<string> {address};
+            var filter = builder.AnyIn(transactionAddress => transactionAddress.Addresses, addressFiler);
 
             if (availableOnly)
             {
@@ -415,12 +376,12 @@ namespace Nako.Storage.Mongo
                 var addrsupdate = addrs;
                 this.GetPoolOutputs(pool).ForEach(f =>
                 {
-                        var adr = addrsupdate.FirstOrDefault(a => a.TransactionId == f.Item1.PrevOut.Hash.ToString() && a.Index == f.Item1.PrevOut.N);
-                        if (adr != null)
-                        {
-                            adr.SpendingTransactionId = f.Item2;
-                        }
-                    });
+                    var adr = addrsupdate.FirstOrDefault(a => a.TransactionId == f.Item1.PrevOut.Hash.ToString() && a.Index == f.Item1.PrevOut.N);
+                    if (adr != null)
+                    {
+                        adr.SpendingTransactionId = f.Item2;
+                    }
+                });
 
                 // if only spendable transactions are to be returned we need to remove 
                 // any that have been marked as spent by a transaction in the pool

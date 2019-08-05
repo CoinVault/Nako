@@ -34,6 +34,8 @@ namespace Nako.Api.Handlers.Types
 
         public string ScriptSig { get; set; }
 
+        public string ScriptSigAsm { get; set; }
+
         public string WitScript { get; set; }
 
         public string SequenceLock { get; set; }

@@ -8,6 +8,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Nako.Crypto;
+
 namespace Nako.Sync
 {
     using System.Collections.Concurrent;
@@ -45,6 +47,9 @@ namespace Nako.Sync
             this.configuration = configuration.Value;
             this.log = logger;
             this.storage = storage;
+
+            // Register the cold staking template.
+            StandardScripts.RegisterStandardScriptTemplate(ColdStakingScriptTemplate.Instance);
         }
 
         public SyncBlockOperation FindBlock(SyncConnection connection, SyncingBlocks container)
