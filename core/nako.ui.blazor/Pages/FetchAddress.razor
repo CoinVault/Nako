@@ -7,7 +7,17 @@
 
 @if (address == null)
 {
-    <p><em>Loading...</em></p>
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div style="margin:0 auto; min-height: 500px">
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }
 else
 {
@@ -90,6 +100,15 @@ else
             <div class="row">
                 <div class="col-lg-12">
                     <div class="center-heading">
+                        
+                        @if (this.fetching)
+                        {
+                            <button class="btn btn-light" type="button" disabled>
+                                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                                <span class="sr-only">Loading...</span>
+                            </button>
+                        }
+
                         @*Assume that if maxitems equals count there is more to fetch.*@
                         @if (this.maxitems != -1 && this.address.Transactions.Count() == this.maxitems)
                         {
@@ -110,52 +129,6 @@ else
 
         </div>
     </section>
-
-
-    @*<div class="list-group">
-        @foreach (var transaction in address.Transactions)
-        {
-            <div class="list-group-item list-group-item-action">
-                <table class="table table-sm table-borderless">
-                    <tbody>
-                        <tr><td>BlockIndex:</td><td @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex.Value))" style="cursor: pointer;" class=" btn btn-link">@transaction.BlockIndex </td></tr>
-                        <tr><td>Confirmations:</td><td>@transaction.Confirmations</td></tr>
-                        <tr><td>Output Hash:</td><td @onclick="@(() => NavigateToTransactionHash(transaction.TransactionHash))" style="cursor: pointer;" class=" btn btn-link">@transaction.TransactionHash</td></tr>
-                        <tr><td>Output Index:</td><td>@transaction.Index</td></tr>
-                        <tr><td>PubScriptHex</td><td>@transaction.PubScriptHex</td></tr>
-
-                        @if (string.IsNullOrEmpty(transaction.SpendingTransactionHash))
-                        {
-                            <tr><td>Value</td><td class="text-success">+ @(transaction.Value / 100000000) @address.CoinTag</td></tr>
-
-                        }
-                        else
-                        {
-                            <tr><td>Value</td><td class="text-danger">- @(transaction.Value / 100000000) @address.CoinTag</td></tr>
-                            <tr><td>Spent in:</td><td @onclick="@(() => NavigateToTransactionHash(transaction.SpendingTransactionHash))" style="cursor: pointer;" class="btn btn-link">@transaction.SpendingTransactionHash</td></tr>
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        }
-    </div>*@
-
-    @*// Assume that if maxitems equals count there is more to fetch.
-    @if (this.maxitems != -1 && this.address.Transactions.Count() == this.maxitems)
-    {
-        <br />
-        <button type="button" @onclick="FetchMoreAddresses" class="btn btn-light text-center">Fetch another 100</button>
-
-        // Not to abuse the fetch all button
-        @if (this.maxitems > 300)
-        {
-            <button type="button" @onclick="FetchAllAddresses" class="btn btn-light text-center">Fetch all</button>
-        }
-
-        <br />
-    }*@
-
 }
 
 @code {
@@ -164,6 +137,8 @@ else
     private string addresshash { get; set; }
 
     private int maxitems { get; set; } = 10;
+
+    private bool fetching { get; set; } = false;
 
     private void NavigateToTransactionHash(string trxHash)
     {
@@ -180,15 +155,22 @@ else
     private async Task FetchMoreAddresses()
     {
         this.maxitems += 100;
+        fetching = true;
 
         address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions/{this.maxitems}?api-version=1.0");
+
+        fetching = false;
     }
 
     private async Task FetchAllAddresses()
     {
         this.maxitems = -1;
 
+        fetching = true;
+
         address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions?api-version=1.0");
+
+        fetching = false;
     }
 
     protected override async Task OnInitAsync()

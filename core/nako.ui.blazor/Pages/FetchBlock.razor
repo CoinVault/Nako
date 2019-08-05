@@ -7,7 +7,17 @@
 
 @if (block == null)
 {
-    <p><em>Loading...</em></p>
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div style="margin:0 auto; min-height: 500px">
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }
 else
 {
@@ -102,6 +112,8 @@ else
 
     private async Task UpdateBlockHash(string hash)
     {
+        block = null;
+
         block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{hash}/1?api-version=1.0");
     }
 

@@ -5,11 +5,20 @@
 
 @if (transaction == null)
 {
-    <p><em>Loading...</em></p>
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div style="margin:0 auto; min-height: 800px">
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }
 else
 {
-
     <section class="block-explorer-section section bg-bottom">
         <div class="container">
             <div class="row">
@@ -32,7 +41,7 @@ else
                                 <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
                                 <tr><td>Bloc kHash</td><td>@transaction.BlockHash</td></tr>
                                 <tr><td>Block Index</td><td style="cursor: pointer;" class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
-                                <tr><td>Timestamp</td><td>@transaction.Timestamp.ToString("dd/MM/yyyy HH:mm")</td></tr>
+                                <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -58,15 +67,15 @@ else
                                                     <div style="padding: .55rem .55rem" class="list-group-item list-group-item-action">
                                                         <table class="table table-sm table-borderless table-sm">
                                                             <tbody>
-                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))"  class=" mousepointer">@input.InputTransactionId</td></tr>
+                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" class=" mousepointer">@input.InputTransactionId</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptSig</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@input.ScriptSig:</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptSig(Asm)</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@input.ScriptSigAsm:</td></tr>
                                                                 @if (!string.IsNullOrEmpty(@input.WitScript))
                                                                 {
-                                                                   <tr><td colspan="2">WitScript</td></tr>
-                                                                   <tr><td colspan="2" class="multiline-text">@input.WitScript</td></tr>
+                                                                    <tr><td colspan="2">WitScript</td></tr>
+                                                                    <tr><td colspan="2" class="multiline-text">@input.WitScript</td></tr>
                                                                 }
                                                                 <tr><td>SequenceLock</td><td>@input.SequenceLock</td></tr>
                                                             </tbody>
@@ -76,7 +85,7 @@ else
                                             }
                                         </div>
                                     </td>
-                                    <td  class="w-50">
+                                    <td class="w-50">
                                         <div class="list-group">
                                             @foreach (var output in transaction.Outputs)
                                             {
@@ -84,8 +93,8 @@ else
                                                     <div style="padding: .55rem .55rem" class="list-group-item list-group-item-action">
                                                         <table class="table table-sm table-borderless table-sm">
                                                             <tbody>
-                                                                <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))"  class=" mousepointer">@output.Address</td></tr>
-                                                                <tr><td>OutputType</td><td>@(output.OutputType == "TX_NULL_DATA" ?"OP_RETURN" : output.OutputType)</td></tr>
+                                                                <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))" class=" mousepointer">@output.Address</td></tr>
+                                                                <tr><td>OutputType</td><td>@(output.OutputType == "TX_NULL_DATA" ? "OP_RETURN" : output.OutputType)</td></tr>
                                                                 <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptPubKey:</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@output.ScriptPubKey</td></tr>
@@ -106,71 +115,6 @@ else
             </div>
         </div>
     </section>
-
-    @*<table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Info</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
-            <tr><td>BlockHash</td><td>@transaction.BlockHash</td></tr>
-            <tr><td>BlockIndex</td><td style="cursor: pointer;" class="btn btn-link" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
-            <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
-        </tbody>
-    </table>*@
-
-    @*<table class="table table-sm">
-        <thead>
-            <tr>
-                <th>Inputs</th>
-                <th>Outputs</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <div class="list-group">
-                        @foreach (var input in transaction.Inputs)
-                        {
-                            <small>
-                                <div class="list-group-item list-group-item-action">
-                                    <table class="table table-sm table-borderless">
-                                        <tbody>
-                                            <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" style="cursor: pointer;" class=" btn btn-link"><small>@input.InputTransactionId</small></td></tr>
-                                            <tr><td>Value:</td><td></td></tr>
-                                            <tr><td>ScriptSig</td><td></td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </small>
-                        }
-                    </div>
-                </td>
-                <td>
-                    <div class="list-group">
-                        @foreach (var output in transaction.Outputs)
-                        {
-                            <small>
-                                <div class="list-group-item list-group-item-action">
-                                    <table class="table table-sm table-borderless">
-                                        <tbody>
-                                            <tr><td>Address:</td><td @onclick="@(() => NavigateToAddress(output.Address))" style="cursor: pointer;" class=" btn btn-link"><small>@output.Address</small></td></tr>
-                                            <tr><td>OutputType</td><td>@output.OutputType</td></tr>
-                                            <tr><td>Value</td><td>@(output.Balance) @transaction.CoinTag</td></tr>
-                                            <tr><td>ScriptPubKey</td><td></td></tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </small>
-                        }
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>*@
 }
 
 @code {
@@ -180,6 +124,8 @@ else
 
     private async Task UpdateTransactionHash(string trxHash)
     {
+        transaction = null;
+
         transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{trxHash}?api-version=1.0");
     }
 
