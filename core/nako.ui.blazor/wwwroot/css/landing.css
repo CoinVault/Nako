@@ -1034,6 +1034,10 @@ header
   left: 0;
 }
 
+.header-area .main-nav .menu-trigger-item {
+    
+}
+
 .header-area .main-nav .menu-trigger span:before,
 .header-area .main-nav .menu-trigger span:after {
   -moz-transition: all 0.4s;

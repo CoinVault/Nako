@@ -8,6 +8,29 @@
                 _0x2f2ex1('.header-area .nav')['slideToggle'](200)
             })
         };
+
+        // the menu elements are only added later 
+        // when blazor loads its elements
+        $(document).bind('DOMNodeInserted', function (event) {
+            if (event.target.className == "menu-trigger") {
+                if (_0x2f2ex1('.menu-trigger')['length']) {
+                    _0x2f2ex1('.menu-trigger')['click'](function () {
+                        _0x2f2ex1(this)['toggleClass']('active');
+                        _0x2f2ex1('.header-area .nav')['slideToggle'](200)
+                    })
+                };
+            }
+
+            if (event.target.className == "menu-trigger-item") {
+                _0x2f2ex1('.menu-trigger-item')['click'](function () {
+                    _0x2f2ex1('.menu-trigger')['removeClass']('active');
+                    _0x2f2ex1('.header-area .nav')['slideUp'](200)
+
+                })
+            }
+        });
+
+
         _0x2f2ex1('body')['click'](function(_0x2f2ex4) {
             var _0x2f2ex5 = _0x2f2ex4['target'];
             if (_0x2f2ex1(_0x2f2ex5)['parents']('.flag-list')['length'] || _0x2f2ex1(_0x2f2ex5)['hasClass']('flag-list')) {
