@@ -5,28 +5,38 @@
 
 @if (stats == null)
 {
-    <p><em>Loading...</em></p>
+    <section class="block-explorer-section section bg-bottom">
+        <div class="container">
+            <div class="row">
+                <div style="margin:0 auto; min-height: 500px">
+                    <div class="spinner-grow" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 }
 else
 {
     <!-- ***** Wellcome Area Start ***** -->
     @*<section class="block-explorer-wrapper bg-bottom-center" id="welcome-1">
-        <div class="block-explorer text">
-            <div class="container text-center">
-                <div class="row">
-                    <div class="col-lg-12 align-self-center">
-                        <h1>@stats.CoinTag Explorer</h1>
-                    </div>
-                    <div class="offset-lg-3 col-lg-6">
-                        <p>Last Block @stats.ClientInfo.Blocks</p>
+            <div class="block-explorer text">
+                <div class="container text-center">
+                    <div class="row">
+                        <div class="col-lg-12 align-self-center">
+                            <h1>@stats.CoinTag Explorer</h1>
+                        </div>
+                        <div class="offset-lg-3 col-lg-6">
+                            <p>Last Block @stats.ClientInfo.Blocks</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <SearchBar />
+            <SearchBar />
 
-    </section>*@
+        </section>*@
     <!-- ***** Wellcome Area End ***** -->
 
     <section class="block-explorer-features section bg-bottom">
