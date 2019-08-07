@@ -106,41 +106,65 @@ namespace Nako.Api.Handlers
 
             res.ForEach(p =>
             {
-                var ipe = CreateIPEndPoint(p.Addr);
-                p.Addr = $"{ipe.Address}:{ipe.Port}";
+                if (TryParse(p.Addr, out IPEndPoint ipe))
+                {
+                    string addr = ipe.Address.ToString();
+                    if (ipe.Address.IsIPv4MappedToIPv6)
+                    {
+                        addr = ipe.Address.MapToIPv4().ToString();
+                    }
+
+                    p.Addr = $"{addr}:{ipe.Port}";
+                }
             });
 
             return res;
         }
 
-        /// <summary>
-        /// Handles IPv4 and IPv6 notation.
-        /// </summary>
-        public static IPEndPoint CreateIPEndPoint(string endPoint)
+
+        // This code is temporary til Nako upgrades to netcore 3.3
+        // see https://github.com/dotnet/corefx/pull/33119
+        public const int MaxPort = 0x0000FFFF;
+
+        public static bool TryParse(string s, out IPEndPoint result)
         {
-            string[] ep = endPoint.Split(':');
-            if (ep.Length < 2) throw new FormatException("Invalid endpoint format");
-            IPAddress ip;
-            if (ep.Length > 2)
+            return TryParse(s.AsSpan(), out result);
+        }
+
+
+        public static bool TryParse(ReadOnlySpan<char> s, out IPEndPoint result)
+        {
+            int addressLength = s.Length;  // If there's no port then send the entire string to the address parser
+            int lastColonPos = s.LastIndexOf(':');
+
+            // Look to see if this is an IPv6 address with a port.
+            if (lastColonPos > 0)
             {
-                if (!IPAddress.TryParse(string.Join(":", ep, 0, ep.Length - 1), out ip))
+                if (s[lastColonPos - 1] == ']')
                 {
-                    throw new FormatException("Invalid ip-adress");
+                    addressLength = lastColonPos;
+                }
+                // Look to see if this is IPv4 with a port (IPv6 will have another colon)
+                else if (s.Slice(0, lastColonPos).LastIndexOf(':') == -1)
+                {
+                    addressLength = lastColonPos;
                 }
             }
-            else
+
+            if (IPAddress.TryParse(s.Slice(0, addressLength), out IPAddress address))
             {
-                if (!IPAddress.TryParse(ep[0], out ip))
+                uint port = 0;
+                if (addressLength == s.Length ||
+                    (uint.TryParse(s.Slice(addressLength + 1), NumberStyles.None, CultureInfo.InvariantCulture, out port) && port <= MaxPort))
+
                 {
-                    throw new FormatException("Invalid ip-adress");
+                    result = new IPEndPoint(address, (int)port);
+                    return true;
                 }
             }
-            int port;
-            if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out port))
-            {
-                throw new FormatException("Invalid port");
-            }
-            return new IPEndPoint(ip, port);
+
+            result = null;
+            return false;
         }
     }
 }
