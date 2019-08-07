@@ -74,6 +74,10 @@ namespace Nako.Api.Handlers.Types
 
         public long Version { get; set; }
 
+        public double Difficulty { get; set; }
+
+        public string ChainWork { get; set; }
+
         public string PosBlockSignature { get; set; }
 
         public string PosModifierv2 { get; set; }

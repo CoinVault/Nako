@@ -49,6 +49,8 @@ else
                                 <tr><td><strong>Version</strong></td><td>@block.Version</td></tr>
                                 <tr><td><strong>Merkleroot</strong></td><td>@block.Merkleroot</td></tr>
                                 <tr><td><strong>Nonce</strong></td><td>@block.Nonce</td></tr>
+                                <tr><td><strong>ChainWork</strong></td><td>@block.ChainWork</td></tr>
+                                <tr><td><strong>Difficulty</strong></td><td>@block.Difficulty</td></tr>
                                 <tr><td><strong>Size</strong></td><td>@block.BlockSize KB</td></tr>
                                 @if (!string.IsNullOrEmpty(@block.PosModifierv2))
                                 {
@@ -57,7 +59,7 @@ else
                                     <tr><td>PosChainTrust</td><td>@block.PosChainTrust</td></tr>
                                     <tr><td>PosBlockTrust</td><td>@block.PosBlockTrust</td></tr>
                                     <tr><td>PosFlags</td><td>@block.PosFlags</td></tr>
-                                    @*<tr><td>Block Signature</td><td> @block.PosBlockSignature</td></tr>*@
+                                    <tr><td colspan="2">Block Signature: <br/><small class="multiline-text"> @block.PosBlockSignature</small></td></tr>
                                 }
                             </tbody>
                         </table>
@@ -108,7 +110,7 @@ else
 
     private void NavigateToTransactionkIndex(string trxHash)
     {
-        UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
+        UriHelper.NavigateTo($"fetchtransaction/{trxHash}");
     }
 
     private async Task UpdateBlockHash(string hash)

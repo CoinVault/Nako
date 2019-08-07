@@ -1,4 +1,4 @@
-﻿@page "/FetchTransaction/{transactionhash}"
+﻿@page "/fetchtransaction/{transactionhash}"
 @inject HttpClient Http
 @inject IUriHelper UriHelper
 @inject GlobalData globalData
@@ -116,6 +116,11 @@ else
                                                                 <tr><td colspan="2" class="multiline-text">@output.ScriptPubKey</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptPubKey(Asm):</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@output.ScriptPubKeyAsm</td></tr>
+                                                                
+                                                                @if (!string.IsNullOrEmpty(output.SpentInTransaction))
+                                                                {
+                                                                    <tr><td>SpentIn</td><td @onclick="@(() => UpdateTransactionHash(output.SpentInTransaction))" class=" mousepointer">@output.SpentInTransaction</td></tr>
+                                                                }
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -142,6 +147,7 @@ else
     {
         transaction = null;
 
+        Console.WriteLine($"trxHash={trxHash}");
         transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{trxHash}?api-version=1.0");
     }
 
@@ -152,13 +158,15 @@ else
 
     private void NavigateToAddress(string address)
     {
-        UriHelper.NavigateTo($"FetchAddress/{address}");
+        UriHelper.NavigateTo($"fetchaddress/{address}");
     }
 
     DataTypes.QueryTransaction transaction;
 
     protected override async Task OnInitAsync()
     {
+        Console.WriteLine($"transactionhash={this.transactionhash}");
+
         transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.transactionhash}?api-version=1.0");
 
     }

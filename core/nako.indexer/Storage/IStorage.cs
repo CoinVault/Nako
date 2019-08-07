@@ -40,6 +40,8 @@ namespace Nako.Storage
 
         SyncTransactionAddressBalance AddressGetBalanceUtxo(string address, long confirmations);
 
+        string GetSpendingTransaction(string transaction, int index);
+
         void DeleteBlock(string blockHash);
 
         IEnumerable<NBitcoin.Transaction> GetMemoryTransactions();

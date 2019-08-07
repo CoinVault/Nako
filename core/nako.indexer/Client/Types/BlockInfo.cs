@@ -19,6 +19,12 @@ namespace Nako.Client.Types
         [JsonProperty("bits")]
         public string Bits { get; set; }
 
+        [JsonProperty("difficulty")]
+        public double Difficulty { get; private set; }
+
+        [JsonProperty("chainwork")]
+        public string ChainWork { get; private set; }
+
         [JsonProperty("confirmations")]
         public long Confirmations { get; set; }
 

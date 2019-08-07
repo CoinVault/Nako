@@ -35,6 +35,10 @@ namespace Nako.Storage.Types
 
         public string Bits { get; set; }
 
+        public double Difficulty { get; set; }
+
+        public string ChainWork { get; set; }
+
         public string Merkleroot { get; set; }
 
         public long Nonce { get; set; }

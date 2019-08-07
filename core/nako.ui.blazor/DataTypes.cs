@@ -28,6 +28,8 @@ namespace Nako.Ui.Blazor
             public string Bits { get; set; }
             public string Merkleroot { get; set; }
             public long Nonce { get; set; }
+            public double Difficulty { get; set; }
+            public string ChainWork { get; set; }
             public long Version { get; set; }
             public string PosBlockSignature { get; set; }
             public string PosModifierv2 { get; set; }
@@ -149,6 +151,8 @@ namespace Nako.Ui.Blazor
             public string ScriptPubKey { get; set; }
 
             public string ScriptPubKeyAsm { get; set; }
+
+            public string SpentInTransaction { get; set; }
         }
 
         public class QueryAddress

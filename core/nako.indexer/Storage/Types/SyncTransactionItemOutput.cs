@@ -11,8 +11,6 @@ namespace Nako.Storage.Types
 {
     public class SyncTransactionItemOutput
     {
-        #region Public Properties
-
         public int Index { get; set; }
 
         public string Address { get; set; }
@@ -23,6 +21,6 @@ namespace Nako.Storage.Types
 
         public string ScriptPubKey { get; set; }
 
-        #endregion
+        public string SpentInTransaction { get; set; }
     }
 }

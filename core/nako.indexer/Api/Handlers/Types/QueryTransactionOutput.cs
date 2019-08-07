@@ -35,5 +35,7 @@ namespace Nako.Api.Handlers.Types
         public string ScriptPubKeyAsm { get; set; }
 
         public string ScriptPubKey { get; set; }
+
+        public string SpentInTransaction { get; set; }
     }
 }

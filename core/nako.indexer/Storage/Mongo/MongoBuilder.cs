@@ -102,8 +102,9 @@ namespace Nako.Storage.Mongo
             var trxBlkIndex = Builders<MapTransactionBlock>.IndexKeys.Ascending(trxBlk => trxBlk.BlockIndex);
             this.mongoData.MapTransactionBlock.Indexes.CreateOne(trxBlkIndex);
 
-            var trxIndex = Builders<MapTransaction>.IndexKeys.Ascending(trxBlk => trxBlk.TransactionId);
-            this.mongoData.MapTransaction.Indexes.CreateOne(trxIndex);
+            // This is not needed as the id field is already the index
+            //var trxIndex = Builders<MapTransaction>.IndexKeys.Ascending(trxBlk => trxBlk.TransactionId);
+            //this.mongoData.MapTransaction.Indexes.CreateOne(trxIndex);
 
             return Task.FromResult(1);
         }

@@ -157,7 +157,7 @@ namespace Nako.Storage.Mongo
                     // insert outputs
                     var outputs = this.CreateOutputs(items).ToList();
                     stats.Outputs += outputs.Count();
-                    outputs.ForEach(outp => this.data.MarkOutput(outp.InputTransactionId, outp.InputIndex, outp.TransactionId));
+                    outputs.ForEach(outp => this.data.MarkOutput(outp.outPoint.Hash.ToString(), (int)outp.outPoint.N, outp.spentIn));
 
                     // If insert trx supported then push trx in batches.
                     if (this.configuration.StoreRawTransactions)
@@ -224,6 +224,8 @@ namespace Nako.Storage.Mongo
                 Confirmations = block.Confirmations,
                 Merkleroot = block.Merkleroot,
                 Nonce = block.Nonce,
+                ChainWork = block.ChainWork,
+                Difficulty = block.Difficulty,
                 PosBlockSignature = block.PosBlockSignature,
                 PosBlockTrust = block.PosBlockTrust,
                 PosChainTrust = block.PosChainTrust,
@@ -282,22 +284,23 @@ namespace Nako.Storage.Mongo
             {
                 var rawTransaction = transaction;
 
-                var index = 0;
-                foreach (var output in rawTransaction.Outputs)
+                var id = rawTransaction.GetHash().ToString();
+
+                for (int index = 0; index < rawTransaction.Outputs.Count; index++)
                 {
+                    var output = rawTransaction.Outputs[index];
+
                     var address = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey);
 
                     if(address == null)
                         continue;
-
-                    var id = rawTransaction.GetHash().ToString();
 
                     yield return new MapTransactionAddress
                     {
                         Id = string.Format("{0}-{1}", id, index),
                         TransactionId = id,
                         Value = output.Value,
-                        Index = index++,
+                        Index = index,
                         Addresses = address.ToList(), 
                         ScriptHex = output.ScriptPubKey.ToHex(),
                         BlockIndex = blockIndex,
@@ -308,18 +311,16 @@ namespace Nako.Storage.Mongo
             }
         }
 
-        private IEnumerable<dynamic> CreateOutputs(IEnumerable<NBitcoin.Transaction> transactions)
+        private IEnumerable<(OutPoint outPoint, string spentIn)> CreateOutputs(IEnumerable<NBitcoin.Transaction> transactions)
         {
             foreach (var transaction in transactions)
             {
+                if(transaction.IsCoinBase)
+                    continue;
+
                 foreach (var input in transaction.Inputs)
                 {
-                    yield return new
-                    {
-                        TransactionId = transaction.GetHash().ToString(),
-                        InputTransactionId = input.PrevOut.Hash.ToString(),
-                        InputIndex = (int)input.PrevOut.N
-                    };
+                    yield return (input.PrevOut, transaction.GetHash().ToString());
                 }
             }
         }

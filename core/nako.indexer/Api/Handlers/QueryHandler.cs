@@ -237,6 +237,8 @@ namespace Nako.Api.Handlers
                 Synced = block.SyncComplete,
                 TransactionCount = block.TransactionCount,
                 Bits = block.Bits,
+                ChainWork = block.ChainWork,
+                Difficulty = block.Difficulty,
                 Confirmations = block.Confirmations,
                 Merkleroot = block.Merkleroot,
                 Nonce = block.Nonce,
@@ -393,15 +395,6 @@ namespace Nako.Api.Handlers
                 Version = transactionItems.Version,
                 IsCoinbase = transactionItems.IsCoinbase,
                 IsCoinstake = transactionItems.IsCoinstake,
-                Outputs = transactionItems.Outputs.Select(o => new QueryTransactionOutput
-                {
-                    Address = o.Address,
-                    Balance = o.Value,
-                    Index = o.Index,
-                    OutputType = o.OutputType,
-                    ScriptPubKey =  o.ScriptPubKey,
-                    ScriptPubKeyAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(o.ScriptPubKey)).ToString()
-                }),
                 Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput
                 {
                     CoinBase = i.InputCoinBase,
@@ -412,7 +405,17 @@ namespace Nako.Api.Handlers
                     ScriptSigAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(i.ScriptSig)).ToString(),
                     WitScript = i.WitScript,
                     SequenceLock = i.SequenceLock
-                })
+                }),
+                Outputs = transactionItems.Outputs.Select(o => new QueryTransactionOutput
+                {
+                    Address = o.Address,
+                    Balance = o.Value,
+                    Index = o.Index,
+                    OutputType = o.OutputType,
+                    ScriptPubKey =  o.ScriptPubKey,
+                    SpentInTransaction = o.SpentInTransaction,
+                    ScriptPubKeyAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(o.ScriptPubKey)).ToString()
+                }),
             };
         }
     }

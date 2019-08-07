@@ -30,8 +30,13 @@
 
     private async Task Navigate()
     {
+        Console.WriteLine($"Search = {this.Search}");
+
+
         if (long.TryParse(this.Search, out long index))
         {
+            Console.WriteLine($"fetchblock/{index}");
+
             UriHelper.NavigateTo($"fetchblock/{index}");
             this.Search = null;
             return;
@@ -43,6 +48,8 @@
         {
             this.globalData.BlocksCache.Add(block.BlockIndex, block);
 
+            Console.WriteLine($"fetchblock/{block.BlockIndex}");
+
             UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
             this.Search = null;
             return;
@@ -52,6 +59,8 @@
 
         if(transaction.TransactionId != null)
         {
+            Console.WriteLine($"fetchtransaction/{transaction.TransactionId}");
+
             UriHelper.NavigateTo($"FetchTransaction/{transaction.TransactionId}");
             this.Search = null;
             return;
@@ -61,7 +70,9 @@
 
         if(address.TotalReceived > 0)
         {
-            UriHelper.NavigateTo($"FetchAddress/{address.Address}");
+            Console.WriteLine($"fetchaddress/{address.Address}");
+
+            UriHelper.NavigateTo($"fetchaddress/{address.Address}");
             this.Search = null;
             return;
         }

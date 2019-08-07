@@ -153,6 +153,13 @@ namespace Nako.Storage.Mongo
             this.MapTransactionAddress.UpdateOne(filter, update);
         }
 
+        public string GetSpendingTransaction(string transaction, int index)
+        {
+            var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, string.Format("{0}-{1}", transaction, index));
+
+            return this.MapTransactionAddress.Find(filter).ToList().Select(t => t.SpendingTransactionId).FirstOrDefault();
+        }
+
         public SyncTransactionInfo BlockTransactionGet(string transactionId)
         {
             var filter = Builders<MapTransactionBlock>.Filter.Eq(info => info.TransactionId, transactionId);
@@ -239,13 +246,13 @@ namespace Nako.Storage.Mongo
                 transaction.PrecomputeHash(false, true);
             }
 
-            return new SyncTransactionItems
+            var ret = new SyncTransactionItems
                        {
                            RBF = transaction.RBF,
                            LockTime = transaction.LockTime.ToString(),
                            Version = transaction.Version,
                            IsCoinbase = transaction.IsCoinBase,
-                           IsCoinstake = this.syncConnection.Network.Consensus.IsProofOfStake ? transaction.IsCoinStake : false,
+                           IsCoinstake = this.syncConnection.Network.Consensus.IsProofOfStake && transaction.IsCoinStake,
                            Inputs = transaction.Inputs.Select(v => new SyncTransactionItemInput
                            {
                                PreviousTransactionHash = v.PrevOut.Hash.ToString(),
@@ -265,6 +272,15 @@ namespace Nako.Storage.Mongo
                            })
                            .ToList()
                        };
+
+
+            // try to fetch spent outputs
+            foreach (var output in ret.Outputs)
+            {
+                output.SpentInTransaction = this.GetSpendingTransaction(transactionId, output.Index);
+            }
+
+            return ret;
         }
 
         public SyncTransactionAddressBalance AddressGetBalance(string address, long confirmations)
@@ -336,6 +352,8 @@ namespace Nako.Storage.Mongo
                 PreviousBlockHash = block.PreviousBlockHash,
                 TransactionCount = block.TransactionCount,
                 Nonce = block.Nonce,
+                ChainWork = block.ChainWork,
+                Difficulty = block.Difficulty,
                 Merkleroot = block.Merkleroot,
                 PosModifierv2 = block.PosModifierv2,
                 PosHashProof = block.PosHashProof,
