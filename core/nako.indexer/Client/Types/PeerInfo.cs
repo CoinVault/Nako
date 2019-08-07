@@ -9,13 +9,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 namespace Nako.Client.Types
 {
-    #region Using Directives
-
     using System.Collections.Generic;
 
     using Newtonsoft.Json;
-
-    #endregion
 
     public class PeerInfo
     {

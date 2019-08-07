@@ -21,6 +21,8 @@ namespace Nako.Api.Handlers
     using Nako.Config;
     using Nako.Operations.Types;
     using Nako.Storage;
+    using System.Globalization;
+    using System.Net;
 
     /// <summary>
     /// Handler to make get info about a blockchain.
@@ -100,7 +102,45 @@ namespace Nako.Api.Handlers
         {
             var connection = this.syncConnection;
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
-            return (await client.GetPeerInfo()).ToList();
+            var res = (await client.GetPeerInfo()).ToList();
+
+            res.ForEach(p =>
+            {
+                var ipe = CreateIPEndPoint(p.Addr);
+                p.Addr = $"{ipe.Address}:{ipe.Port}";
+            });
+
+            return res;
+        }
+
+        /// <summary>
+        /// Handles IPv4 and IPv6 notation.
+        /// </summary>
+        public static IPEndPoint CreateIPEndPoint(string endPoint)
+        {
+            string[] ep = endPoint.Split(':');
+            if (ep.Length < 2) throw new FormatException("Invalid endpoint format");
+            IPAddress ip;
+            if (ep.Length > 2)
+            {
+                if (!IPAddress.TryParse(string.Join(":", ep, 0, ep.Length - 1), out ip))
+                {
+                    throw new FormatException("Invalid ip-adress");
+                }
+            }
+            else
+            {
+                if (!IPAddress.TryParse(ep[0], out ip))
+                {
+                    throw new FormatException("Invalid ip-adress");
+                }
+            }
+            int port;
+            if (!int.TryParse(ep[ep.Length - 1], NumberStyles.None, NumberFormatInfo.CurrentInfo, out port))
+            {
+                throw new FormatException("Invalid port");
+            }
+            return new IPEndPoint(ip, port);
         }
     }
 }
