@@ -103,6 +103,16 @@ namespace Nako.Ui.Blazor
 
             public long Confirmations { get; set; }
 
+            public bool IsCoinbase { get; set; }
+
+            public bool IsCoinstake { get; set; }
+
+            public string LockTime { get; set; }
+
+            public bool RBF { get; set; }
+
+            public uint Version { get; set; }
+
             public IEnumerable<QueryTransactionInput> Inputs { get; set; }
 
             public IEnumerable<QueryTransactionOutput> Outputs { get; set; }

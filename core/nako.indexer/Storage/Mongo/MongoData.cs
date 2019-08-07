@@ -241,6 +241,11 @@ namespace Nako.Storage.Mongo
 
             return new SyncTransactionItems
                        {
+                           RBF = transaction.RBF,
+                           LockTime = transaction.LockTime.ToString(),
+                           Version = transaction.Version,
+                           IsCoinbase = transaction.IsCoinBase,
+                           IsCoinstake = this.syncConnection.Network.Consensus.IsProofOfStake ? transaction.IsCoinStake : false,
                            Inputs = transaction.Inputs.Select(v => new SyncTransactionItemInput
                            {
                                PreviousTransactionHash = v.PrevOut.Hash.ToString(),

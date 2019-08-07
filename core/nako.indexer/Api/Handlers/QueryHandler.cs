@@ -388,6 +388,11 @@ namespace Nako.Api.Handlers
                 Timestamp = transaction.Timestamp.UnixTimeStampToDateTime(),
                 TransactionId = transaction.TransactionHash,
                 Confirmations = transaction.Confirmations,
+                RBF = transactionItems.RBF,
+                LockTime = transactionItems.LockTime.ToString(),
+                Version = transactionItems.Version,
+                IsCoinbase = transactionItems.IsCoinbase,
+                IsCoinstake = transactionItems.IsCoinstake,
                 Outputs = transactionItems.Outputs.Select(o => new QueryTransactionOutput
                 {
                     Address = o.Address,
@@ -396,7 +401,6 @@ namespace Nako.Api.Handlers
                     OutputType = o.OutputType,
                     ScriptPubKey =  o.ScriptPubKey,
                     ScriptPubKeyAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(o.ScriptPubKey)).ToString()
-                    
                 }),
                 Inputs = transactionItems.Inputs.Select(i => new QueryTransactionInput
                 {

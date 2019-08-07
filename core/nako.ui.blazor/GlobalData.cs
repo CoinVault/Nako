@@ -39,6 +39,13 @@ namespace Nako.Ui.Blazor
 
             return blocktime.UtcDateTime;
         }
+
+        public static string ToUnit(long satoshi)
+        {
+            var res = (decimal) satoshi / 100000000;
+
+            return res.ToString("00,000.00000000");
+        }
     }
 
 

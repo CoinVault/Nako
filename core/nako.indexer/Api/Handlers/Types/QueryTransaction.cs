@@ -49,6 +49,16 @@ namespace Nako.Api.Handlers.Types
         /// </summary>
         public long Confirmations { get; set; }
 
+        public bool IsCoinbase { get; set; }
+
+        public bool IsCoinstake { get; set; }
+
+        public string LockTime { get; set; }
+
+        public bool RBF { get; set; }
+
+        public uint Version { get; set; }
+
         /// <summary>
         /// Gets or sets the transaction inputs.
         /// </summary>

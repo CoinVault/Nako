@@ -74,14 +74,13 @@ namespace Nako.Operations.Types
             powNoRetargeting: false,
             powLimit: new Target(uint256.Zero),
             minimumChainWork: null,
-            isProofOfStake: true,
+            isProofOfStake: consensusFactory is PosConsensusFactory,
             lastPowBlock: 0,
             proofOfStakeLimit: null,
             proofOfStakeLimitV2: null,
             proofOfStakeReward: 0
         )
         {
-
         }
     }
 
