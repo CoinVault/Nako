@@ -83,14 +83,15 @@ else
                                                     <div style="padding: .55rem .55rem" class="list-group-item list-group-item-action">
                                                         <table class="table table-sm table-borderless table-sm">
                                                             <tbody>
-                                                                <tr><td># @input.InputIndex</td><td @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" class=" mousepointer">@input.InputTransactionId</td></tr>
+                                                                <tr><td colspan="2"><strong>Prevout</strong></td></tr>
+                                                                <tr><td colspan="2" @onclick="@(() => UpdateTransactionHash(input.InputTransactionId))" class=" mousepointer"># @input.InputIndex - @input.InputTransactionId</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptSig</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@input.ScriptSig:</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptSig(Asm)</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@input.ScriptSigAsm:</td></tr>
                                                                 @if (!string.IsNullOrEmpty(@input.WitScript))
                                                                 {
-                                                                    <tr><td colspan="2">WitScript</td></tr>
+                                                                    <tr><td colspan="2"><strong>WitScript</strong></td></tr>
                                                                     <tr><td colspan="2" class="multiline-text">@input.WitScript</td></tr>
                                                                 }
                                                                 <tr><td>SequenceLock</td><td>@input.SequenceLock</td></tr>
@@ -116,10 +117,15 @@ else
                                                                 <tr><td colspan="2" class="multiline-text">@output.ScriptPubKey</td></tr>
                                                                 <tr><td colspan="2"><strong>ScriptPubKey(Asm):</strong></td></tr>
                                                                 <tr><td colspan="2" class="multiline-text">@output.ScriptPubKeyAsm</td></tr>
-                                                                
+
                                                                 @if (!string.IsNullOrEmpty(output.SpentInTransaction))
                                                                 {
-                                                                    <tr><td>SpentIn</td><td @onclick="@(() => UpdateTransactionHash(output.SpentInTransaction))" class=" mousepointer">@output.SpentInTransaction</td></tr>
+                                                                    <tr><td colspan="2"><strong>Spent in</strong></td></tr>
+                                                                    <tr><td colspan="2" @onclick="@(() => UpdateTransactionHash(output.SpentInTransaction))" class=" mousepointer">@output.SpentInTransaction</td></tr>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <tr><td colspan="2">unspent</td></tr>
                                                                 }
                                                             </tbody>
                                                         </table>
