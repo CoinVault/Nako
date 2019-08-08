@@ -7,7 +7,7 @@ services:
     command: --urls=http://0.0.0.0:80
     ports:
         - 80:80
-		
+
   nako:
     container_name: btc-nako
     networks: 
@@ -33,7 +33,7 @@ services:
     ports: 
         - 5000:5000
         - 8333:8333
-		    - 37220:37220
+        - 37220:37220
 
   mongo:
     container_name: btc-mongo
