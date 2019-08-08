@@ -10,19 +10,13 @@
 
 namespace Nako.Operations.Types
 {
-    #region Using Directives
-
     using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     using Nako.Client.Types;
 
-    #endregion
-
     public class SyncingBlocks
     {
-        #region Public Properties
-
         public ConcurrentDictionary<string, BlockInfo> CurrentSyncing { get; set; }
 
         public BlockInfo LastBlock { get; set; }
@@ -30,7 +24,5 @@ namespace Nako.Operations.Types
         public bool Blocked { get; set; }
 
         public List<string> CurrentPoolSyncing { get; set; }
-
-        #endregion
     }
 }
