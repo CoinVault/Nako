@@ -61,7 +61,7 @@ else
                             <h5>Connections</h5>
                         </div>
                         <div class="text mousepointer">
-                            <span @onclick="@(() => NavigateToPeers())">@stats.ClientInfo.Connections</span>
+                            <span @onclick="@(() => NavigateToPeers())">@stats.NetworkInfo.Connections</span>
                         </div>
                     </div>
                 </div>
@@ -91,10 +91,10 @@ else
                     <div class="item">
                         <div class="title">
                             <div class="icon"></div>
-                            <h5>Protocol Version</h5>
+                            <h5>In IBD</h5>
                         </div>
                         <div class="text">
-                            <span>@stats.ClientInfo.ProtocolVersion</span>
+                            <span>@stats.BlockchainInfo.IsInitialBlockDownload</span>
                         </div>
                     </div>
                 </div>
@@ -102,10 +102,10 @@ else
                     <div class="item">
                         <div class="title">
                             <div class="icon"></div>
-                            <h5>Node time</h5>
+                            <h5>Median Time</h5>
                         </div>
                         <div class="text">
-                            <span>@stats.ClientInfo.TimeOffset <i class="blue fa fa-long-arrow-up"></i></span>
+                            <span>@GlobalData.UnixTimeToDateTime((ulong)stats.BlockchainInfo.MedianTime).ToString() <i class="blue fa fa-long-arrow-up"></i></span>
                         </div>
                     </div>
                 </div>
@@ -116,7 +116,7 @@ else
                             <h5>Last Block</h5>
                         </div>
                         <div class="text mousepointer">
-                            <span @onclick="@(() => NavigateToBlockIndex(stats.ClientInfo.Blocks))">@stats.SyncBlockIndex</span>
+                            <span @onclick="@(() => NavigateToBlockIndex(stats.BlockchainInfo.Blocks))">@stats.SyncBlockIndex</span>
                         </div>
                     </div>
                 </div>
@@ -145,9 +145,9 @@ else
             </div>
         </div>
 
-        @if (@stats.ClientInfo.Errors != null)
+        @if (stats.Error != null)
         {
-            <div>@stats.ClientInfo.Errors</div>
+            <div>@stats.Error</div>
         }
 
     </section>
@@ -161,7 +161,7 @@ else
     {
         stats = await Http.GetJsonAsync<DataTypes.Statistics>($"http://{this.globalData.ApiUrl}/api/stats?api-version=1.0");
 
-        this.globalData.Info.BlockHeight = stats.ClientInfo.Blocks;
+        this.globalData.Info.BlockHeight = stats.BlockchainInfo.Blocks;
     }
 
     private void NavigateToBlockIndex(long index)

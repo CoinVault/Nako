@@ -55,7 +55,7 @@ else
 
                                 <tr>
                                     <td><a class="mousepointer" @onclick="@(() => NavigateToBlockIndex(block.BlockIndex))">@block.BlockIndex</a></td>
-                                    <td>@UnixTimeToDateTime(@block.BlockTime) ago</td>
+                                    <td>@UnixTimeToDateTime(@block.BlockTime)</td>
                                     <td>@block.TransactionCount</td>
                                     <td>@block.BlockSize KB</td>
                                     <td>@block.Bits</td>
@@ -109,13 +109,15 @@ else
         public static string UnixTimeToDateTime(long timestamp)
         {
 
-            var blocktime = @GlobalData.UnixTimeToDateTime((ulong)timestamp);
+            var blocktime = GlobalData.UnixTimeToDateTime((ulong)timestamp);
 
-            var ret = (DateTime.UtcNow - blocktime).ToString();
+            return GlobalData.DateTimeAgo(blocktime);
 
-            ret = ret.Substring(0, ret.IndexOf("."));
+            //var ret = (DateTime.UtcNow - blocktime).ToString();
 
-            return ret;
+            //ret = ret.Substring(0, ret.IndexOf("."));
+
+            //return ret;
 
         }
 

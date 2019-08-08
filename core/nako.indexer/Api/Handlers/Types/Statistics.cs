@@ -47,14 +47,16 @@ namespace Nako.Api.Handlers.Types
         /// </summary>
         public long SyncBlockIndex { get; set; } 
 
-        /// <summary>
-        /// Gets or sets some data bout a coin.
-        /// </summary>
-        public ClientInfo ClientInfo { get; set; }
+        public BlockchainInfoModel BlockchainInfo { get; set; }
+
+        public NetworkInfoModel NetworkInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the blocks per minute being processed.
         /// </summary>
         public string BlocksPerMinute { get; set; }
+
+        public string Error { get; set; }
+
     }
 }

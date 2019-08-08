@@ -10,6 +10,72 @@
 
 namespace Nako.Client.Types
 {
+    public class NetworkInfoModel
+    {
+        //[JsonProperty(PropertyName = "version")]
+        public uint Version { get; set; }
+
+        //[JsonProperty(PropertyName = "subversion")]
+        public string SubVersion { get; set; }
+
+        //[JsonProperty(PropertyName = "protocolversion")]
+        public uint ProtocolVersion { get; set; }
+
+        //[JsonProperty(PropertyName = "localservices")]
+        public string LocalServices { get; set; }
+
+        //[JsonProperty(PropertyName = "localrelay")]
+        public bool IsLocalRelay { get; set; }
+
+        //[JsonProperty(PropertyName = "timeoffset")]
+        public long TimeOffset { get; set; }
+
+        //[JsonProperty(PropertyName = "connections", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int? Connections { get; set; }
+
+        //[JsonProperty(PropertyName = "networkactive")]
+        public bool IsNetworkActive { get; set; }
+
+        //[JsonProperty(PropertyName = "relayfee")]
+        public decimal RelayFee { get; set; }
+
+        //[JsonProperty(PropertyName = "incrementalfee")]
+        public decimal IncrementalFee { get; set; }
+    }
+
+    public class BlockchainInfoModel
+    {
+        //[JsonProperty(PropertyName = "chain")]
+        public string Chain { get; set; }
+
+        //[JsonProperty(PropertyName = "blocks")]
+        public uint Blocks { get; set; }
+
+        //[JsonProperty(PropertyName = "headers")]
+        public uint Headers { get; set; }
+
+        //[JsonProperty(PropertyName = "bestblockhash")]
+        public string BestBlockHash { get; set; }
+
+        //[JsonProperty(PropertyName = "difficulty")]
+        public double Difficulty { get; set; }
+
+        //[JsonProperty(PropertyName = "mediantime")]
+        public long MedianTime { get; set; }
+
+        //[JsonProperty(PropertyName = "verificationprogress")]
+        public double VerificationProgress { get; set; }
+
+        //[JsonProperty(PropertyName = "initialblockdownload")]
+        public bool IsInitialBlockDownload { get; set; }
+
+        //[JsonProperty(PropertyName = "chainwork")]
+        public string Chainwork { get; set; }
+
+        //[JsonProperty(PropertyName = "pruned")]
+        public bool IsPruned { get; set; }
+    }
+
     public class ClientInfo
     {
         public string Version { get; set; }

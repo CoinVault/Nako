@@ -232,6 +232,16 @@ namespace Nako.Client
             return await this.CallAsync<ClientInfo>("getinfo");
         }
 
+        public async Task<BlockchainInfoModel> GetBlockchainInfo()
+        {
+            return await this.CallAsync<BlockchainInfoModel>("getblockchaininfo");
+        }
+
+        public async Task<NetworkInfoModel> GetNetworkInfo()
+        {
+            return await this.CallAsync<NetworkInfoModel>("getnetworkinfo");
+        }
+
         /// <inheritdoc />
         public async Task<IEnumerable<PeerInfo>> GetPeerInfo()
         {

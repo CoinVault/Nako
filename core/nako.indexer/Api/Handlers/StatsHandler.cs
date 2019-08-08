@@ -76,11 +76,13 @@ namespace Nako.Api.Handlers
 
             try
             {
-                stats.ClientInfo = await client.GetInfoAsync();
+                stats.BlockchainInfo = await client.GetBlockchainInfo();
+                stats.NetworkInfo = await client.GetNetworkInfo();
             }
             catch (Exception ex)
             {
-                stats.ClientInfo = new ClientInfo { Errors = ex.Message };
+                stats.Error = ex.Message;
+                return stats;   
             }
 
             stats.TransactionsInPool = this.storage.GetMemoryTransactions().Count();
@@ -88,7 +90,7 @@ namespace Nako.Api.Handlers
             try
             {
                 stats.SyncBlockIndex = this.storage.BlockGetBlockCount(1).First().BlockIndex;
-                stats.Progress = $"{stats.SyncBlockIndex}/{stats.ClientInfo.Blocks} - {stats.ClientInfo.Blocks - stats.SyncBlockIndex}";
+                stats.Progress = $"{stats.SyncBlockIndex}/{stats.BlockchainInfo.Blocks} - {stats.BlockchainInfo.Blocks - stats.SyncBlockIndex}";
             }
             catch (Exception ex)
             {
