@@ -21,6 +21,8 @@ namespace Nako.Operations.Types
 
         public BlockInfo LastBlock { get; set; }
 
+        public long LastClientBlockIndex { get; set; }
+
         public bool Blocked { get; set; }
 
         public List<string> CurrentPoolSyncing { get; set; }

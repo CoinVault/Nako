@@ -114,11 +114,11 @@ namespace Nako.Sync
 
                 string blockHashsToSync;
 
-                var blokcs = this.storage.BlockGetBlockCount(1).ToList();
+                var blocks = this.storage.BlockGetBlockCount(1).ToList();
 
-                if (blokcs.Any())
+                if (blocks.Any())
                 {
-                    var lastBlockIndex = blokcs.First().BlockIndex;
+                    var lastBlockIndex = blocks.First().BlockIndex;
 
                     if (lastBlockIndex == lastCryptoBlockIndex)
                     {
@@ -162,9 +162,9 @@ namespace Nako.Sync
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
 
-            var lastCryptoBlockIndex = client.GetBlockCount();
+            syncingBlocks.LastClientBlockIndex = client.GetBlockCount();
 
-            var blockToSync = this.GetNextBlockToSync(client, connection, lastCryptoBlockIndex, syncingBlocks);
+            var blockToSync = this.GetNextBlockToSync(client, connection, syncingBlocks.LastClientBlockIndex, syncingBlocks);
 
             if (blockToSync != null && blockToSync.BlockInfo != null)
             {
@@ -181,11 +181,6 @@ namespace Nako.Sync
             var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
-
-            if (client.GetBlockchainInfo().Result.IsInitialBlockDownload)
-            {
-                return new SyncPoolTransactions { Transactions = new List<string>() };
-            }
 
             var memPool = client.GetRawMemPool();
 

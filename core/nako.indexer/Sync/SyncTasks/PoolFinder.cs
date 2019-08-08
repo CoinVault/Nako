@@ -58,6 +58,12 @@ namespace Nako.Sync.SyncTasks
                 return false;
             }
 
+            if (syncingBlocks.LastBlock == null || syncingBlocks.LastBlock.Height + 10 < syncingBlocks.LastClientBlockIndex)
+            {
+                // Don't sync mempool until api is at tip
+                return false;
+            }
+
             if (this.Runner.Get<BlockSyncer>().Queue.Count() >= this.config.MaxItemsInQueue)
             {
                 return false;
