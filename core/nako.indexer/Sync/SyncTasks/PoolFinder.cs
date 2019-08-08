@@ -63,13 +63,6 @@ namespace Nako.Sync.SyncTasks
                 return false;
             }
 
-            if (syncingBlocks.CurrentSyncing.Any())
-            {
-                // while blocks are still syncing don't sync memppool
-                return false;
-            }
-
-
             var stoper = Stopwatch.Start();
 
             var pool = this.syncOperations.FindPoolTransactions(this.syncConnection, syncingBlocks);

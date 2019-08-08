@@ -181,6 +181,12 @@ namespace Nako.Sync
             var stoper = Stopwatch.Start();
 
             var client = CryptoClientFactory.Create(connection.ServerDomain, connection.RpcAccessPort, connection.User, connection.Password, connection.Secure);
+
+            if (client.GetBlockchainInfo().Result.IsInitialBlockDownload)
+            {
+                return new SyncPoolTransactions { Transactions = new List<string>() };
+            }
+
             var memPool = client.GetRawMemPool();
 
             var currentMemoryPool = new HashSet<string>(memPool);
