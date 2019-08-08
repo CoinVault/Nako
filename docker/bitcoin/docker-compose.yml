@@ -1,29 +1,51 @@
 version: '2'
 services:
-  client:
-    container_name: btc-client
-    networks: 
-        - btc
-    image: coinvault/bitcoin
-    ports: 
-        - 5000:5000
-        - 8333:8333
+
+ noko-ui:
+    container_name: btc-nako-ui
+    image: coinvault/nako-ui-blazor:latest
+    command: --urls=http://0.0.0.0:80
+    ports:
+        - 80:80
+
   nako:
     container_name: btc-nako
     networks: 
-        - btc
-    image: coinvault/nako
+        nakonet:
+            ipv4_address: 172.16.10.100
+    image: coinvault/nako-indexer:latest
     command: BTC
     ports: 
         - 9000:9000
     depends_on:
         - mongo
         - client
+
+  client:
+    container_name: btc-client
+    networks: 
+        nakonet:
+            ipv4_address: 172.16.10.101
+    image: nicolasdorier/docker-bitcoin:0.18.0
+    command: ["bitcoind", 
+              "-server=1", "-txindex=1",
+              "-rpcallowip=172.16.10.100", "-rpcbind=172.16.10.101", "-rpcport=5000", "-rpcuser=rpcuser", "-rpcpassword=rpcpassword"]
+    ports: 
+        - 5000:5000
+        - 8333:8333
+        - 37220:37220
+
   mongo:
     container_name: btc-mongo
     networks: 
-        - btc
+        nakonet:
+            ipv4_address: 172.16.10.102
     image: mongo:3.2
+
 networks:
-    btc:
-      driver: bridge
+  nakonet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.10.0/24
