@@ -6,11 +6,8 @@ Nako api can be searched by segwit addresses and Cold-Staking (hot and cold key)
 
 CoinVault uses Nako as a block Explorer, Nako is lightweight and uses mongodb to index transactions by addresses.
 
-### Features
-- Language C# (using mono)
-- Auther: Dan Gershony
-
 ### Technologies
+- dotnet core (and blazor)
 - Running a full Bitcoin/Altcoin node either daemon or qt 
 - Running a MongoDB instance as indexing storage
 - OWIN selfhost REST api easily documented using swagger
