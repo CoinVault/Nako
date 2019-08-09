@@ -39,7 +39,7 @@ namespace Nako.Ui.Blazor
         {
             var res = (decimal) satoshi / 100000000;
 
-            return res.ToString("###,###,###.########");
+            return res.ToString("###,###,##0.00######");
         }
 
         public static string DateTimeAgo(DateTime dateTime)
