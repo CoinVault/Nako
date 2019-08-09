@@ -55,7 +55,7 @@ namespace Nako.Ui.Blazor
             const int DAY = 24 * HOUR;
             const int MONTH = 30 * DAY;
 
-            var ts = new TimeSpan(dateTime.Ticks);
+            var ts = new TimeSpan(DateTime.UtcNow.Ticks - dateTime.Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 1 * MINUTE)
@@ -72,10 +72,6 @@ namespace Nako.Ui.Blazor
 
             if (delta < 24 * HOUR)
                 return ts.Hours + " hours ago";
-
-            var ret = dateTime.ToString();
-
-            return dateTime.ToString().Substring(0, ret.IndexOf("."));
 
             if (delta < 48 * HOUR)
                 return "yesterday";
