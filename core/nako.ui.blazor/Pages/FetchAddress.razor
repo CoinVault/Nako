@@ -65,9 +65,10 @@ else
                                 <tr>
                                     <th>Hash</th>
                                     <th>Block</th>
+                                    <th>Type</th>
                                     <th>Confirmations</th>
                                     <th>Amount</th>
-                                    <th>spent in</th>
+                                    <th>spent-in</th>
 
                                 </tr>
                             </thead>
@@ -77,17 +78,18 @@ else
                                     <tr>
                                           <td @onclick="@(() => NavigateToTransactionHash(transaction.TransactionHash))"  class=" mousepointer">@transaction.TransactionHash</td>
                                           <td @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex.Value))"  class=" mousepointer">@transaction.BlockIndex </td>
+                                           <td>@(transaction.CoinBase ? "mined" : transaction.CoinStake ? "minted" : string.Empty)</td>
                                           <td>@transaction.Confirmations</td>
 
                                         @if (string.IsNullOrEmpty(transaction.SpendingTransactionHash))
                                          {
-                                             <td class="text-success">+@(transaction.Value / 100000000) @address.CoinTag</td>
+                                             <td class="text-success">+@GlobalData.ToUnit(transaction.Value) @address.CoinTag</td>
                                              <td class="text-success"></td>
 
                                          }
                                          else
                                          {
-                                             <td class="text-danger">-@(transaction.Value / 100000000) @address.CoinTag</td>
+                                             <td class="text-danger">-@GlobalData.ToUnit(transaction.Value) @address.CoinTag</td>
                                              <td @onclick="@(() => NavigateToTransactionHash(transaction.SpendingTransactionHash))" class="mousepointer">@transaction.SpendingTransactionHash.Substring(0, 10)</td>
                                          }
                                     </tr>

@@ -305,7 +305,7 @@ namespace Nako.Storage.Mongo
                         ScriptHex = output.ScriptPubKey.ToHex(),
                         BlockIndex = blockIndex,
                         CoinBase = rawTransaction.IsCoinBase,
-                        CoinStake = rawTransaction.IsCoinStake,
+                        CoinStake = this.syncConnection.Network.Consensus.IsProofOfStake && rawTransaction.IsCoinStake,
                     };
                 }
             }

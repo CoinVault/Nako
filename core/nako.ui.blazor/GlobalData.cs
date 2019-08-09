@@ -32,11 +32,6 @@ namespace Nako.Ui.Blazor
         {
             TimeSpan span = TimeSpan.FromSeconds(timestamp);
             var blocktime = (unixRef + span);
-
-            //var ret = (DateTime.UtcNow - blocktime).ToString();
-
-            //ret = ret.Substring(0, ret.IndexOf("."));
-
             return blocktime.UtcDateTime;
         }
 
@@ -44,7 +39,7 @@ namespace Nako.Ui.Blazor
         {
             var res = (decimal) satoshi / 100000000;
 
-            return res.ToString("00,000.00000000");
+            return res.ToString("###,###,###.########");
         }
 
         public static string DateTimeAgo(DateTime dateTime)
