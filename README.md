@@ -8,6 +8,7 @@ CoinVault uses Nako as a block Explorer, Nako is lightweight and uses mongodb to
 
 ### Technologies
 - dotnet core (and blazor)
+- NBitcoin and Stratis.Bitcoin
 - Running a full Bitcoin/Altcoin node either daemon or qt 
 - Running a MongoDB instance as indexing storage
 - OWIN selfhost REST api easily documented using swagger
