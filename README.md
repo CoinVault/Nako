@@ -2,6 +2,8 @@
 A server application to index Blockchain transactions by addresses for Bitcoin and Altcoins.  
 Nako exposes a REST api to query the blockchain data.
 
+Nako api can be searched by segwit addresses and Cold-Staking (hot and cold key) script types.
+
 CoinVault uses Nako as a block Explorer, Nako is lightweight and uses mongodb to index transactions by addresses.
 
 ### Features
@@ -14,6 +16,10 @@ CoinVault uses Nako as a block Explorer, Nako is lightweight and uses mongodb to
 - OWIN selfhost REST api easily documented using swagger
 
 We user [docker](https://www.docker.com/) (with docker-compose)
+
+#### DB schema
+Can be found here:  
+https://github.com/CoinVault/Nako/blob/master/core/nako.indexer/doc/dbschema.md
 
 #### Api
 Swagger http://[server-url]:[port]/swagger/
@@ -30,6 +36,6 @@ GET /api/query/transaction/{transactionId}
 GET /api/stats  
 GET /api/stats/peers  
 
-#### DB schema
-Can be found here:  
-https://github.com/CoinVault/Nako/blob/master/core/nako.indexer/doc/dbschema.md
+#### Nako UI
+Checkout an experimental blazor ui  
+https://github.com/CoinVault/Nako/tree/master/core/nako.ui.blazor
