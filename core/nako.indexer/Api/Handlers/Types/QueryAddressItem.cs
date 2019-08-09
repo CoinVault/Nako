@@ -32,6 +32,8 @@ namespace Nako.Api.Handlers.Types
         /// </summary>
         public string SpendingTransactionHash { get; set; }
 
+        public long? SpendingBlockIndex { get; set; }
+
         /// <summary>
         /// Gets or sets the script public key hex.
         /// </summary>

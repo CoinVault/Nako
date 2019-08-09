@@ -23,6 +23,8 @@ namespace Nako.Storage.Types
 
         public string SpendingTransactionHash { get; set; }
 
+        public long? SpendingBlockIndex { get; set; }
+
         public string ScriptHex { get; set; }
 
         public bool CoinBase { get; set; }

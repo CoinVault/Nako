@@ -27,6 +27,8 @@ namespace Nako.Storage.Mongo.Types
 
         public string SpendingTransactionId { get; set; }
 
+        public long? SpendingBlockIndex { get; set; }
+
         public long BlockIndex { get; set; }
 
         public bool CoinBase { get; set; }

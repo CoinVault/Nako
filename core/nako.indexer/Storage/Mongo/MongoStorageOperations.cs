@@ -157,7 +157,7 @@ namespace Nako.Storage.Mongo
                     // insert outputs
                     var outputs = this.CreateOutputs(items).ToList();
                     stats.Outputs += outputs.Count();
-                    outputs.ForEach(outp => this.data.MarkOutput(outp.outPoint.Hash.ToString(), (int)outp.outPoint.N, outp.spentIn));
+                    outputs.ForEach(outp => this.data.MarkOutput(outp.outPoint.Hash.ToString(), (int)outp.outPoint.N, outp.spentIn, item.BlockInfo.Height));
 
                     // If insert trx supported then push trx in batches.
                     if (this.configuration.StoreRawTransactions)

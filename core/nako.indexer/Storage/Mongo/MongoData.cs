@@ -146,10 +146,13 @@ namespace Nako.Storage.Mongo
             this.MapBlock.UpdateOne(filter, update);
         }
 
-        public void MarkOutput(string transaction, int index, string spendingTransactionId)
+        public void MarkOutput(string transaction, int index, string spendingTransactionId, long spendingBlockIndex)
         {
             var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, string.Format("{0}-{1}", transaction, index));
-            var update = Builders<MapTransactionAddress>.Update.Set(blockInfo => blockInfo.SpendingTransactionId, spendingTransactionId);
+            var update = Builders<MapTransactionAddress>.Update
+                .Set(blockInfo => blockInfo.SpendingTransactionId, spendingTransactionId)
+                .Set(blockInfo => blockInfo.SpendingBlockIndex, spendingBlockIndex);
+
             this.MapTransactionAddress.UpdateOne(filter, update);
         }
 
@@ -428,6 +431,7 @@ namespace Nako.Storage.Mongo
                 Value = s.Value, 
                 Confirmations = s.BlockIndex == -1 ? 0 : current.BlockIndex - s.BlockIndex + 1, 
                 SpendingTransactionHash = s.SpendingTransactionId, 
+                SpendingBlockIndex = s.SpendingBlockIndex,
                 CoinBase = s.CoinBase,
                 CoinStake = s.CoinStake,
                 ScriptHex = new Script(Encoders.Hex.DecodeData(s.ScriptHex)).ToString(),

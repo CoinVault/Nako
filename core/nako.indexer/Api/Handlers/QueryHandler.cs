@@ -8,22 +8,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Microsoft.Extensions.Options;
-using NBitcoin;
-
 namespace Nako.Api.Handlers
 {
     using System.Collections.Generic;
-    #region Using Directives
-
     using System.Linq;
 
     using Nako.Api.Handlers.Types;
     using Nako.Config;
     using Nako.Extensions;
     using Nako.Storage;
-
-    #endregion
+    using Microsoft.Extensions.Options;
+    using NBitcoin;
 
     /// <summary>
     /// A handler that make request on the blockchain.
@@ -69,8 +64,10 @@ namespace Nako.Api.Handlers
                 {
                     PubScriptHex = t.ScriptHex,
                     CoinBase = t.CoinBase,
+                    CoinStake = t.CoinStake,
                     Index = t.Index,
                     SpendingTransactionHash = t.SpendingTransactionHash,
+                    SpendingBlockIndex = t.SpendingBlockIndex,
                     TransactionHash = t.TransactionHash,
                     Type = t.Type, Value = t.Value,
                     BlockIndex = t.BlockIndex,
@@ -80,8 +77,11 @@ namespace Nako.Api.Handlers
                 UnconfirmedTransactions = unconfirmed.Select(t => new QueryAddressItem
                 {
                     PubScriptHex = t.ScriptHex,
-                    CoinBase = t.CoinBase, Index = t.Index,
+                    CoinBase = t.CoinBase,
+                    CoinStake = t.CoinStake,
+                    Index = t.Index,
                     SpendingTransactionHash = t.SpendingTransactionHash,
+                    SpendingBlockIndex = t.SpendingBlockIndex,
                     TransactionHash = t.TransactionHash,
                     Type = t.Type, Value = t.Value,
                     BlockIndex = t.BlockIndex,
@@ -151,14 +151,39 @@ namespace Nako.Api.Handlers
 
             return new QueryAddress
             {
-                CoinTag = this.configuration.CoinTag, 
-                Address = address, 
-                Balance = stats.Available, 
-                TotalReceived = stats.Received, 
-                TotalSent = stats.Sent, 
-                UnconfirmedBalance = stats.Unconfirmed, 
-                Transactions = confirmed.Select(t => new QueryAddressItem { PubScriptHex = t.ScriptHex, CoinBase = t.CoinBase, Index = t.Index, SpendingTransactionHash = t.SpendingTransactionHash, TransactionHash = t.TransactionHash, Type = t.Type, Value = t.Value, BlockIndex = t.BlockIndex, Confirmations = t.Confirmations, Time = t.Time }), 
-                UnconfirmedTransactions = unconfirmed.Select(t => new QueryAddressItem { PubScriptHex = t.ScriptHex, CoinBase = t.CoinBase, Index = t.Index, SpendingTransactionHash = t.SpendingTransactionHash, TransactionHash = t.TransactionHash, Type = t.Type, Value = t.Value, BlockIndex = t.BlockIndex, Confirmations = t.Confirmations, Time = t.Time })
+                CoinTag = this.configuration.CoinTag,
+                Address = address,
+                Balance = stats.Available,
+                TotalReceived = stats.Received,
+                TotalSent = stats.Sent,
+                UnconfirmedBalance = stats.Unconfirmed,
+                Transactions = confirmed.Select(t => new QueryAddressItem
+                {
+                    PubScriptHex = t.ScriptHex,
+                    CoinBase = t.CoinBase,
+                    Index = t.Index,
+                    SpendingTransactionHash = t.SpendingTransactionHash,
+                    SpendingBlockIndex = t.SpendingBlockIndex,
+                    TransactionHash = t.TransactionHash,
+                    Type = t.Type, Value = t.Value,
+                    BlockIndex = t.BlockIndex,
+                    Confirmations = t.Confirmations,
+                    Time = t.Time
+                }),
+                UnconfirmedTransactions = unconfirmed.Select(t => new QueryAddressItem
+                {
+                    PubScriptHex = t.ScriptHex,
+                    CoinBase = t.CoinBase,
+                    CoinStake = t.CoinStake,
+                    Index = t.Index,
+                    SpendingTransactionHash = t.SpendingTransactionHash,
+                    SpendingBlockIndex = t.SpendingBlockIndex,
+                    TransactionHash = t.TransactionHash,
+                    Type = t.Type, Value = t.Value,
+                    BlockIndex = t.BlockIndex,
+                    Confirmations = t.Confirmations,
+                    Time = t.Time
+                })
             };
         }
 
@@ -185,7 +210,21 @@ namespace Nako.Api.Handlers
                 TotalSent = stats.Sent, 
                 UnconfirmedBalance = stats.Unconfirmed, 
                 Transactions = Enumerable.Empty<QueryAddressItem>(), 
-                UnconfirmedTransactions = transactions.Select(t => new QueryAddressItem { PubScriptHex = t.ScriptHex, CoinBase = t.CoinBase, Index = t.Index, SpendingTransactionHash = t.SpendingTransactionHash, TransactionHash = t.TransactionHash, Type = t.Type, Value = t.Value, BlockIndex = t.BlockIndex, Confirmations = t.Confirmations, Time = t.Time })
+                UnconfirmedTransactions = transactions.Select(t => new QueryAddressItem
+                {
+                    PubScriptHex = t.ScriptHex,
+                    CoinBase = t.CoinBase,
+                    CoinStake = t.CoinStake,
+                    Index = t.Index,
+                    SpendingTransactionHash = t.SpendingTransactionHash,
+                    SpendingBlockIndex = t.SpendingBlockIndex,
+                    TransactionHash = t.TransactionHash,
+                    Type = t.Type,
+                    Value = t.Value,
+                    BlockIndex = t.BlockIndex,
+                    Confirmations = t.Confirmations,
+                    Time = t.Time
+                })
             };
         }
 
@@ -211,7 +250,20 @@ namespace Nako.Api.Handlers
                 TotalReceived = stats.Received, 
                 TotalSent = stats.Sent, 
                 UnconfirmedBalance = stats.Unconfirmed, 
-                Transactions = transactions.Select(t => new QueryAddressItem { PubScriptHex = t.ScriptHex, CoinBase = t.CoinBase, Index = t.Index, SpendingTransactionHash = t.SpendingTransactionHash, TransactionHash = t.TransactionHash, Type = t.Type, Value = t.Value, BlockIndex = t.BlockIndex, Confirmations = t.Confirmations, Time = t.Time }), 
+                Transactions = transactions.Select(t => new QueryAddressItem
+                {
+                    PubScriptHex = t.ScriptHex,
+                    CoinBase = t.CoinBase,
+                    CoinStake = t.CoinStake,
+                    Index = t.Index,
+                    SpendingTransactionHash = t.SpendingTransactionHash,
+                    SpendingBlockIndex = t.SpendingBlockIndex,
+                    TransactionHash = t.TransactionHash,
+                    Type = t.Type, Value = t.Value,
+                    BlockIndex = t.BlockIndex,
+                    Confirmations = t.Confirmations,
+                    Time = t.Time
+                }), 
                 UnconfirmedTransactions = Enumerable.Empty<QueryAddressItem>()
             };
         }

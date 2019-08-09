@@ -233,6 +233,8 @@ namespace Nako.Ui.Blazor
 
             public string SpendingTransactionHash { get; set; }
 
+            public long? SpendingBlockIndex { get; set; }
+
             public string PubScriptHex { get; set; }
 
             public bool CoinBase { get; set; }
