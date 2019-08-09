@@ -29,3 +29,7 @@ GET /api/query/block/Index/{blockIndex}/{transactions}
 GET /api/query/transaction/{transactionId}  
 GET /api/stats  
 GET /api/stats/peers  
+
+#### DB schema
+Can be found here:  
+https://github.com/CoinVault/Nako/blob/master/core/nako.indexer/doc/dbschema.md
