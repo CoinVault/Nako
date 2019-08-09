@@ -17,6 +17,25 @@
         </div>
     </section>
 }
+else if (transaction.TransactionId == null)
+{
+        <section class="block-explorer-section section bg-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="center-heading">
+                            <h2 class="section-title">Details for Transaction</h2>
+                        </div>
+                    </div>
+                    <div class="offset-lg-3 col-lg-6">
+                        <div class="center-text">
+                            <p>NOT FOUND</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+}
 else
 {
     <section class="block-explorer-section section bg-bottom">
@@ -39,12 +58,12 @@ else
                         <table class="table table-striped table-latests table-detail">
                             <tbody>
                                 <tr><td>Hash</td><td>@transaction.TransactionId</td></tr>
-                                <tr><td>Block Hash</td><td class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockHash</td></tr>
-                                <tr><td>Block Index</td><td class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex))">@transaction.BlockIndex</td></tr>
+                                <tr><td>Block Hash</td><td class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex ?? 0))">@transaction.BlockHash</td></tr>
+                                <tr><td>Block Index</td><td class="mousepointer" @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex ?? 0))">@transaction.BlockIndex</td></tr>
                                 <tr><td>Timestamp</td><td>@transaction.Timestamp</td></tr>
                                 <tr><td>LockTime</td><td>@transaction.LockTime</td></tr>
                                 <tr><td>Version</td><td>@transaction.Version</td></tr>
-                                
+
                                 @if (transaction.IsCoinbase)
                                 {
                                     <tr><td colspan="2">Coinbase</td></tr>
@@ -148,6 +167,8 @@ else
 
     [Parameter]
     private string transactionhash { get; set; }
+
+    private bool fetched { get; set; } = false;
 
     private async Task UpdateTransactionHash(string trxHash)
     {

@@ -426,22 +426,22 @@ namespace Nako.Api.Handlers
         public QueryTransaction GetTransaction(string transactionId)
         {
             var transaction = this.storage.BlockTransactionGet(transactionId);
+            var transactionItems = this.storage.TransactionItemsGet(transactionId);
 
-            if (transaction == null)
+            if (transactionItems == null)
             {
                 return new QueryTransaction();
             }
 
-            var transactionItems = this.storage.TransactionItemsGet(transactionId);
-
             return new QueryTransaction
             {
                 CoinTag = this.configuration.CoinTag,
-                BlockHash = transaction.BlockHash,
-                BlockIndex = transaction.BlockIndex,
-                Timestamp = transaction.Timestamp.UnixTimeStampToDateTime(),
-                TransactionId = transaction.TransactionHash,
-                Confirmations = transaction.Confirmations,
+                BlockHash = transaction?.BlockHash ?? null,
+                BlockIndex = transaction?.BlockIndex ?? null,
+                Confirmations = transaction?.Confirmations ?? 0,
+                Timestamp = transaction?.Timestamp.UnixTimeStampToDateTime() ?? null,
+                TransactionId = transaction?.TransactionHash ?? transactionId,
+              
                 RBF = transactionItems.RBF,
                 LockTime = transactionItems.LockTime.ToString(),
                 Version = transactionItems.Version,
@@ -468,6 +468,17 @@ namespace Nako.Api.Handlers
                     SpentInTransaction = o.SpentInTransaction,
                     ScriptPubKeyAsm = new Script(NBitcoin.DataEncoders.Encoders.Hex.DecodeData(o.ScriptPubKey)).ToString()
                 }),
+            };
+        }
+
+        public QueryMempoolTransactions GetMempoolTransactions(int count)
+        {
+            var transactions = this.storage.GetMemoryTransactions();
+
+            return new QueryMempoolTransactions
+            {
+                CoinTag = this.configuration.CoinTag,
+                Transactions = transactions.Select(t => new QueryMempoolTransaction {TransactionId = t.GetHash().ToString()}).Take(count).ToList()
             };
         }
     }

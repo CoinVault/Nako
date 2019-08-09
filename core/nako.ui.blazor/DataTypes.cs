@@ -146,9 +146,9 @@ namespace Nako.Ui.Blazor
 
             public string BlockHash { get; set; }
 
-            public long BlockIndex { get; set; }
+            public long? BlockIndex { get; set; }
 
-            public DateTime Timestamp { get; set; }
+            public DateTime? Timestamp { get; set; }
 
             public string TransactionId { get; set; }
 
@@ -262,5 +262,18 @@ namespace Nako.Ui.Blazor
 
             public long BlockHeight { get; set; }
         }
+
+        public class QueryMempoolTransaction
+        {
+            public string TransactionId { get; set; }
+        }
+
+        public class QueryMempoolTransactions
+        {
+            public string CoinTag { get; set; }
+
+            public IEnumerable<QueryMempoolTransaction> Transactions { get; set; }
+        }
+
     }
 }

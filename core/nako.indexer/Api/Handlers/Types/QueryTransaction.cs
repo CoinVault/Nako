@@ -32,12 +32,12 @@ namespace Nako.Api.Handlers.Types
         /// <summary>
         /// Gets or sets the block index.
         /// </summary>
-        public long BlockIndex { get; set; }
+        public long? BlockIndex { get; set; }
 
         /// <summary>
         /// Gets or sets the Timestamp.
         /// </summary>
-        public DateTime Timestamp { get; set; }
+        public DateTime? Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the transaction id.

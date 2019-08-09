@@ -240,6 +240,11 @@ namespace Nako.Storage.Mongo
 
                 var res = client.GetRawTransactionAsync(transactionId, 0).Result;
 
+                if (res.Hex == null)
+                {
+                    return null;
+                }
+
                 transaction = this.syncConnection.Network.Consensus.ConsensusFactory.CreateTransaction(res.Hex);
                 transaction.PrecomputeHash(false, true);
             }

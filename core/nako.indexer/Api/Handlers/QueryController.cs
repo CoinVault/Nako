@@ -47,19 +47,19 @@ namespace Nako.Api.Handlers
         }
 
         [HttpGet]
-        [Route("address/{address}/confirmations/{confirmations:long=0}/transactions/{max}")]
-        public IActionResult GetAddressTransactionsCount(string address, long confirmations, int max)
+        [Route("address/{address}/confirmations/{confirmations:long=0}/transactions/{count}")]
+        public IActionResult GetAddressTransactionsCount(string address, long confirmations, int count)
         {
             var ret = this.handler.GetAddressTransactions(address, confirmations);
 
-            if(ret.Transactions.Count() > max)
+            if(ret.Transactions.Count() > count)
             {
-                ret.Transactions = ret.Transactions.Take(max);
+                ret.Transactions = ret.Transactions.Take(count);
             }
 
-            if (ret.UnconfirmedTransactions.Count() > max)
+            if (ret.UnconfirmedTransactions.Count() > count)
             {
-                ret.UnconfirmedTransactions = ret.UnconfirmedTransactions.Take(max);
+                ret.UnconfirmedTransactions = ret.UnconfirmedTransactions.Take(count);
             }
 
             var response = this.CreateOkResponse(ret);
@@ -238,6 +238,22 @@ namespace Nako.Api.Handlers
         public IActionResult GetTransaction(string transactionId)
         {
             var ret = this.handler.GetTransaction(transactionId);
+
+            if (ret == null)
+            {
+                return new NotFoundResult();
+            }
+
+            var response = this.CreateOkResponse(ret);
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("mempool/transactions/{count}")]
+        public IActionResult GetMempoolTransactions(int count)
+        {
+            var ret = this.handler.GetMempoolTransactions(count);
 
             if (ret == null)
             {
