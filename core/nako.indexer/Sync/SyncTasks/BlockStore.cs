@@ -62,7 +62,7 @@ namespace Nako.Sync.SyncTasks
                     }
                 }
 
-                var notifications = new AddressNotifications { Addresses = count.Items.SelectMany(s => s.Addresses).Distinct().ToList() };
+                var notifications = new AddressNotifications { Addresses = count.Items.Where( ad => ad.Addresses != null).SelectMany(s => s.Addresses).Distinct().ToList() };
                 this.Runner.Get<Notifier>().Enqueue(notifications);
 
                 stoper.Stop();

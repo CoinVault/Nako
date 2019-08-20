@@ -123,7 +123,7 @@ namespace Nako.Storage.Mongo
                     }
                     catch (MongoBulkWriteException mbwex)
                     {
-                        if (!mbwex.Message.Contains("E11000 duplicate key error collection"))
+                        if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))//.Message.Contains("E11000 duplicate key error collection"))
                         {
                             throw;
                         }
@@ -131,22 +131,48 @@ namespace Nako.Storage.Mongo
 
                     // insert inputs and add to the list for later to use on the notification task.
                     var inputs = this.CreateInputs(item.BlockInfo.Height, items).ToList();
+                    var outputs = this.CreateOutputs(items, item.BlockInfo.Height).ToList();
+                    stats.Inputs += inputs.Count();
+                    stats.Outputs += outputs.Count();
+                    inputs.AddRange(outputs);
                     var queueInner = new Queue<MapTransactionAddress>(inputs);
+
                     do
                     {
                         try
                         {
                             var itemsInner = this.GetBatch(this.configuration.MongoBatchSize, queueInner).ToList();
+                            var ops = new List<WriteModel<MapTransactionAddress>>();
+                            var writeOptions = new BulkWriteOptions() { IsOrdered = false };
+
+                            foreach (var mapTransactionAddress in itemsInner)
+                            {
+                                if(mapTransactionAddress.SpendingTransactionId == null)
+                                {
+                                    ops.Add(new InsertOneModel<MapTransactionAddress>(mapTransactionAddress));
+                                }
+                                else
+                                {
+                                    var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, mapTransactionAddress.Id);
+                                    var update = Builders<MapTransactionAddress>.Update
+                                        .Set(blockInfo => blockInfo.SpendingTransactionId, mapTransactionAddress.SpendingTransactionId)
+                                        .Set(blockInfo => blockInfo.SpendingBlockIndex, mapTransactionAddress.SpendingBlockIndex);
+
+                                    ops.Add(new UpdateOneModel<MapTransactionAddress>(filter, update));
+                                }
+                            }
+
                             if (itemsInner.Any())
                             {
-                                stats.Inputs += itemsInner.Count();
+                               // stats.Inputs += itemsInner.Count();
                                 stats.Items.AddRange(itemsInner);
-                                this.data.MapTransactionAddress.InsertMany(itemsInner, new InsertManyOptions { IsOrdered = false });
+                                //this.data.MapTransactionAddress.InsertMany(itemsInner, new InsertManyOptions { IsOrdered = false });
+                                this.data.MapTransactionAddress.BulkWrite(ops, writeOptions);
                             }
                         }
                         catch (MongoBulkWriteException mbwex)
                         {
-                            if (!mbwex.Message.Contains("E11000 duplicate key error collection"))
+                            if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))//.Message.Contains("E11000 duplicate key error collection"))
                             {
                                 throw;
                             }
@@ -155,9 +181,12 @@ namespace Nako.Storage.Mongo
                     while (queueInner.Any());
 
                     // insert outputs
-                    var outputs = this.CreateOutputs(items).ToList();
-                    stats.Outputs += outputs.Count();
-                    outputs.ForEach(outp => this.data.MarkOutput(outp.outPoint.Hash.ToString(), (int)outp.outPoint.N, outp.spentIn, item.BlockInfo.Height));
+                    //var outputs = this.CreateOutputs(items, item.BlockInfo.Height).ToList();
+                   // stats.Outputs += outputs.Count();
+
+                 
+                    //outputs.ForEach(outp => this.data.MarkOutput(outp.outPoint.Hash.ToString(), (int)outp.outPoint.N, outp.spentIn, item.BlockInfo.Height));
+
 
                     // If insert trx supported then push trx in batches.
                     if (this.configuration.StoreRawTransactions)
@@ -169,7 +198,7 @@ namespace Nako.Storage.Mongo
                         }
                         catch (MongoBulkWriteException mbwex)
                         {
-                            if (!mbwex.Message.Contains("E11000 duplicate key error collection"))
+                            if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))//.Message.Contains("E11000 duplicate key error collection"))
                             {
                                 throw;
                             }
@@ -311,7 +340,7 @@ namespace Nako.Storage.Mongo
             }
         }
 
-        private IEnumerable<(OutPoint outPoint, string spentIn)> CreateOutputs(IEnumerable<NBitcoin.Transaction> transactions)
+        private IEnumerable<MapTransactionAddress> CreateOutputs(IEnumerable<NBitcoin.Transaction> transactions, long blockIndex)
         {
             foreach (var transaction in transactions)
             {
@@ -320,7 +349,13 @@ namespace Nako.Storage.Mongo
 
                 foreach (var input in transaction.Inputs)
                 {
-                    yield return (input.PrevOut, transaction.GetHash().ToString());
+                    yield return new MapTransactionAddress
+                    {
+                        Id = string.Format("{0}-{1}", input.PrevOut.Hash, input.PrevOut.N),
+                        SpendingTransactionId = transaction.GetHash().ToString(),
+                        SpendingBlockIndex = blockIndex,
+                    };
+
                 }
             }
         }
