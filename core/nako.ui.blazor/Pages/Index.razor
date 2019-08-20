@@ -157,7 +157,7 @@ else
 
     DataTypes.Statistics stats;
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         stats = await Http.GetJsonAsync<DataTypes.Statistics>($"http://{this.globalData.ApiUrl}/api/stats?api-version=1.0");
 

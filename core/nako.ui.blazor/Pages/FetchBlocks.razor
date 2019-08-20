@@ -101,7 +101,7 @@ else
             UriHelper.NavigateTo($"fetchblock/{index}");
         }
 
-        protected override async Task OnInitAsync()
+        protected override async Task OnInitializedAsync()
         {
             blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
         }

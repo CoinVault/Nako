@@ -177,7 +177,7 @@ else
         fetching = false;
     }
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions/{this.maxitems}?api-version=1.0");
     }

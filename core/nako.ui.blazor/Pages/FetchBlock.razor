@@ -120,7 +120,7 @@ else
         block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{hash}/1?api-version=1.0");
     }
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         if (this.blockindex == -1)
         {

@@ -68,7 +68,7 @@ else
         UriHelper.NavigateTo($"fetchtransaction/{trxHash}");
     }
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         mempoolTransaction = await Http.GetJsonAsync<DataTypes.QueryMempoolTransactions>($"http://{this.globalData.ApiUrl}/api/Query/mempool/transactions/{100}?api-version=1.0");
     }

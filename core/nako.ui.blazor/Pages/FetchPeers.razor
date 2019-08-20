@@ -117,7 +117,7 @@ else
         UriHelper.NavigateTo("fetchblock/" + index);
     }
 
-    protected override async Task OnInitAsync()
+    protected override async Task OnInitializedAsync()
     {
         peers = await Http.GetJsonAsync<DataTypes.PeerInfo[]>($"http://{this.globalData.ApiUrl}/api/stats/peers?api-version=1.0");
     }
