@@ -117,7 +117,7 @@ namespace Nako.Storage.Mongo
                         if (item.BlockInfo != null)
                         {
                             var inserts = items.Select(s => new MapTransactionBlock { BlockIndex = item.BlockInfo.Height, TransactionId = s.GetHash().ToString() }).ToList();
-                            stats.Transactions += inserts.Count();
+                            stats.Transactions += inserts.Count;
                             this.data.MapTransactionBlock.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
                         }
                     }
@@ -132,8 +132,6 @@ namespace Nako.Storage.Mongo
                     // insert inputs and add to the list for later to use on the notification task.
                     var inputs = this.CreateInputs(item.BlockInfo.Height, items).ToList();
                     var outputs = this.CreateOutputs(items, item.BlockInfo.Height).ToList();
-                    stats.Inputs += inputs.Count();
-                    stats.Outputs += outputs.Count();
                     inputs.AddRange(outputs);
                     var queueInner = new Queue<MapTransactionAddress>(inputs);
 
@@ -142,32 +140,44 @@ namespace Nako.Storage.Mongo
                         try
                         {
                             var itemsInner = this.GetBatch(this.configuration.MongoBatchSize, queueInner).ToList();
-                            var ops = new List<WriteModel<MapTransactionAddress>>();
+                            var ops = new Dictionary<string, WriteModel<MapTransactionAddress>>();
                             var writeOptions = new BulkWriteOptions() { IsOrdered = false };
 
                             foreach (var mapTransactionAddress in itemsInner)
                             {
                                 if(mapTransactionAddress.SpendingTransactionId == null)
                                 {
-                                    ops.Add(new InsertOneModel<MapTransactionAddress>(mapTransactionAddress));
+                                    ops.Add(mapTransactionAddress.Id, new InsertOneModel<MapTransactionAddress>(mapTransactionAddress));
                                 }
                                 else
                                 {
-                                    var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, mapTransactionAddress.Id);
-                                    var update = Builders<MapTransactionAddress>.Update
-                                        .Set(blockInfo => blockInfo.SpendingTransactionId, mapTransactionAddress.SpendingTransactionId)
-                                        .Set(blockInfo => blockInfo.SpendingBlockIndex, mapTransactionAddress.SpendingBlockIndex);
+                                    if (ops.TryGetValue(mapTransactionAddress.Id, out WriteModel<MapTransactionAddress> mta))
+                                    {
+                                        // in case a utxo is spent in the same block
+                                        // we just modify the inserted item directly
 
-                                    ops.Add(new UpdateOneModel<MapTransactionAddress>(filter, update));
+                                        var imta = mta as InsertOneModel<MapTransactionAddress>;
+                                        imta.Document.SpendingTransactionId = mapTransactionAddress.SpendingTransactionId;
+                                        imta.Document.SpendingBlockIndex = mapTransactionAddress.SpendingBlockIndex;
+                                    }
+                                    else
+                                    {
+                                        var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, mapTransactionAddress.Id);
+
+                                        var update = Builders<MapTransactionAddress>.Update
+                                            .Set(blockInfo => blockInfo.SpendingTransactionId, mapTransactionAddress.SpendingTransactionId)
+                                            .Set(blockInfo => blockInfo.SpendingBlockIndex, mapTransactionAddress.SpendingBlockIndex);
+
+                                        ops.Add(mapTransactionAddress.Id, new UpdateOneModel<MapTransactionAddress>(filter, update));
+                                    }
                                 }
                             }
 
                             if (itemsInner.Any())
                             {
-                               // stats.Inputs += itemsInner.Count();
                                 stats.Items.AddRange(itemsInner);
-                                //this.data.MapTransactionAddress.InsertMany(itemsInner, new InsertManyOptions { IsOrdered = false });
-                                this.data.MapTransactionAddress.BulkWrite(ops, writeOptions);
+                                stats.InputsOutputs += ops.Count;
+                                this.data.MapTransactionAddress.BulkWrite(ops.Values, writeOptions);
                             }
                         }
                         catch (MongoBulkWriteException mbwex)
@@ -180,21 +190,14 @@ namespace Nako.Storage.Mongo
                     }
                     while (queueInner.Any());
 
-                    // insert outputs
-                    //var outputs = this.CreateOutputs(items, item.BlockInfo.Height).ToList();
-                   // stats.Outputs += outputs.Count();
-
-                 
-                    //outputs.ForEach(outp => this.data.MarkOutput(outp.outPoint.Hash.ToString(), (int)outp.outPoint.N, outp.spentIn, item.BlockInfo.Height));
-
-
                     // If insert trx supported then push trx in batches.
                     if (this.configuration.StoreRawTransactions)
                     {
                         try
                         {
                             var inserts = items.Select(t => new MapTransaction { TransactionId = t.GetHash().ToString(), RawTransaction = t.ToBytes(syncConnection.Network.Consensus.ConsensusFactory) }).ToList();
-                            this.data.MapTransaction.InsertMany(inserts);
+                            stats.RawTransactions = inserts.Count;
+                            this.data.MapTransaction.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
                         }
                         catch (MongoBulkWriteException mbwex)
                         {

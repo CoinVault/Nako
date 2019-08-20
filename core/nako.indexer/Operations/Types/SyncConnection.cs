@@ -8,6 +8,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using NBitcoin;
 using NBitcoin.DataEncoders;
 
@@ -105,6 +106,8 @@ namespace Nako.Operations.Types
             // This can be replaced with a specific the network class of a specific coin
             // Or use the config values to simulate the network class.
             this.Network = new NetworkConfig(config.Value);
+
+            this.RecentItems = new Buffer<(DateTime Inserted, TimeSpan Duration)>(1000);
         }
 
         public NBitcoin.Network Network { get; }
@@ -126,5 +129,21 @@ namespace Nako.Operations.Types
         public string User { get; set; }
 
         public long StartBlockIndex { get; set; }
+
+        public Buffer<(DateTime Inserted, TimeSpan Duration)> RecentItems { get; set; }
+    }
+
+    public class Buffer<T> : Queue<T>
+    {
+        private int? maxCapacity { get; set; }
+
+        public Buffer() { maxCapacity = null; }
+        public Buffer(int capacity) { maxCapacity = capacity; }
+
+        public void Add(T newElement)
+        {
+            if (this.Count == (maxCapacity ?? -1)) this.Dequeue(); // no limit if maxCapacity = null
+            this.Enqueue(newElement);
+        }
     }
 }

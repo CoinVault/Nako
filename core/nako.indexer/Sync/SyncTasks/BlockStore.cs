@@ -29,14 +29,16 @@ namespace Nako.Sync.SyncTasks
         private readonly ILogger<BlockStore> log;
 
         private readonly IStorageOperations storageOperations;
+        private readonly SyncConnection syncConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlockStore"/> class.
         /// </summary>
-        public BlockStore(IOptions<NakoConfiguration> configuration, ILogger<BlockStore> logger, IStorageOperations storageOperations)
+        public BlockStore(IOptions<NakoConfiguration> configuration, ILogger<BlockStore> logger, IStorageOperations storageOperations, SyncConnection syncConnection)
             : base(configuration, logger)
         {
             this.storageOperations = storageOperations;
+            this.syncConnection = syncConnection;
             this.log = logger;
         }
 
@@ -68,10 +70,13 @@ namespace Nako.Sync.SyncTasks
                 stoper.Stop();
 
                 var message = item.BlockInfo != null ? 
-                    string.Format("Seconds = {0} - BlockIndex = {1} - TotalItems = {2}", stoper.Elapsed.TotalSeconds, item.BlockInfo.Height, count.Transactions + count.Inputs + count.Outputs) :
-                    string.Format("Seconds = {0} - PoolSync - TotalItems = {1}", stoper.Elapsed.TotalSeconds, count.Transactions + count.Inputs + count.Outputs);
+                    string.Format("Seconds = {0} - BlockIndex = {1} - TotalItems = {2}", stoper.Elapsed.TotalSeconds, item.BlockInfo.Height, count.Transactions + count.InputsOutputs) :
+                    string.Format("Seconds = {0} - PoolSync - TotalItems = {1}", stoper.Elapsed.TotalSeconds, count.Transactions + count.InputsOutputs);
 
+                
                 this.log.LogDebug(message);
+
+                this.syncConnection.RecentItems.Add((DateTime.UtcNow, stoper.Elapsed));
 
                 return await Task.FromResult(true);
             }

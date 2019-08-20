@@ -91,6 +91,8 @@ namespace Nako.Api.Handlers
             {
                 stats.SyncBlockIndex = this.storage.BlockGetBlockCount(1).First().BlockIndex;
                 stats.Progress = $"{stats.SyncBlockIndex}/{stats.BlockchainInfo.Blocks} - {stats.BlockchainInfo.Blocks - stats.SyncBlockIndex}";
+
+                stats.BlocksPerMinute = this.syncConnection.RecentItems.Count(w => w.Inserted > DateTime.UtcNow.AddMinutes(-1)).ToString();
             }
             catch (Exception ex)
             {
