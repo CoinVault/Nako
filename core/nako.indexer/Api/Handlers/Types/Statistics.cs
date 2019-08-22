@@ -51,10 +51,9 @@ namespace Nako.Api.Handlers.Types
 
         public NetworkInfoModel NetworkInfo { get; set; }
 
-        /// <summary>
-        /// Gets or sets the blocks per minute being processed.
-        /// </summary>
-        public string BlocksPerMinute { get; set; }
+        public int BlocksPerMinute { get; set; }
+
+        public double AvgBlockPersistInSeconds { get; set; }
 
         public string Error { get; set; }
 

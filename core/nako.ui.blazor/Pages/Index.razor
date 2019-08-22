@@ -72,7 +72,16 @@ else
                             <h5>Sync Progress</h5>
                         </div>
                         <div class="text">
-                            <span>@stats.Progress</span>
+                            <span>
+                                <small>
+                                    @stats.Progress
+
+                                    <br />
+                                    Blocks per minute: @stats.BlocksPerMinute
+                                    <br />
+                                    Avg insert time seconds:  @stats.AvgBlockPersistInSeconds
+                                </small>
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -107,7 +107,7 @@ namespace Nako.Operations.Types
             // Or use the config values to simulate the network class.
             this.Network = new NetworkConfig(config.Value);
 
-            this.RecentItems = new Buffer<(DateTime Inserted, TimeSpan Duration)>(1000);
+            this.RecentItems = new Buffer<(DateTime Inserted, TimeSpan Duration)>(5000);
         }
 
         public NBitcoin.Network Network { get; }

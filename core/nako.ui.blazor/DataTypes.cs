@@ -69,9 +69,9 @@ namespace Nako.Ui.Blazor
             public int TransactionsInPool { get; set; }
             public long SyncBlockIndex { get; set; }
             public BlockchainInfoModel BlockchainInfo { get; set; }
-            public string BlocksPerMinute { get; set; }
+            public int BlocksPerMinute { get; set; }
+            public double AvgBlockPersistInSeconds { get; set; }
             public NetworkInfoModel NetworkInfo { get; set; }
-
             public string Error { get; set; }
         }
 
