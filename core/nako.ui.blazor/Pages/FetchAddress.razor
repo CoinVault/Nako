@@ -140,9 +140,9 @@ else
     [Parameter]
     private string addresshash { get; set; }
 
-    private int maxitems { get; set; } = 10;
+    private int maxitems { get; set; }
 
-    private bool fetching { get; set; } = false;
+    private bool fetching { get; set; }
 
     private void NavigateToTransactionHash(string trxHash)
     {
@@ -179,6 +179,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        this.maxitems = 10;
+
         address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.addresshash}/confirmations/0/transactions/{this.maxitems}?api-version=1.0");
     }
 }

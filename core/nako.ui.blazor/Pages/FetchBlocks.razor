@@ -79,10 +79,10 @@ else
 
     @code {
         [Parameter]
-        private int blockindex { get; set; } = -1;
+        private int? blockindex { get; set; }
 
         [Parameter]
-        private int blockcount { get; set; } = 10;
+        private int? blockcount { get; set; }
 
         DataTypes.QueryBlocks blocks;
 
@@ -103,6 +103,12 @@ else
 
         protected override async Task OnInitializedAsync()
         {
+            if (this.blockcount == null)
+                this.blockcount = 10;
+
+            if (this.blockindex == null)
+                this.blockindex = -1;
+
             blocks = await Http.GetJsonAsync<DataTypes.QueryBlocks>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/Count/{this.blockcount}?api-version=1.0");
         }
 

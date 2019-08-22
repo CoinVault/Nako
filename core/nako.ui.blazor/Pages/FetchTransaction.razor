@@ -168,7 +168,7 @@ else
     [Parameter]
     private string transactionhash { get; set; }
 
-    private bool fetched { get; set; } = false;
+    private bool fetched { get; set; }
 
     private async Task UpdateTransactionHash(string trxHash)
     {

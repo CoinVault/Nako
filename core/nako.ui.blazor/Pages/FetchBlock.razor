@@ -101,12 +101,12 @@ else
 @code {
 
     [Parameter]
-    private long blockindex { get; set; } = -1;
+    public long? blockindex { get; set; }
 
     [Parameter]
-    private string blockhash { get; set; }
+    public string blockhash { get; set; }
 
-    DataTypes.QueryBlock block;
+    private DataTypes.QueryBlock block;
 
     private void NavigateToTransactionkIndex(string trxHash)
     {
@@ -122,20 +122,26 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        if (this.blockindex == -1)
+        if (this.blockindex == null)
         {
+            Console.WriteLine($"fetchblock/lastblock");
+
             block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/Latest/1?api-version=1.0");
             return;
         }
 
         if (!string.IsNullOrEmpty(this.blockhash))
         {
+            Console.WriteLine($"fetchblock/{this.blockhash}");
+
             block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/{this.blockhash}/1?api-version=1.0");
             return;
         }
 
-        if (!this.globalData.BlocksCache.TryGetValue(this.blockindex, out block))
+        if (!this.globalData.BlocksCache.TryGetValue(this.blockindex.Value, out block))
         {
+            Console.WriteLine($"fetchblock/{this.blockindex}");
+
             block = await Http.GetJsonAsync<DataTypes.QueryBlock>($"http://{this.globalData.ApiUrl}/api/Query/block/Index/{this.blockindex}/1?api-version=1.0");
         }
     }

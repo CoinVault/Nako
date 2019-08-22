@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-preview7-disco
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0.100-preview8-disco
 
 MAINTAINER Dan Gershony - CoinVault <dan@coinvault.io>
 
