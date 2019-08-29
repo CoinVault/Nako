@@ -28,7 +28,7 @@
   "SyncBlockchain": true,
   "SyncMemoryPool": true,
   "StartBlockIndex": 1,
-  "MongoBatchSize": 500,
+  "MongoBatchSize": 10000,
   "ParallelRequestsToTransactionRpc": 50,
   "DetailedTrace": 0,
   "MaxItemsInQueue": 200,
