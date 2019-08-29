@@ -71,6 +71,7 @@ namespace Nako.Ui.Blazor
             public BlockchainInfoModel BlockchainInfo { get; set; }
             public int BlocksPerMinute { get; set; }
             public double AvgBlockPersistInSeconds { get; set; }
+            public double AvgBlockSizeKb { get; set; }
             public NetworkInfoModel NetworkInfo { get; set; }
             public string Error { get; set; }
         }

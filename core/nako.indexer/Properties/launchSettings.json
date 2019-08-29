@@ -58,6 +58,10 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:9000/"
+    },
+    "Nako.Core (BTC)": {
+      "commandName": "Project",
+      "commandLineArgs": "BTC"
     }
   }
 }

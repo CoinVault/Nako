@@ -15,7 +15,7 @@
 	"ParallelRequestsToTransactionRpc": 50,
 	"MaxItemsInQueue": 200,
 	"SyncInterval": 5,
-	"AverageInterval": 10
+	"AverageInterval": 10,
 	
 	"NetworkConsensusFactoryType": "NBitcoin.ConsensusFactory, NBitcoin", // (ConsensusFactory, PosConsensusFactory)
         "NetworkPubkeyAddressPrefix": 0,

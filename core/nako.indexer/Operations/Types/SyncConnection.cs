@@ -107,7 +107,7 @@ namespace Nako.Operations.Types
             // Or use the config values to simulate the network class.
             this.Network = new NetworkConfig(config.Value);
 
-            this.RecentItems = new Buffer<(DateTime Inserted, TimeSpan Duration)>(5000);
+            this.RecentItems = new Buffer<(DateTime Inserted, TimeSpan Duration, long Size)>(5000);
         }
 
         public NBitcoin.Network Network { get; }
@@ -130,7 +130,7 @@ namespace Nako.Operations.Types
 
         public long StartBlockIndex { get; set; }
 
-        public Buffer<(DateTime Inserted, TimeSpan Duration)> RecentItems { get; set; }
+        public Buffer<(DateTime Inserted, TimeSpan Duration, long Size)> RecentItems { get; set; }
     }
 
     public class Buffer<T> : Queue<T>

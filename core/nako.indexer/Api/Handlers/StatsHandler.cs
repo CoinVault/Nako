@@ -94,6 +94,10 @@ namespace Nako.Api.Handlers
 
                 var totalSeconds = this.syncConnection.RecentItems.Sum(s => s.Duration.TotalSeconds);
                 stats.AvgBlockPersistInSeconds = Math.Round(totalSeconds / this.syncConnection.RecentItems.Count, 2);
+
+                var totalSize = this.syncConnection.RecentItems.Sum(s => s.Size);
+                stats.AvgBlockSizeKb = Math.Round((double)totalSize / this.syncConnection.RecentItems.Count, 0);
+
                 stats.BlocksPerMinute = this.syncConnection.RecentItems.Count(w => w.Inserted > DateTime.UtcNow.AddMinutes(-1));
             }
             catch (Exception ex)

@@ -55,6 +55,8 @@ namespace Nako.Api.Handlers.Types
 
         public double AvgBlockPersistInSeconds { get; set; }
 
+        public double AvgBlockSizeKb { get; set; }
+
         public string Error { get; set; }
 
     }

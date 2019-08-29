@@ -62,6 +62,8 @@ namespace Nako.Sync.SyncTasks
                     {
                         throw new Exception(string.Format("Failed to remove block hash {0} from collection", item.BlockInfo.Hash));
                     }
+
+                    this.syncConnection.RecentItems.Add((DateTime.UtcNow, stoper.Elapsed, item.BlockInfo.Size));
                 }
 
                 var notifications = new AddressNotifications { Addresses = count.Items.Where( ad => ad.Addresses != null).SelectMany(s => s.Addresses).Distinct().ToList() };
@@ -70,13 +72,11 @@ namespace Nako.Sync.SyncTasks
                 stoper.Stop();
 
                 var message = item.BlockInfo != null ? 
-                    string.Format("Seconds = {0} - BlockIndex = {1} - TotalItems = {2}", stoper.Elapsed.TotalSeconds, item.BlockInfo.Height, count.Transactions + count.InputsOutputs) :
+                    string.Format("Seconds = {0} - BlockIndex = {1} - TotalItems = {2} - Size = {3} kb", stoper.Elapsed.TotalSeconds, item.BlockInfo.Height, count.Transactions + count.InputsOutputs, item.BlockInfo.Size) :
                     string.Format("Seconds = {0} - PoolSync - TotalItems = {1}", stoper.Elapsed.TotalSeconds, count.Transactions + count.InputsOutputs);
 
                 
                 this.log.LogDebug(message);
-
-                this.syncConnection.RecentItems.Add((DateTime.UtcNow, stoper.Elapsed));
 
                 return await Task.FromResult(true);
             }
