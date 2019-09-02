@@ -78,12 +78,6 @@ namespace Nako.Storage.Mongo
                         }
 
                         this.CreateBlock(item.BlockInfo);
-
-                        ////if (string.IsNullOrEmpty(lastBlock.NextBlockHash))
-                        ////{
-                        ////    lastBlock.NextBlockHash = item.BlockInfo.Hash;
-                        ////    this.SyncOperations.UpdateBlockHash(lastBlock);
-                        ////}
                     }
                 }
                 else
@@ -106,20 +100,90 @@ namespace Nako.Storage.Mongo
                         this.data.MemoryTransactions.TryRemove(t.GetHash().ToString(), out outer);
                     });
 
-                // break the work in to batches of transactions
-                var queue = new Queue<NBitcoin.Transaction>(item.Transactions);
-                do
-                {
-                    var items = this.GetBatch(this.configuration.MongoBatchSize, queue).ToList();
 
+                var items = new List<Transaction>(item.Transactions);
+
+                // insert all the mappings of transactions to a block
+                try
+                {
+                    if (item.BlockInfo != null)
+                    {
+                        var inserts = items.Select(s => new MapTransactionBlock { BlockIndex = item.BlockInfo.Height, TransactionId = s.GetHash().ToString() }).ToList();
+                        stats.Transactions += inserts.Count;
+                        this.data.MapTransactionBlock.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
+                    }
+                }
+                catch (MongoBulkWriteException mbwex)
+                {
+                    if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))
+                    {
+                        throw;
+                    }
+                }
+
+                // insert inputs and add to the list for later to use on the notification task.
+                var inputs = this.CreateInputs(item.BlockInfo.Height, items).ToList();
+                var outputs = this.CreateOutputs(items, item.BlockInfo.Height).ToList();
+                inputs.AddRange(outputs);
+
+                try
+                {
+                    var ops = new Dictionary<string, WriteModel<MapTransactionAddress>>();
+                    var writeOptions = new BulkWriteOptions() { IsOrdered = false };
+
+                    foreach (var mapTransactionAddress in inputs)
+                    {
+                        if(mapTransactionAddress.SpendingTransactionId == null)
+                        {
+                            ops.Add(mapTransactionAddress.Id, new InsertOneModel<MapTransactionAddress>(mapTransactionAddress));
+                        }
+                        else
+                        {
+                            if (ops.TryGetValue(mapTransactionAddress.Id, out WriteModel<MapTransactionAddress> mta))
+                            {
+                                // in case a utxo is spent in the same block
+                                // we just modify the inserted item directly
+
+                                var imta = mta as InsertOneModel<MapTransactionAddress>;
+                                imta.Document.SpendingTransactionId = mapTransactionAddress.SpendingTransactionId;
+                                imta.Document.SpendingBlockIndex = mapTransactionAddress.SpendingBlockIndex;
+                            }
+                            else
+                            {
+                                var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, mapTransactionAddress.Id);
+
+                                var update = Builders<MapTransactionAddress>.Update
+                                    .Set(blockInfo => blockInfo.SpendingTransactionId, mapTransactionAddress.SpendingTransactionId)
+                                    .Set(blockInfo => blockInfo.SpendingBlockIndex, mapTransactionAddress.SpendingBlockIndex);
+
+                                ops.Add(mapTransactionAddress.Id, new UpdateOneModel<MapTransactionAddress>(filter, update));
+                            }
+                        }
+                    }
+
+                    if (ops.Any())
+                    {
+                        stats.Items.AddRange(inputs);
+                        stats.InputsOutputs += ops.Count;
+                        this.data.MapTransactionAddress.BulkWrite(ops.Values, writeOptions);
+                    }
+                }
+                catch (MongoBulkWriteException mbwex)
+                {
+                    if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))//.Message.Contains("E11000 duplicate key error collection"))
+                    {
+                        throw;
+                    }
+                }
+
+                // If insert trx supported then push trx in batches.
+                if (this.configuration.StoreRawTransactions)
+                {
                     try
                     {
-                        if (item.BlockInfo != null)
-                        {
-                            var inserts = items.Select(s => new MapTransactionBlock { BlockIndex = item.BlockInfo.Height, TransactionId = s.GetHash().ToString() }).ToList();
-                            stats.Transactions += inserts.Count;
-                            this.data.MapTransactionBlock.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
-                        }
+                        var inserts = items.Select(t => new MapTransaction { TransactionId = t.GetHash().ToString(), RawTransaction = t.ToBytes(syncConnection.Network.Consensus.ConsensusFactory) }).ToList();
+                        stats.RawTransactions = inserts.Count;
+                        this.data.MapTransaction.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
                     }
                     catch (MongoBulkWriteException mbwex)
                     {
@@ -128,87 +192,7 @@ namespace Nako.Storage.Mongo
                             throw;
                         }
                     }
-
-                    // insert inputs and add to the list for later to use on the notification task.
-                    var inputs = this.CreateInputs(item.BlockInfo.Height, items).ToList();
-                    var outputs = this.CreateOutputs(items, item.BlockInfo.Height).ToList();
-                    inputs.AddRange(outputs);
-                    var queueInner = new Queue<MapTransactionAddress>(inputs);
-
-                    do
-                    {
-                        try
-                        {
-                            var itemsInner = this.GetBatch(this.configuration.MongoBatchSize, queueInner).ToList();
-                            var ops = new Dictionary<string, WriteModel<MapTransactionAddress>>();
-                            var writeOptions = new BulkWriteOptions() { IsOrdered = false };
-
-                            foreach (var mapTransactionAddress in itemsInner)
-                            {
-                                if(mapTransactionAddress.SpendingTransactionId == null)
-                                {
-                                    ops.Add(mapTransactionAddress.Id, new InsertOneModel<MapTransactionAddress>(mapTransactionAddress));
-                                }
-                                else
-                                {
-                                    if (ops.TryGetValue(mapTransactionAddress.Id, out WriteModel<MapTransactionAddress> mta))
-                                    {
-                                        // in case a utxo is spent in the same block
-                                        // we just modify the inserted item directly
-
-                                        var imta = mta as InsertOneModel<MapTransactionAddress>;
-                                        imta.Document.SpendingTransactionId = mapTransactionAddress.SpendingTransactionId;
-                                        imta.Document.SpendingBlockIndex = mapTransactionAddress.SpendingBlockIndex;
-                                    }
-                                    else
-                                    {
-                                        var filter = Builders<MapTransactionAddress>.Filter.Eq(addr => addr.Id, mapTransactionAddress.Id);
-
-                                        var update = Builders<MapTransactionAddress>.Update
-                                            .Set(blockInfo => blockInfo.SpendingTransactionId, mapTransactionAddress.SpendingTransactionId)
-                                            .Set(blockInfo => blockInfo.SpendingBlockIndex, mapTransactionAddress.SpendingBlockIndex);
-
-                                        ops.Add(mapTransactionAddress.Id, new UpdateOneModel<MapTransactionAddress>(filter, update));
-                                    }
-                                }
-                            }
-
-                            if (itemsInner.Any())
-                            {
-                                stats.Items.AddRange(itemsInner);
-                                stats.InputsOutputs += ops.Count;
-                                this.data.MapTransactionAddress.BulkWrite(ops.Values, writeOptions);
-                            }
-                        }
-                        catch (MongoBulkWriteException mbwex)
-                        {
-                            if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))//.Message.Contains("E11000 duplicate key error collection"))
-                            {
-                                throw;
-                            }
-                        }
-                    }
-                    while (queueInner.Any());
-
-                    // If insert trx supported then push trx in batches.
-                    if (this.configuration.StoreRawTransactions)
-                    {
-                        try
-                        {
-                            var inserts = items.Select(t => new MapTransaction { TransactionId = t.GetHash().ToString(), RawTransaction = t.ToBytes(syncConnection.Network.Consensus.ConsensusFactory) }).ToList();
-                            stats.RawTransactions = inserts.Count;
-                            this.data.MapTransaction.InsertMany(inserts, new InsertManyOptions { IsOrdered = false });
-                        }
-                        catch (MongoBulkWriteException mbwex)
-                        {
-                            if (mbwex.WriteErrors.Any(e => e.Category != ServerErrorCategory.DuplicateKey))//.Message.Contains("E11000 duplicate key error collection"))
-                            {
-                                throw;
-                            }
-                        }
-                    }
                 }
-                while (queue.Any());
 
                 // mark the block as synced.
                 this.CompleteBlock(item.BlockInfo);
@@ -279,16 +263,6 @@ namespace Nako.Storage.Mongo
             // todo: optimize this
             var aggregate = Nako.Extensions.Extensions.TakeAndRemove(queue, maxItems).ToList();
             items.AddRange(aggregate);
-
-            //do
-            //{
-            //    var aggregate = Extensions.TakeAndRemove(queue, 100).ToList();
-
-            //    items.AddRange(aggregate);
-
-            //    total = items.SelectMany(s => s.VIn).Cast<object>().Concat(items.SelectMany(s => s.VOut).Cast<object>()).Count();
-            //}
-            //while (total < maxItems && queue.Any());
 
             return items;
         }
