@@ -1,11 +1,13 @@
 {
-	"CoinTag": "CITY",
-	"ConnectionString": "mongodb://localhost",
-	"DatabaseNameSubfix": true,
-	"RpcDomain": "127.0.0.1",
-	"RpcAccessPort": 4334,
-	"NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
-	"NetworkPubkeyAddressPrefix": 28,
-	"NetworkScriptAddressPrefix": 88,
-	"NetworkWitnessPrefix": "bc"
+  "CoinTag": "CITY",
+  "NetworkConsensusFactoryType": "NBitcoin.PosConsensusFactory, NBitcoin",
+  "NetworkPubkeyAddressPrefix": 28,
+  "NetworkScriptAddressPrefix": 88,
+  "NetworkWitnessPrefix": "city",
+  "RpcAccessPort": 4334,
+  "DatabaseNameSubfix": false,
+  "StoreRawTransactions": true,
+  "LogoUrl": "",
+  "CoinName": "City Chain",
+  "CoinInformation": "Powering the Smart City Platform"
 }
