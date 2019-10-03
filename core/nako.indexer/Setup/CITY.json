@@ -4,7 +4,6 @@
   "NetworkPubkeyAddressPrefix": 28,
   "NetworkScriptAddressPrefix": 88,
   "NetworkWitnessPrefix": "city",
-  "RpcAccessPort": 4334,
   "DatabaseNameSubfix": false,
   "StoreRawTransactions": true,
   "LogoUrl": "",
