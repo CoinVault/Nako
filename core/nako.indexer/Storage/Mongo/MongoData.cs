@@ -461,6 +461,9 @@ namespace Nako.Storage.Mongo
                 {
                     var addressIndex = ScriptToAddressParser.GetAddress(this.syncConnection.Network, output.ScriptPubKey);
 
+                    if(addressIndex == null)
+                        continue;
+                    
                     if (address == addressIndex.FirstOrDefault())
                         continue;
 
