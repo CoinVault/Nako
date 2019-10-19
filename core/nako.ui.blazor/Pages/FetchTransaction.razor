@@ -1,6 +1,6 @@
 ﻿@page "/fetchtransaction/{transactionhash}"
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 
 @if (transaction == null)
@@ -166,7 +166,7 @@ else
 @code {
 
     [Parameter]
-    private string transactionhash { get; set; }
+    public string transactionhash { get; set; }
 
     private bool fetched { get; set; }
 
@@ -180,12 +180,12 @@ else
 
     private void NavigateToBlockIndex(long index)
     {
-        UriHelper.NavigateTo($"fetchblock/{index}");
+        NavigationManager.NavigateTo($"fetchblock/{index}");
     }
 
     private void NavigateToAddress(string address)
     {
-        UriHelper.NavigateTo($"fetchaddress/{address}");
+        NavigationManager.NavigateTo($"fetchaddress/{address}");
     }
 
     DataTypes.QueryTransaction transaction;

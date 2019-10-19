@@ -1,7 +1,7 @@
 ﻿@page "/"
 @inject HttpClient Http
 @inject GlobalData globalData
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 
 @if (stats == null)
 {
@@ -177,16 +177,16 @@ else
 
     private void NavigateToBlockIndex(long index)
     {
-        UriHelper.NavigateTo($"fetchblock/{index}");
+        NavigationManager.NavigateTo($"fetchblock/{index}");
     }
 
     private void NavigateToPeers()
     {
-        UriHelper.NavigateTo($"FetchPeers");
+        NavigationManager.NavigateTo($"FetchPeers");
     }
 
     private void NavigateToMempool()
     {
-        UriHelper.NavigateTo($"FetchPeers");
+        NavigationManager.NavigateTo($"FetchPeers");
     }
 }

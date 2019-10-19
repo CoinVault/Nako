@@ -1,7 +1,7 @@
 @inherits LayoutComponentBase
 @inject GlobalData globalData
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 
 <!-- ***** Header Area Start ***** -->
 <header class="header-area">
@@ -68,6 +68,6 @@
 
     private void NavigateToBlock()
     {
-        UriHelper.NavigateTo($"fetchblock");
+        NavigationManager.NavigateTo($"fetchblock");
     }
 }

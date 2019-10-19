@@ -1,4 +1,4 @@
-﻿@inject IUriHelper UriHelper
+﻿@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 @inject HttpClient Http
 
@@ -15,12 +15,12 @@
             </div>
         </div>
     </div>
-</div>	
+</div>
 
 @code {
     private string Search { get; set; }
 
-    private void KeyUp(UIKeyboardEventArgs e)
+    private void KeyUp(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
@@ -37,7 +37,7 @@
         {
             Console.WriteLine($"fetchblock/{index}");
 
-            UriHelper.NavigateTo($"fetchblock/{index}");
+            NavigationManager.NavigateTo($"fetchblock/{index}");
             this.Search = null;
             return;
         }
@@ -50,29 +50,29 @@
 
             Console.WriteLine($"fetchblock/{block.BlockIndex}");
 
-            UriHelper.NavigateTo($"fetchblock/{block.BlockIndex}");
+            NavigationManager.NavigateTo($"fetchblock/{block.BlockIndex}");
             this.Search = null;
             return;
         }
 
         var transaction = await Http.GetJsonAsync<DataTypes.QueryTransaction>($"http://{this.globalData.ApiUrl}/api/Query/transaction/{this.Search}?api-version=1.0");
 
-        if(transaction.TransactionId != null)
+        if (transaction.TransactionId != null)
         {
             Console.WriteLine($"fetchtransaction/{transaction.TransactionId}");
 
-            UriHelper.NavigateTo($"fetchtransaction/{transaction.TransactionId}");
+            NavigationManager.NavigateTo($"fetchtransaction/{transaction.TransactionId}");
             this.Search = null;
             return;
         }
 
         var address = await Http.GetJsonAsync<DataTypes.QueryAddress>($"http://{this.globalData.ApiUrl}/api/Query/address/{this.Search}?api-version=1.0");
 
-        if(address.TotalReceived > 0)
+        if (address.TotalReceived > 0)
         {
             Console.WriteLine($"fetchaddress/{address.Address}");
 
-            UriHelper.NavigateTo($"fetchaddress/{address.Address}");
+            NavigationManager.NavigateTo($"fetchaddress/{address.Address}");
             this.Search = null;
             return;
         }

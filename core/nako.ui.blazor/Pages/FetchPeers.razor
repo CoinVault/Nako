@@ -1,6 +1,6 @@
 ﻿@page "/fetchpeers"
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 
 
@@ -114,7 +114,7 @@ else
 
     private void NavigateToBlockIndex(long index)
     {
-        UriHelper.NavigateTo("fetchblock/" + index);
+        NavigationManager.NavigateTo("fetchblock/" + index);
     }
 
     protected override async Task OnInitializedAsync()

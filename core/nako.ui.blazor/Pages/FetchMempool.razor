@@ -1,6 +1,6 @@
 ﻿@page "/fetchmempool"
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 
 @if (this.mempoolTransaction == null)
@@ -65,7 +65,7 @@ else
 
     private void NavigateToTransactionkIndex(string trxHash)
     {
-        UriHelper.NavigateTo($"fetchtransaction/{trxHash}");
+        NavigationManager.NavigateTo($"fetchtransaction/{trxHash}");
     }
 
     protected override async Task OnInitializedAsync()
