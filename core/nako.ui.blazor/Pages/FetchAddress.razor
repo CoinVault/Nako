@@ -1,7 +1,7 @@
 ﻿@page "/fetchaddress/{addresshash}"
 @using System.Threading
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 
 
@@ -76,24 +76,24 @@ else
                                 @foreach (var transaction in address.Transactions)
                                 {
                                     <tr>
-                                          <td @onclick="@(() => NavigateToTransactionHash(transaction.TransactionHash))"  class=" mousepointer">@transaction.TransactionHash</td>
-                                          <td @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex.Value))" class=" mousepointer">@transaction.BlockIndex @(transaction.CoinBase ? "mined" : transaction.CoinStake ? "minted" : string.Empty)</td>
-                                           @*<td>@(transaction.CoinBase ? "mined" : transaction.CoinStake ? "minted" : string.Empty)</td>*@
-                                          @*<td>@transaction.Confirmations</td>*@
+                                        <td @onclick="@(() => NavigateToTransactionHash(transaction.TransactionHash))" class=" mousepointer">@transaction.TransactionHash</td>
+                                        <td @onclick="@(() => NavigateToBlockIndex(transaction.BlockIndex.Value))" class=" mousepointer">@transaction.BlockIndex @(transaction.CoinBase ? "mined" : transaction.CoinStake ? "minted" : string.Empty)</td>
+                                        @*<td>@(transaction.CoinBase ? "mined" : transaction.CoinStake ? "minted" : string.Empty)</td>*@
+                                        @*<td>@transaction.Confirmations</td>*@
 
                                         @if (string.IsNullOrEmpty(transaction.SpendingTransactionHash))
-                                         {
-                                             <td class="text-success">@GlobalData.ToUnit(transaction.Value) @address.CoinTag</td>
-                                             <td class="text-success"></td>
-                                             <td class="text-success"></td>
+                                        {
+                                            <td class="text-success">@GlobalData.ToUnit(transaction.Value) @address.CoinTag</td>
+                                            <td class="text-success"></td>
+                                            <td class="text-success"></td>
 
-                                         }
-                                         else
-                                         {
-                                             <td class="text-danger">@GlobalData.ToUnit(transaction.Value) @address.CoinTag</td>
-                                             <td @onclick="@(() => NavigateToTransactionHash(transaction.SpendingTransactionHash))" class="mousepointer">@transaction.SpendingTransactionHash.Substring(0, 10) </td>
-                                             <td @onclick="@(() => NavigateToBlockIndex(transaction.SpendingBlockIndex ?? 0))" class="mousepointer">@transaction.SpendingBlockIndex</td>
-                                         }
+                                        }
+                                        else
+                                        {
+                                            <td class="text-danger">@GlobalData.ToUnit(transaction.Value) @address.CoinTag</td>
+                                            <td @onclick="@(() => NavigateToTransactionHash(transaction.SpendingTransactionHash))" class="mousepointer">@transaction.SpendingTransactionHash.Substring(0, 10) </td>
+                                            <td @onclick="@(() => NavigateToBlockIndex(transaction.SpendingBlockIndex ?? 0))" class="mousepointer">@transaction.SpendingBlockIndex</td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -104,7 +104,7 @@ else
             <div class="row">
                 <div class="col-lg-12">
                     <div class="center-heading">
-                        
+
                         @if (this.fetching)
                         {
                             <button class="btn btn-light" type="button" disabled>
@@ -121,9 +121,9 @@ else
 
                             // Not to abuse the fetch all button
                             @if (this.maxitems > 300)
-                             {
-                                 <button type="button" @onclick="FetchAllAddresses" class="btn btn-light text-center">Fetch all</button>
-                             }
+                            {
+                                <button type="button" @onclick="FetchAllAddresses" class="btn btn-light text-center">Fetch all</button>
+                            }
 
                             <br />
                         }
@@ -138,7 +138,7 @@ else
 @code {
 
     [Parameter]
-    private string addresshash { get; set; }
+    public string addresshash { get; set; }
 
     private int maxitems { get; set; }
 
@@ -146,12 +146,12 @@ else
 
     private void NavigateToTransactionHash(string trxHash)
     {
-        UriHelper.NavigateTo($"FetchTransaction/{trxHash}");
+        NavigationManager.NavigateTo($"FetchTransaction/{trxHash}");
     }
 
     private void NavigateToBlockIndex(long index)
     {
-        UriHelper.NavigateTo($"fetchblock/{index}");
+        NavigationManager.NavigateTo($"fetchblock/{index}");
     }
 
     DataTypes.QueryAddress address;

@@ -1,7 +1,7 @@
 ﻿@page "/fetchblocks"
 @page "/fetchblocks/{blockindex:int}/{blockcount:int}"
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 
 @if (blocks == null)
@@ -79,10 +79,10 @@ else
 
     @code {
         [Parameter]
-        private int? blockindex { get; set; }
+        public int? blockindex { get; set; }
 
         [Parameter]
-        private int? blockcount { get; set; }
+        public int? blockcount { get; set; }
 
         DataTypes.QueryBlocks blocks;
 
@@ -98,7 +98,7 @@ else
 
         private void NavigateToBlockIndex(long index)
         {
-            UriHelper.NavigateTo($"fetchblock/{index}");
+            NavigationManager.NavigateTo($"fetchblock/{index}");
         }
 
         protected override async Task OnInitializedAsync()

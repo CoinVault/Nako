@@ -1,0 +1,12 @@
+{
+  "CoinTag": "XDS",
+  "NetworkConsensusFactoryType": "NBitcoin.ConsensusFactory, NBitcoin",
+  "NetworkPubkeyAddressPrefix": 0,
+  "NetworkScriptAddressPrefix": 5,
+  "NetworkWitnessPrefix": "xds",
+  "DatabaseNameSubfix": false,
+  "StoreRawTransactions": true,
+  "LogoUrl": "",
+  "CoinName": "XDS",
+  "CoinInformation": "XDS"
+}

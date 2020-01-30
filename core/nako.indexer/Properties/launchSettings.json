@@ -41,6 +41,15 @@
       },
       "applicationUrl": "http://localhost:9000/"
     },
+    "Nako.Core (XDS)": {
+      "commandName": "Project",
+      "commandLineArgs": "XDS",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:9000/"
+    },
     "Nako.Core (ODX)": {
       "commandName": "Project",
       "commandLineArgs": "ODX",

@@ -2,7 +2,7 @@
 @page "/fetchblock/{blockindex:long}"
 @page "/fetchblock/{blockhash}"
 @inject HttpClient Http
-@inject IUriHelper UriHelper
+@inject NavigationManager NavigationManager
 @inject GlobalData globalData
 
 @if (block == null)
@@ -110,7 +110,7 @@ else
 
     private void NavigateToTransactionkIndex(string trxHash)
     {
-        UriHelper.NavigateTo($"fetchtransaction/{trxHash}");
+        NavigationManager.NavigateTo($"fetchtransaction/{trxHash}");
     }
 
     private async Task UpdateBlockHash(string hash)
